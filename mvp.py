@@ -3,7 +3,7 @@
 
 # In[ ]:
 
-!pip install openpyxl
+pip install openpyxl
 
 import pandas as pd
 import sys
