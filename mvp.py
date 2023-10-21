@@ -11,10 +11,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import streamlit as st
 
-
-# In[ ]:
-
-
 def upload_excel():
     uploaded_file = st.file_uploader("Choose an Excel file", type="xlsx")
 
@@ -27,23 +23,6 @@ def upload_excel():
             st.error(f"Error: {e}")
     return None
 
-
-# In[ ]:
-
-
-birth['DOB'] = birth['DOB'].dt.year
-birth['Name'] = birth['Name'].str.split('Last').str[1].str.split(', First').str.join('-')
-birth = birth[birth['DOB'].notna()]
-birth = birth.sort_values('DOB', ascending = True)
-
-dup_birth = birth[birth['Name'].duplicated(keep=False)]
-dup_birth = dup_birth.sort_values('Name', ascending = True)
-print(len(birth))
-
-
-# In[ ]:
-
-
 def main():
     st.title("Streamlit App with Excel Upload")
 
@@ -52,6 +31,18 @@ def main():
 
     # Rest of your Streamlit app logic goes here
     if birth is not None:
+        # Your additional transformations
+        birth['DOB'] = birth['DOB'].dt.year
+        birth['Name'] = birth['Name'].str.split('Last').str[1].str.split(', First').str.join('-')
+        birth = birth[birth['DOB'].notna()]
+        birth = birth.sort_values('DOB', ascending=True)
+
+        dup_birth = birth[birth['Name'].duplicated(keep=False)]
+        dup_birth = dup_birth.sort_values('Name', ascending=True)
+
+        # Print the length of 'birth'
+        st.write(f"Length of 'birth' DataFrame: {len(birth)}")
+
         st.write("Preview of 'birth' DataFrame:")
         st.write(birth.head())
 
