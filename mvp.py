@@ -15,12 +15,15 @@ def upload_excel():
     if uploaded_file is not None:
         try:
             birth = pd.read_csv(uploaded_file)
+            
+            # Convert 'DOB' column to datetime format
+            birth['DOB'] = pd.to_datetime(birth['DOB'], errors='coerce')
+            
             st.success("File uploaded successfully. DataFrame 'birth' created.")
             return birth
         except Exception as e:
             st.error(f"Error: {e}")
     return None
-
 def main():
     st.title("Streamlit App with CSV Upload")
 
