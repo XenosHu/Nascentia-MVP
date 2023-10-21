@@ -2,27 +2,19 @@
 # coding: utf-8
 
 # In[ ]:
-
-
-
 import pandas as pd
 import sys
 from datetime import datetime as dt, timedelta
 import numpy as np
-import openpyxl
 import matplotlib.pyplot as plt
 import streamlit as st
 
-if 'openpyxl' not in sys.modules:
-    st.warning("Installing 'openpyxl'. This might take a while...")
-    st.experimental_rerun()
-    
 def upload_excel():
-    uploaded_file = st.file_uploader("Choose an Excel file", type="xlsx")
+    uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
 
     if uploaded_file is not None:
         try:
-            birth = pd.read_excel(uploaded_file, engine='openpyxl')
+            birth = pd.read_csv(uploaded_file)
             st.success("File uploaded successfully. DataFrame 'birth' created.")
             return birth
         except Exception as e:
@@ -30,7 +22,7 @@ def upload_excel():
     return None
 
 def main():
-    st.title("Streamlit App with Excel Upload")
+    st.title("Streamlit App with Csv Upload")
 
     # Call the function to upload Excel file and get DataFrame
     birth = upload_excel()
