@@ -22,28 +22,30 @@ def upload_excel():
     return None
 
 def main():
-    st.title("Streamlit App with Csv Upload")
+    st.title("Streamlit App with CSV Upload")
 
-    # Call the function to upload Excel file and get DataFrame
+    # Call the function to upload CSV file and get DataFrame
     birth = upload_excel()
 
     # Rest of your Streamlit app logic goes here
     if birth is not None:
-        # Your additional transformations
-        birth['DOB'] = birth['DOB'].dt.year
-        birth['Name'] = birth['Name'].str.split('Last').str[1].str.split(', First').str.join('-')
-        birth = birth[birth['DOB'].notna()]
-        birth = birth.sort_values('DOB', ascending=True)
+        st.write(f"Data types of columns in 'birth': {birth.dtypes}")
 
-        dup_birth = birth[birth['Name'].duplicated(keep=False)]
-        dup_birth = dup_birth.sort_values('Name', ascending=True)
+        # Convert 'DOB' column to datetime, if it's not already
+        if 'DOB' in birth.columns and pd.api.types.is_datetime64_any_dtype(birth['DOB']):
+            birth['DOB'] = birth['DOB'].dt.year
+            birth['Name'] = birth['Name'].str.split('Last').str[1].str.split(', First').str.join('-')
+            birth = birth[birth['DOB'].notna()]
+            birth = birth.sort_values('DOB', ascending=True)
 
-        # Print the length of 'birth'
-        st.write(f"Length of 'birth' DataFrame: {len(birth)}")
+            dup_birth = birth[birth['Name'].duplicated(keep=False)]
+            dup_birth = dup_birth.sort_values('Name', ascending=True)
 
-        st.write("Preview of 'birth' DataFrame:")
-        st.write(birth.head())
-
+            st.write(f"Length of 'birth': {len(birth)}")
+            st.write("Preview of 'birth' DataFrame:")
+            st.write(birth.head())
+        else:
+            st.error("The 'DOB' column is not recognized as datetime. Check your CSV file format.")
 if __name__ == "__main__":
     main()
 
