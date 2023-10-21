@@ -17,7 +17,7 @@ def upload_excel():
 
     if uploaded_file is not None:
         try:
-            birth = pd.read_excel(uploaded_file)
+            birth = pd.read_excel(uploaded_file, engine='openpyxl')
             st.success("File uploaded successfully. DataFrame 'birth' created.")
             return birth
         except Exception as e:
