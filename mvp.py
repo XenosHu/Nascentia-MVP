@@ -3,7 +3,7 @@
 
 # In[ ]:
 
-pip install openpyxl
+
 
 import pandas as pd
 import sys
@@ -13,6 +13,10 @@ import openpyxl
 import matplotlib.pyplot as plt
 import streamlit as st
 
+if 'openpyxl' not in sys.modules:
+    st.warning("Installing 'openpyxl'. This might take a while...")
+    st.experimental_rerun()
+    
 def upload_excel():
     uploaded_file = st.file_uploader("Choose an Excel file", type="xlsx")
 
