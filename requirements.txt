@@ -1,7 +1,7 @@
 pandas
 numpy
 matplotlib
-openpyxl
+openpyxl==3.0.18
 scikit-learn
 scipy
 streamlit==1.15.0
