@@ -118,7 +118,8 @@ def main():
     # Merge and process data
     if ulcer is not None and brad is not None:
         ulcer_b = merge_and_process_data(ulcer, brad)  # Get the processed DataFrame
-        st.write("Processed 'Ulcer Data' DataFrame:")
+        st.write(f"Length of 'ulcer merge physical assignment Data': {len(ulcer_b)}")
+        st.write("Preview of 'ulcer merge physical assignment Data' DataFrame:")
         st.write(ulcer_b.head(10))
         
 if __name__ == "__main__":
