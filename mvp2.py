@@ -70,6 +70,22 @@ def upload_brad_csv():
             st.error(f"Error: {e}")
     return None
 
+def plot_patient_data(patient_id, brad):
+    # Filter data for the specified patient
+    sub = brad[brad['Name'] == patient_id]
+    sub = sub.sort_values('Visitdate', ascending=True)
+
+    # Plot line chart
+    plt.figure(figsize=(10, 6))
+    plt.plot(sub['Visitdate'], sub['AssessmentAnswer'], marker='o', linestyle='-')
+    plt.title(f'Assessment Braden score of Patient {patient_id} over Time')
+    plt.xlabel('Visit Date')
+    plt.ylabel('Assessment Answer')
+    plt.tight_layout()
+
+    # Display the plot using Streamlit
+    st.pyplot()
+    
 def merge_and_process_data(ulcer, brad):
     # Merge two tables
     ulcer_b = ulcer.merge(brad, left_on='Name', right_on='Name')
@@ -104,16 +120,16 @@ def main():
 
         process_ulcer_data(ulcer)
         st.write(f"Length of 'Ulcer Data': {len(ulcer)}")
-        st.write("Preview of 'Ulcer Data' DataFrame:")
-        st.write(ulcer.head(10))
+        #st.write("Preview of 'Ulcer Data' DataFrame:")
+        #st.write(ulcer.head(10))
 
     # Display the processed brad dataset
     if brad is not None:
 
         process_brad_data(brad)
         st.write(f"Length of 'brad Data': {len(brad)}")
-        st.write("Preview of 'brad Data' DataFrame:")
-        st.write(brad.head(10))
+        #st.write("Preview of 'brad Data' DataFrame:")
+        #st.write(brad.head(10))
 
     # Merge and process data
     if ulcer is not None and brad is not None:
@@ -121,6 +137,15 @@ def main():
         st.write(f"Length of 'ulcer merge physical assignment Data': {len(ulcer_b)}")
         st.write("Preview of 'ulcer merge physical assignment Data' DataFrame:")
         st.write(ulcer_b.head(10))
+
+        # Allow user to input a patient ID
+        patient_id = st.text_input("Enter Patient ID (in format of First-Last, e.g. 12-345) for their Braden score history:")
+        
+        # Check if the patient ID is provided
+        if patient_id:
+            # Plot line chart for the specified patient
+            plot_patient_data(patient_id, brad)
+
         
 if __name__ == "__main__":
     main()
