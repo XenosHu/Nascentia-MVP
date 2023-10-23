@@ -84,6 +84,8 @@ def merge_and_process_data(ulcer, brad):
     # Drop the MaxAllowedDate column
     ulcer_b = ulcer_b.drop(columns=['MaxAllowedDate'])
     ulcer_b = ulcer_b.sort_values('Name', ascending=True)
+
+    return ulcer_b 
     
 def main():
     st.title("Streamlit App with CSV Upload")
@@ -100,7 +102,7 @@ def main():
         process_ulcer_data(ulcer)
         st.write(f"Length of 'Ulcer Data': {len(ulcer)}")
         st.write("Preview of 'Ulcer Data' DataFrame:")
-        st.write(ulcer)
+        st.write(ulcer.head(10))
 
     # Display the processed brad dataset
     if brad is not None:
@@ -108,12 +110,13 @@ def main():
         process_brad_data(brad)
         st.write(f"Length of 'brad Data': {len(brad)}")
         st.write("Preview of 'brad Data' DataFrame:")
-        st.write(brad)
+        st.write(brad.head(10))
 
     # Merge and process data
     if ulcer is not None and brad is not None:
-        merge_and_process_data(ulcer, brad)
-        st.write(ulcer_b)
+        ulcer_b = merge_and_process_data(ulcer, brad)  # Get the processed DataFrame
+        st.write("Processed 'Ulcer Data' DataFrame:")
+        st.write(ulcer_b.head(10))
         
 if __name__ == "__main__":
     main()
