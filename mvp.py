@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import streamlit as st
 
-def upload_excel():
+def upload_csv():
     uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
 
     if uploaded_file is not None:
@@ -28,7 +28,7 @@ def main():
     st.title("Streamlit App with CSV Upload")
 
     # Call the function to upload CSV file and get DataFrame
-    birth = upload_excel()
+    birth = upload_csv()
 
     # Rest of your Streamlit app logic goes here
     if birth is not None:
