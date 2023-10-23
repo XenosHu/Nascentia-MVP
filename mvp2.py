@@ -117,8 +117,7 @@ def main():
     # Merge and process data
     if ulcer is not None and brad is not None:
         merge_and_process_data(ulcer, brad)
-    else:
-        st.error("The 'DOB' column is not recognized as datetime. Check your CSV file format.")
+        
 if __name__ == "__main__":
     main()
 
