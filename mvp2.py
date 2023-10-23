@@ -209,6 +209,9 @@ def main():
         plot_severity_counts(brad)
     if ulcer is not None and brad is not None:
         plot_ulcer_counts(ulcer_b)
+    st.markdown("Appendix: [The logic of graphs and analysis for reference]"
+            "(https://drive.google.com/file/d/1gyZnA_mfkNlwyOyjKlLGgIH7LiEUQvZQ/view?usp=share_link)")
+
 
         
 if __name__ == "__main__":
