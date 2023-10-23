@@ -89,7 +89,7 @@ def plot_patient_data(patient_id, brad):
 
 def plot_ulcer_counts(ulcer):
     # Plot bar chart for Pressure Ulcer Count by Type
-    type_counts = ulcer_b['Type'].value_counts().sort_index()
+    type_counts = ulcer['Type'].value_counts().sort_index()
 
     plt.figure(figsize=(10, 6))
     type_counts.plot(kind='bar', title='Pressure Ulcer Count by Type', color='skyblue')
