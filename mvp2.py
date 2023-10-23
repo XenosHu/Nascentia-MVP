@@ -84,6 +84,7 @@ def plot_patient_data(patient_id, brad):
     plt.tight_layout()
 
     # Display the plot using Streamlit
+    st.set_option('deprecation.showPyplotGlobalUse', False)
     st.pyplot()
     
 def merge_and_process_data(ulcer, brad):
