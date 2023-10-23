@@ -89,35 +89,36 @@ def merge_and_process_data(ulcer, birth):
     # Drop the MaxAllowedDate column
     ulcer_b = ulcer_b.drop(columns=['MaxAllowedDate'])
     ulcer_b = ulcer_b.sort_values('Name', ascending=True)
-
-    st.write("Processed 'Ulcer Data' DataFrame:")
-    st.write(ulcer_b)
     
 def main():
     st.title("Streamlit App with CSV Upload")
 
-    # Call the function to upload CSV file and get DataFrame
-    birth = upload_csv()
+    # Call the function to upload CSV file for Ulcer dataset
+    ulcer = upload_ulcer_csv()
 
-    # Rest of your Streamlit app logic goes here
+    # Call the function to upload CSV file for Birth dataset
+    birth = upload_birth_csv()
+
+    # Display the processed Ulcer dataset
+    if ulcer is not None:
+        st.write(f"Length of 'Ulcer Data': {len(ulcer)}")
+        st.write("Preview of 'Ulcer Data' DataFrame:")
+        st.write(ulcer)
+
+    # Display the processed Birth dataset
     if birth is not None:
-        st.write(f"Data types of columns in 'birth': {birth.dtypes}")
+        # Process birth data
+        process_birth_data(birth)
 
-        # Convert 'DOB' column to datetime, if it's not already
-        if 'DOB' in birth.columns and pd.api.types.is_datetime64_any_dtype(birth['DOB']):
-            birth['DOB'] = birth['DOB'].dt.year
-            birth['Name'] = birth['Name'].str.split('Last').str[1].str.split(', First').str.join('-')
-            birth = birth[birth['DOB'].notna()]
-            birth = birth.sort_values('DOB', ascending=True)
+        st.write(f"Length of 'Birth Data': {len(birth)}")
+        st.write("Preview of 'Birth Data' DataFrame:")
+        st.write(birth)
 
-            dup_birth = birth[birth['Name'].duplicated(keep=False)]
-            dup_birth = dup_birth.sort_values('Name', ascending=True)
-
-            st.write(f"Length of 'birth': {len(birth)}")
-            st.write("Preview of 'birth' DataFrame:")
-            st.write(birth.head())
-        else:
-            st.error("The 'DOB' column is not recognized as datetime. Check your CSV file format.")
+    # Merge and process data
+    if ulcer is not None and birth is not None:
+        merge_and_process_data(ulcer, birth)
+    else:
+        st.error("The 'DOB' column is not recognized as datetime. Check your CSV file format.")
 if __name__ == "__main__":
     main()
 
