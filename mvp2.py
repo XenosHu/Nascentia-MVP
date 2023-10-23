@@ -69,15 +69,15 @@ def upload_brad_csv():
         try:
             brad = pd.read_csv(uploaded_file)
 
-            st.success("Birth dataset uploaded successfully.")
-            return birth
+            st.success("Physical Assessment dataset uploaded successfully.")
+            return brad
         except Exception as e:
             st.error(f"Error: {e}")
     return None
 
-def merge_and_process_data(ulcer, birth):
+def merge_and_process_data(ulcer, brad):
     # Merge two tables
-    ulcer_b = ulcer.merge(birth, left_on='Name', right_on='Name')
+    ulcer_b = ulcer.merge(brad, left_on='Name', right_on='Name')
     ulcer_b = ulcer_b.dropna()
 
     # Calculate the maximum allowed date (SOE Date + 60 days)
@@ -96,8 +96,8 @@ def main():
     # Call the function to upload CSV file for Ulcer dataset
     ulcer = upload_ulcer_csv()
 
-    # Call the function to upload CSV file for Birth dataset
-    birth = upload_birth_csv()
+    # Call the function to upload CSV file for Brad dataset
+    brad = upload_brad_csv()
 
     # Display the processed Ulcer dataset
     if ulcer is not None:
@@ -105,18 +105,18 @@ def main():
         st.write("Preview of 'Ulcer Data' DataFrame:")
         st.write(ulcer)
 
-    # Display the processed Birth dataset
-    if birth is not None:
-        # Process birth data
-        process_birth_data(birth)
+    # Display the processed brad dataset
+    if brad is not None:
+        # Process brad data
+        process_brad_data(brad)
 
-        st.write(f"Length of 'Birth Data': {len(birth)}")
-        st.write("Preview of 'Birth Data' DataFrame:")
-        st.write(birth)
+        st.write(f"Length of 'brad Data': {len(brad)}")
+        st.write("Preview of 'brad Data' DataFrame:")
+        st.write(brad)
 
     # Merge and process data
-    if ulcer is not None and birth is not None:
-        merge_and_process_data(ulcer, birth)
+    if ulcer is not None and brad is not None:
+        merge_and_process_data(ulcer, brad)
     else:
         st.error("The 'DOB' column is not recognized as datetime. Check your CSV file format.")
 if __name__ == "__main__":
