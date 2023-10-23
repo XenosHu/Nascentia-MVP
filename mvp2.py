@@ -182,7 +182,7 @@ def location_counts(ulcer_b):
     location_counts = location_count_name_counts['Location_Count']
     name_counts = location_count_name_counts['Name_Count']
 
-    colors = plt.cm.RdYlGn(np.linspace(0, 1, len(location_counts)))
+    colors = plt.cm.RdYlGn(np.linspace(1, 0, len(location_counts)))
 
     plt.figure(figsize=(10, 6))
     plt.bar(location_counts, name_counts, color = colors)
