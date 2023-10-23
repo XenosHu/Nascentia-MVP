@@ -52,10 +52,6 @@ def upload_ulcer_csv():
     if uploaded_file is not None:
         try:
             ulcer = pd.read_csv(uploaded_file)
-
-            # Process the ulcer data
-            ulcer = process_ulcer_data(ulcer)
-
             st.success("Ulcer dataset uploaded successfully.")
             return ulcer
         except Exception as e:
@@ -68,7 +64,6 @@ def upload_brad_csv():
     if uploaded_file is not None:
         try:
             brad = pd.read_csv(uploaded_file)
-
             st.success("Physical Assessment dataset uploaded successfully.")
             return brad
         except Exception as e:
