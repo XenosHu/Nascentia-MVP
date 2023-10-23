@@ -28,12 +28,12 @@ def process_ulcer_data(ulcer):
     # Rename columns containing 'Loca' to 'Location'
     location_columns = ulcer.filter(like='Loca')
     location_columns = {col: 'Location' for col in location_columns.columns}
-    ulcer = ulcer.rename(columns=location_columns)
+    ulcer.rename(columns=location_columns, inplace=True)
 
     # Rename columns containing 'Acti' to 'Activated'
     activated_columns = ulcer.filter(like='Acti')
     activated_columns = {col: 'Activated' for col in activated_columns.columns}
-    ulcer = ulcer.rename(columns=activated_columns)
+    ulcer.rename(columns=activated_columns, inplace=True)
     
     # Modify the Type column
     type_mapping = {
@@ -47,8 +47,11 @@ def process_ulcer_data(ulcer):
     ulcer['Onset'] = pd.to_datetime(ulcer['Onset'])
     ulcer['Activated'] = pd.to_datetime(ulcer['Activated'])
     
-    # ulcer = ulcer.sort_values('SOE' , ascending=True)
     ulcer["Type"] = ulcer["Type"].astype(int)
+
+    print("After modification - Unique values in 'Type':", ulcer['Type'].unique())
+
+    return ulcer  # Return the modified DataFrame
 
 def process_brad_data(brad):
     brad['Severity'] = brad['AssessmentAnswer'].apply(determine_severity)
