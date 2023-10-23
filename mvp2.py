@@ -144,6 +144,23 @@ def plot_severity_counts(brad):
 
     # Display the plot using Streamlit
     st.pyplot()
+
+def braden_score_for_ulcer_patient_counts(ulcer_b):
+    # Sort and count the Latest_Assessment_Score
+    unique_ulcer_b_score = ulcer_b.sort_values('SOE', ascending=False).drop_duplicates('Name')
+    score_counts = unique_ulcer_b_score['AssessmentAnswer'].value_counts().reset_index()
+    
+    # Create a bar plot
+    plt.figure(figsize=(10, 6))
+    plt.bar(score_counts['AssessmentAnswer'], score_counts['Count'], color='skyblue')
+    plt.xlabel('AssessmentAnswer')
+    plt.ylabel('Number of Names')
+    plt.title('Latest_Braden_Score_for_ulcer_patient_counts')
+
+    # Add text labels above the bars
+    for i, count in enumerate(score_counts['Count']):
+        plt.text(score_counts['AssessmentAnswer'][i], count, str(count), ha='center', va='bottom', size=10, color='black')
+    st.pyplot()
     
 def merge_and_process_data(ulcer, brad):
     # Merge two tables
@@ -209,6 +226,7 @@ def main():
         plot_severity_counts(brad)
     if ulcer is not None and brad is not None:
         plot_ulcer_counts(ulcer_b)
+        braden_score_for_ulcer_patient_counts(ulcer_b)
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
             "(https://drive.google.com/file/d/1gyZnA_mfkNlwyOyjKlLGgIH7LiEUQvZQ/view?usp=share_link)")
 
