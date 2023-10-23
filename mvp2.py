@@ -86,6 +86,44 @@ def plot_patient_data(patient_id, brad):
     # Display the plot using Streamlit
     st.set_option('deprecation.showPyplotGlobalUse', False)
     st.pyplot()
+
+def plot_ulcer_counts(ulcer):
+    # Plot bar chart for Pressure Ulcer Count by Type
+    type_counts = ulcer_b['Type'].value_counts().sort_index()
+
+    plt.figure(figsize=(10, 6))
+    type_counts.plot(kind='bar', title='Pressure Ulcer Count by Type', color='skyblue')
+    plt.xlabel('Type')
+    plt.ylabel('Count')
+
+    # Add labels for each bar
+    for i, count in enumerate(type_counts):
+        plt.text(i, count + 0.1, str(count), ha='center', va='bottom')
+
+    plt.xticks(rotation=45, ha='left')
+    plt.tight_layout()
+
+    # Display the plot using Streamlit
+    st.pyplot()
+
+def plot_severity_counts(brad):
+    # Plot bar chart for Braden Score Count
+    type_counts = brad['Severity'].value_counts().sort_values(ascending=False)
+
+    plt.figure(figsize=(10, 6))
+    type_counts.plot(kind='bar', title='Braden Score Count over all', color='skyblue')
+    plt.xlabel('Severity')
+    plt.ylabel('Count')
+
+    # Add labels for each bar
+    for i, count in enumerate(type_counts):
+        plt.text(i, count + 0.1, str(count), ha='center', va='bottom')
+
+    plt.xticks(rotation=45, ha='left')
+    plt.tight_layout()
+
+    # Display the plot using Streamlit
+    st.pyplot()
     
 def merge_and_process_data(ulcer, brad):
     # Merge two tables
@@ -131,6 +169,8 @@ def main():
         st.write(f"Length of 'brad Data': {len(brad)}")
         #st.write("Preview of 'brad Data' DataFrame:")
         #st.write(brad.head(10))
+        
+        plot_severity_counts(brad)
 
     # Merge and process data
     if ulcer is not None and brad is not None:
@@ -146,6 +186,8 @@ def main():
         if patient_id:
             # Plot line chart for the specified patient
             plot_patient_data(patient_id, brad)
+        
+        plot_ulcer_counts(ulcer_b)
 
         
 if __name__ == "__main__":
