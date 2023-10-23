@@ -153,7 +153,7 @@ def braden_score_for_ulcer_patient_counts(ulcer_b):
     unique_ulcer_b_score = ulcer_b.sort_values('SOE', ascending=False).drop_duplicates('Name')
     score_counts = unique_ulcer_b_score['AssessmentAnswer'].value_counts().reset_index()
 
-    colors = plt.cm.RdYlGn(np.linspace(0, 1, len(type_counts)))
+    colors = plt.cm.RdYlGn(np.linspace(0, 1, len(score_counts)))
     
     # Create a bar plot
     plt.figure(figsize=(10, 6))
