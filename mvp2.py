@@ -160,6 +160,9 @@ def braden_score_for_ulcer_patient_counts(ulcer_b):
     # Add text labels above the bars
     for i, count in enumerate(score_counts.iloc[:, 1]):
         plt.text(score_counts.iloc[:, 0][i], count, str(count), ha='center', va='bottom', size=10, color='black')
+        
+    # Set x-axis ticks from the lowest to the highest AssessmentAnswer values with a step of 1
+    plt.xticks(range(int(score_counts.iloc[:, 0].min()), int(score_counts.iloc[:, 0].max()) + 1))
     st.pyplot()
     
 def merge_and_process_data(ulcer, brad):
