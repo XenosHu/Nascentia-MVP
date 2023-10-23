@@ -25,8 +25,15 @@ def process_ulcer_data(ulcer):
     ulcer['Name'] = ulcer['Name'].str.split('Last').str[1].str.split(', First').str.join('-')
 
     # Change column names
-    ulcer = ulcer.rename(columns={ulcer.columns[2]: 'Location'})
-    ulcer = ulcer.rename(columns={ulcer.columns[5]: 'Activated'})
+    # Rename columns containing 'Loca' to 'Location'
+    location_columns = ulcer.filter(like='Loca')
+    location_columns = {col: 'Location' for col in location_columns.columns}
+    ulcer = ulcer.rename(columns=location_columns)
+
+    # Rename columns containing 'Acti' to 'Activated'
+    activated_columns = ulcer.filter(like='Acti')
+    activated_columns = {col: 'Activated' for col in activated_columns.columns}
+    ulcer = ulcer.rename(columns=activated_columns)
     
     # Modify the Type column
     roman_to_arabic = {'I': '1', 'II': '2', 'III': '3', 'IV': '4'}
@@ -88,8 +95,11 @@ def plot_patient_data(patient_id, brad):
     st.pyplot()
 
 def plot_ulcer_counts(ulcer):
+    # Create a filtered DataFrame with unique patients, keeping the most recent record
+    unique_ulcer_patients = ulcer.sort_values('SOE', ascending=False).drop_duplicates('Name')
+
     # Plot bar chart for Pressure Ulcer Count by Type
-    type_counts = ulcer['Type'].value_counts().sort_index()
+    type_counts = unique_ulcer_patients['Type'].value_counts().sort_index()
 
     plt.figure(figsize=(10, 6))
     type_counts.plot(kind='bar', title='Pressure Ulcer Count by Type', color='skyblue')
@@ -106,9 +116,11 @@ def plot_ulcer_counts(ulcer):
     # Display the plot using Streamlit
     st.pyplot()
 
+
 def plot_severity_counts(brad):
-    # Plot bar chart for Braden Score Count
-    type_counts = brad['Severity'].value_counts().sort_values(ascending=False)
+    
+    unique_brad_patients = brad.sort_values('Visitdate', ascending=False).drop_duplicates('Name')
+    type_counts = unique_brad_patients['Severity'].value_counts().sort_values(ascending=False)
 
     plt.figure(figsize=(10, 6))
     type_counts.plot(kind='bar', title='Severity levels count over all', color='skyblue')
