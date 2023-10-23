@@ -9,21 +9,90 @@ import numpy as np
 import matplotlib.pyplot as plt
 import streamlit as st
 
-def upload_csv():
-    uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
+def determine_severity(score):
+    if 6 <= score <= 12:
+        return 'High Risk'
+    elif 13 <= score <= 14:
+        return 'Moderate Risk'
+    elif 15 <= score <= 18:
+        return 'Low Risk'
+    elif 19 <= score <= 23:
+        return 'Healthy'
+    else:
+        return 'Unknown'
+
+def process_ulcer_data(ulcer):
+    ulcer['Name'] = ulcer['Name'].str.split('Last').str[1].str.split(', First').str.join('-')
+
+    # Change column names
+    ulcer = ulcer.rename(columns={ulcer.columns[2]: 'Location'})
+    ulcer = ulcer.rename(columns={ulcer.columns[5]: 'Activated'})
+    
+    # Modify the Type column
+    roman_to_arabic = {'I': '1', 'II': '2', 'III': '3', 'IV': '4'}
+    ulcer['Type'] = ulcer['Type'].str.extract('STAGE (\w+)')[0].map(roman_to_arabic)
+    ulcer['SOE'] = pd.to_datetime(ulcer['SOE'])
+    ulcer['Onset'] = pd.to_datetime(ulcer['Onset'])
+    ulcer['Activated'] = pd.to_datetime(ulcer['Activated'])
+    
+    # ulcer = ulcer.sort_values('SOE' , ascending=True)
+    ulcer["Type"] = ulcer["Type"].astype(int)
+
+def process_brad_data(brad):
+    brad['Severity'] = brad['AssessmentAnswer'].apply(determine_severity)
+    # Strip the Name column to remove 'Last' and 'First' and retain the numbers
+    brad['Name'] = brad['Name'].str.split('Last').str[1].str.split(', First').str.join('-')
+    brad['Visitdate'] = pd.to_datetime(brad['Visitdate'])
+    brad['Worker_name'] = brad['Textbox65'].str.split(':').str[1].str.split(',').str[0]
+    brad['Worker_type'] = brad['Textbox65'].str.rsplit(',').str[1]
+
+def upload_ulcer_csv():
+    uploaded_file = st.file_uploader("Choose a CSV file for Ulcer dataset", type="csv")
 
     if uploaded_file is not None:
         try:
-            birth = pd.read_csv(uploaded_file)
-            
-            # Convert 'DOB' column to datetime format
-            birth['DOB'] = pd.to_datetime(birth['DOB'], errors='coerce')
-            
-            st.success("File uploaded successfully. DataFrame 'birth' created.")
+            ulcer = pd.read_csv(uploaded_file)
+
+            # Process the ulcer data
+            ulcer = process_ulcer_data(ulcer)
+
+            st.success("Ulcer dataset uploaded successfully.")
+            return ulcer
+        except Exception as e:
+            st.error(f"Error: {e}")
+    return None
+
+def upload_brad_csv():
+    uploaded_file = st.file_uploader("Choose a CSV file for Physical Assessment dataset", type="csv")
+
+    if uploaded_file is not None:
+        try:
+            brad = pd.read_csv(uploaded_file)
+
+            st.success("Birth dataset uploaded successfully.")
             return birth
         except Exception as e:
             st.error(f"Error: {e}")
     return None
+
+def merge_and_process_data(ulcer, birth):
+    # Merge two tables
+    ulcer_b = ulcer.merge(birth, left_on='Name', right_on='Name')
+    ulcer_b = ulcer_b.dropna()
+
+    # Calculate the maximum allowed date (SOE Date + 60 days)
+    ulcer_b['MaxAllowedDate'] = ulcer_b['SOE'] + timedelta(days=60)
+
+    # Filter the rows where VisitDate is greater than SOEDate but not greater than 60 days
+    ulcer_b = ulcer_b[(ulcer_b['Visitdate'] >= ulcer_b['SOE']) & (ulcer_b['Visitdate'] <= ulcer_b['MaxAllowedDate'])]
+
+    # Drop the MaxAllowedDate column
+    ulcer_b = ulcer_b.drop(columns=['MaxAllowedDate'])
+    ulcer_b = ulcer_b.sort_values('Name', ascending=True)
+
+    st.write("Processed 'Ulcer Data' DataFrame:")
+    st.write(ulcer_b)
+    
 def main():
     st.title("Streamlit App with CSV Upload")
 
