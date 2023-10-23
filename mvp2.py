@@ -109,7 +109,7 @@ def plot_ulcer_counts(ulcer):
     # Plot bar chart for Pressure Ulcer Count by Type
     type_counts = unique_ulcer_patients['Type'].value_counts().sort_index()
 
-    colors = plt.cm.RdYlGn(np.linspace(0, 1, len(type_counts)))
+    colors = plt.cm.RdYlGn(np.linspace(1, 0, len(type_counts)))
     plt.figure(figsize=(10, 6))
     type_counts.plot(kind='bar', title='Pressure Ulcer Count by Type', color = colors)
     plt.xlabel('Type')
@@ -131,7 +131,7 @@ def plot_severity_counts(brad):
     unique_brad_patients = brad.sort_values('Visitdate', ascending=False).drop_duplicates('Name')
     type_counts = unique_brad_patients['Severity'].value_counts().sort_values(ascending=False)
 
-    colors = plt.cm.RdYlGn(np.linspace(0, 1, len(type_counts)))
+    colors = plt.cm.RdYlGn(np.linspace(1, 0, len(type_counts)))
     
     plt.figure(figsize=(10, 6))
     type_counts.plot(kind='bar', title='Severity levels count over all', color = colors)
