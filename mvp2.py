@@ -75,8 +75,11 @@ def merge_and_process_data(ulcer, brad):
     ulcer_b = ulcer.merge(brad, left_on='Name', right_on='Name')
     ulcer_b = ulcer_b.dropna()
 
+    # Ensure 'SOE' column is in datetime format
+    ulcer_b['SOE'] = pd.to_datetime(ulcer_b['SOE'], errors='coerce')
+
     # Calculate the maximum allowed date (SOE Date + 60 days)
-    ulcer_b['MaxAllowedDate'] = ulcer_b['SOE'] + timedelta(days=60)
+    ulcer_b['MaxAllowedDate'] = ulcer_b['SOE'] + pd.to_timedelta(60, unit='D')
 
     # Filter the rows where VisitDate is greater than SOEDate but not greater than 60 days
     ulcer_b = ulcer_b[(ulcer_b['Visitdate'] >= ulcer_b['SOE']) & (ulcer_b['Visitdate'] <= ulcer_b['MaxAllowedDate'])]
@@ -85,7 +88,7 @@ def merge_and_process_data(ulcer, brad):
     ulcer_b = ulcer_b.drop(columns=['MaxAllowedDate'])
     ulcer_b = ulcer_b.sort_values('Name', ascending=True)
 
-    return ulcer_b 
+    return ulcer_b  # Return the processed DataFrame
     
 def main():
     st.title("Streamlit App with CSV Upload")
