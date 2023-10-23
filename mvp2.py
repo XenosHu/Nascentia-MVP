@@ -36,8 +36,13 @@ def process_ulcer_data(ulcer):
     ulcer = ulcer.rename(columns=activated_columns)
     
     # Modify the Type column
-    roman_to_arabic = {'I': '1', 'II': '2', 'III': '3', 'IV': '4'}
-    ulcer['Type'] = ulcer['Type'].str.extract('STAGE (\w+)')[0].map(roman_to_arabic)
+    type_mapping = {
+        'PRESSURE ULCER STAGE I': 1,
+        'PRESSURE ULCER STAGE II': 2,
+        'PRESSURE ULCER STAGE III': 3,
+        'PRESSURE ULCER STAGE IV': 4,
+    }
+    ulcer['Type'] = ulcer['Type'].map(type_mapping)
     ulcer['SOE'] = pd.to_datetime(ulcer['SOE'])
     ulcer['Onset'] = pd.to_datetime(ulcer['Onset'])
     ulcer['Activated'] = pd.to_datetime(ulcer['Activated'])
