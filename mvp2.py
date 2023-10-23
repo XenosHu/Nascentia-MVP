@@ -111,7 +111,7 @@ def plot_severity_counts(brad):
     type_counts = brad['Severity'].value_counts().sort_values(ascending=False)
 
     plt.figure(figsize=(10, 6))
-    type_counts.plot(kind='bar', title='Braden Score Count over all', color='skyblue')
+    type_counts.plot(kind='bar', title='Severity levels count over all', color='skyblue')
     plt.xlabel('Severity')
     plt.ylabel('Count')
 
@@ -169,8 +169,6 @@ def main():
         st.write(f"Length of 'brad Data': {len(brad)}")
         #st.write("Preview of 'brad Data' DataFrame:")
         #st.write(brad.head(10))
-        
-        plot_severity_counts(brad)
 
     # Merge and process data
     if ulcer is not None and brad is not None:
@@ -186,7 +184,10 @@ def main():
         if patient_id:
             # Plot line chart for the specified patient
             plot_patient_data(patient_id, brad)
-        
+
+    if brad is not None:
+        plot_severity_counts(brad)
+    if ulcer is not None and brad is not None:
         plot_ulcer_counts(ulcer_b)
 
         
