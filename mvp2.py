@@ -171,6 +171,28 @@ def braden_score_for_ulcer_patient_counts(ulcer_b):
     # Set x-axis ticks from the lowest to the highest AssessmentAnswer values with a step of 1
     plt.xticks(range(int(score_counts.iloc[:, 0].min()), int(score_counts.iloc[:, 0].max()) + 1))
     st.pyplot()
+
+def location_counts(ulcer_b):
+    name_location_count = ulcer_b.groupby('Name')['Location'].nunique().reset_index()
+    name_location_count.columns = ['Name', 'Location_Count']
+    
+    location_count_name_counts = name_location_count.groupby('Location_Count')['Name'].count().reset_index()
+    location_count_name_counts.columns = ['Location_Count', 'Name_Count']
+    
+    location_counts = location_count_name_counts['Location_Count']
+    name_counts = location_count_name_counts['Name_Count']
+    
+    plt.figure(figsize=(10, 6))
+    plt.bar(location_counts, name_counts)
+    plt.xticks(range(1, max(location_counts) + 1))
+    
+    for i, count in enumerate(name_counts):
+        plt.text(location_counts[i], count, str(count), ha='center', va='bottom')
+    
+    plt.title('Patients by Location Count')
+    plt.xlabel('Ulcer location count')
+    plt.ylabel('Patients count')
+    st.pyplot()
     
 def merge_and_process_data(ulcer, brad):
     # Merge two tables
@@ -193,7 +215,7 @@ def merge_and_process_data(ulcer, brad):
     return ulcer_b  # Return the processed DataFrame
     
 def main():
-    st.title("Streamlit App with CSV Upload")
+    st.title("Nascentia Pressure Ulcer Data Analyzer")
 
     # Call the function to upload CSV file for Ulcer dataset
     ulcer = upload_ulcer_csv()
@@ -237,6 +259,7 @@ def main():
     if ulcer is not None and brad is not None:
         plot_ulcer_counts(ulcer_b)
         braden_score_for_ulcer_patient_counts(ulcer_b)
+        location_counts(ulcer_b)
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
             "(https://drive.google.com/file/d/1gyZnA_mfkNlwyOyjKlLGgIH7LiEUQvZQ/view?usp=share_link)")
 
