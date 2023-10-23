@@ -101,15 +101,16 @@ def main():
 
     # Display the processed Ulcer dataset
     if ulcer is not None:
+
+        process_ulcer_data(ulcer)
         st.write(f"Length of 'Ulcer Data': {len(ulcer)}")
         st.write("Preview of 'Ulcer Data' DataFrame:")
         st.write(ulcer)
 
     # Display the processed brad dataset
     if brad is not None:
-        # Process brad data
-        process_brad_data(brad)
 
+        process_brad_data(brad)
         st.write(f"Length of 'brad Data': {len(brad)}")
         st.write("Preview of 'brad Data' DataFrame:")
         st.write(brad)
@@ -117,6 +118,7 @@ def main():
     # Merge and process data
     if ulcer is not None and brad is not None:
         merge_and_process_data(ulcer, brad)
+        st.write(ulcer_b)
         
 if __name__ == "__main__":
     main()
