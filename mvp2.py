@@ -115,7 +115,7 @@ def plot_ulcer_counts(ulcer):
     for i, count in enumerate(type_counts):
         plt.text(i, count + 0.1, str(count), ha='center', va='bottom')
 
-    #plt.xticks(rotation=45, ha='left')
+    plt.xticks(rotation=0, ha='left')
     plt.tight_layout()
 
     # Display the plot using Streamlit
@@ -136,7 +136,7 @@ def plot_severity_counts(brad):
     for i, count in enumerate(type_counts):
         plt.text(i, count + 0.1, str(count), ha='center', va='bottom')
 
-    #plt.xticks(rotation=45, ha='left')
+    plt.xticks(rotation=0, ha='left')
     plt.tight_layout()
 
     # Display the plot using Streamlit
