@@ -488,6 +488,7 @@ def main():
         heal_rate_braden_score(brad,ulcer)
         result = heal_rate_braden_score(brad, ulcer)
         result = heal_logic(result)
+        st.write(result)
         # Dist_Cate_Labels(result)
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
             "(https://drive.google.com/file/d/1gyZnA_mfkNlwyOyjKlLGgIH7LiEUQvZQ/view?usp=share_link)")
