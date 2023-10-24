@@ -412,7 +412,7 @@ def Cate_given_brad(result):
         width = p.get_width()
         height = p.get_height()
         x, y = p.get_xy()
-        ax.annotate(f'{int(height)}', (x + width / 2, y + height / 2), ha='center')
+        ax.annotate(f'{int(height)}', (x + width / 2, y + height / 2), ha='center', fontsize = 8)
     
     st.pyplot()
     
