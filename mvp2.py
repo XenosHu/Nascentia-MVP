@@ -507,7 +507,7 @@ def main():
         ulcer_b = merge_and_process_data(ulcer, brad)  # Get the processed DataFrame
         st.write(f"Length of 'Pressure Ulcer Data merge Physical Assessment Data': {len(ulcer_b)}")
         st.write("Preview of 'Pressure Ulcer Data merge Physical Assessment Data' DataFrame:")
-        st.write(ulcer_b.head(10))
+        st.write(ulcer_b)
 
         # Allow user to input a patient ID
         patient_id = st.text_input("Enter Patient ID (in format of First-Last, e.g. 12-345) for their Braden score history:")
