@@ -267,7 +267,7 @@ def heal_rate_braden_score(brad,ulcer):
 def heal_logic(result):
     for index, row in result.iterrows():
         assessment_scores_row = row["Sorted_AssessmentAnswers"]
-        types_str = row["types"]
+        types_str = row["Type"]
 
         # Convert string representation of list to actual list
         types = ast.literal_eval(types_str)
