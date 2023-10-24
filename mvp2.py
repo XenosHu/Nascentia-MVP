@@ -336,26 +336,26 @@ def heal_logic(result):
     
     return result
 
-# #------------------------------------------------------------------------------------------------------
-# def Dist_Cate_Labels(result):
-#     # Count the occurrences of each category
-#     category_counts = result['Categorization'].value_counts()
+#------------------------------------------------------------------------------------------------------
+def Dist_Cate_Labels(result):
+    # Count the occurrences of each category
+    category_counts = result['Categorization'].value_counts()
     
-#     # Create a bar plot with counts on top of the bars
-#     plt.figure(figsize=(8, 6))
-#     ax = category_counts.plot(kind='bar', color='skyblue')
-#     plt.title('Count Distribution of Categorization Labels')
-#     plt.xlabel('Categorization Labels')
-#     plt.ylabel('Count')
-#     plt.xticks(rotation=45)
-#     plt.tight_layout()
+    # Create a bar plot with counts on top of the bars
+    plt.figure(figsize=(8, 6))
+    ax = category_counts.plot(kind='bar', color='skyblue')
+    plt.title('Count Distribution of Categorization Labels')
+    plt.xlabel('Categorization Labels')
+    plt.ylabel('Count')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
     
-#     # Add counts on top of the bars
-#     for p in ax.patches:
-#         ax.annotate(str(p.get_height()), (p.get_x() + p.get_width() / 2., p.get_height()),
-#                     ha='center', va='center', xytext=(0, 10), textcoords='offset points')
+    # Add counts on top of the bars
+    for p in ax.patches:
+        ax.annotate(str(p.get_height()), (p.get_x() + p.get_width() / 2., p.get_height()),
+                    ha='center', va='center', xytext=(0, 10), textcoords='offset points')
     
-#     st.pyplot()
+    st.pyplot()
     
     # # Define your custom color set with four colors
     # custom_colors = ['#1f77b4',  '#2ca02c', '#ff7f0e','#d62728']
@@ -489,7 +489,7 @@ def main():
         result = heal_rate_braden_score(brad, ulcer)
         result = heal_logic(result)
         st.write(result)
-        # Dist_Cate_Labels(result)
+        Dist_Cate_Labels(result)
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
             "(https://drive.google.com/file/d/1gyZnA_mfkNlwyOyjKlLGgIH7LiEUQvZQ/view?usp=share_link)")
 
