@@ -268,7 +268,7 @@ def heal_logic(result):
         assessment_scores_row = row["Sorted_AssessmentAnswers"]
         types_str = row["Type"]
 
-        print("types_str:", types_str)
+        print(f"Row {index} - types_str:", types_str)
 
         # Convert string representation of list to actual list
         try:
