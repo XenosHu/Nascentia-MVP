@@ -451,6 +451,11 @@ def Cate_given_brad_perc(result):
             ax.annotate(percentage_value, (x + width / 2, y + height / 2), ha='center', fontsize = 8)
     
     st.pyplot()
+
+def find_worse(result):
+    worse_result = result[result['Categorization'] == 'Worse']
+    st.write('Patients whose condition got worse: ')
+    st.write(worse_result)
     
 def merge_and_process_data(ulcer, brad):
     # Merge two tables
@@ -524,6 +529,7 @@ def main():
         
         Cate_given_brad(result)
         Cate_given_brad_perc(result)
+        find_worse(result):
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
             "(https://drive.google.com/file/d/1gyZnA_mfkNlwyOyjKlLGgIH7LiEUQvZQ/view?usp=share_link)")
 
