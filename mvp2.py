@@ -205,7 +205,9 @@ def heal_rate_braden_score(ulcer_b):
     
     # Sort the merged dataframe by 'Name' and 'Visitdate' to ensure data is ordered correctly
     ulcer_b = ulcer_b.sort_values(by=['Name', 'Visitdate'])
-    
+    ulcer_b['SOE'] = pd.to_datetime(ulcer_b['SOE'])
+    ulcer_b['Visitdate'] = pd.to_datetime(ulcer_b['Visitdate'])
+
     # Counter to generate unique wound IDs
     wound_id_counter = 1
     merged_df = ulcer_b.copy()
@@ -252,15 +254,15 @@ def heal_rate_braden_score(ulcer_b):
     
     # Merge based on 'Name' and conditions for 'SOE' and 'Visitdate'
     merged_df2 = pd.merge(ulcer_b, merged_df, how='inner', on='Name')
+    print(merged_df2)
+    # # Filter rows where Visitdate is >= SOE and not greater than 60 days
+    # merged_df2 = merged_df2[(merged_df2['Visitdate'] >= merged_df2['SOE']) & (merged_df2['Visitdate'] - merged_df2['SOE'] <= pd.Timedelta(days=60))]
     
-    # Filter rows where Visitdate is >= SOE and not greater than 60 days
-    merged_df2 = merged_df2[(merged_df2['Visitdate'] >= merged_df2['SOE']) & (merged_df2['Visitdate'] - merged_df2['SOE'] <= pd.Timedelta(days=60))]
+    # # Reset index if needed
+    # merged_df2.reset_index(drop=True, inplace=True)
     
-    # Reset index if needed
-    merged_df2.reset_index(drop=True, inplace=True)
-    
-    result = merged_df2
-    return result
+    # result = merged_df2
+    # return result
     
 # def heal_logic(result):
 #     for index, row in result.iterrows():
