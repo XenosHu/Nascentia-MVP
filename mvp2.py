@@ -487,7 +487,7 @@ def main():
         location_counts(ulcer_b)
         heal_rate_braden_score(brad,ulcer)
         result = heal_rate_braden_score(brad, ulcer)
-        #result = heal_logic(result)
+        result = heal_logic(result)
         st.write(result)
         # Dist_Cate_Labels(result)
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
