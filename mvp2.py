@@ -199,18 +199,18 @@ def location_counts(ulcer_b):
     st.pyplot()
 
     
-def heal_rate_braden_score(ulcer_b):    
+def heal_rate_braden_score(brad,ulcer):    
     # Dictionary to store unique names as keys and their AssessmentAnswers, Visitdates, and woundID as values
     name_data = defaultdict(lambda: {"AssessmentAnswers": [], "Visitdates": [], "woundID": None})
     
     # Sort the merged dataframe by 'Name' and 'Visitdate' to ensure data is ordered correctly
-    ulcer_b = ulcer_b.sort_values(by=['Name', 'Visitdate'])
-    ulcer_b['SOE'] = pd.to_datetime(ulcer_b['SOE'])
-    ulcer_b['Visitdate'] = pd.to_datetime(ulcer_b['Visitdate'])
+    brad = brad.sort_values(by=['Name', 'Visitdate'])
+    # ulcer_b['SOE'] = pd.to_datetime(ulcer_b['SOE'])
+    # ulcer_b['Visitdate'] = pd.to_datetime(ulcer_b['Visitdate'])
 
     # Counter to generate unique wound IDs
     wound_id_counter = 1
-    merged_df = ulcer_b.copy()
+    merged_df = brad.copy()
     
     # Process the data and group scores, dates, and assign wound IDs within 60-day windows
     for _, row in merged_df.iterrows():
@@ -254,7 +254,7 @@ def heal_rate_braden_score(ulcer_b):
     
     # Merge based on 'Name' and conditions for 'SOE' and 'Visitdate'
     merged_df2 = pd.merge(ulcer, merged_df, how='inner', on='Name')
-    st.write(merged_df)
+    st.write(merged_df2)
     # # Filter rows where Visitdate is >= SOE and not greater than 60 days
     # merged_df2 = merged_df2[(merged_df2['Visitdate'] >= merged_df2['SOE']) & (merged_df2['Visitdate'] - merged_df2['SOE'] <= pd.Timedelta(days=60))]
     
@@ -486,7 +486,7 @@ def main():
         plot_ulcer_counts(ulcer_b)
         braden_score_for_ulcer_patient_counts(ulcer_b)
         location_counts(ulcer_b)
-        heal_rate_braden_score(ulcer_b)
+        heal_rate_braden_score(brad,ulcer)
         #st.write(result.head(10))
         # result = heal_logic(result)
         # Dist_Cate_Labels(result)
