@@ -199,7 +199,7 @@ def location_counts(ulcer_b):
     st.pyplot()
 
     
-def heal_rate_braden_score(brad,ulcer):    
+def heal_rate_braden_score(brad,ulcer_b):    
     # Dictionary to store unique names as keys and their AssessmentAnswers, Visitdates, and woundID as values
     name_data = defaultdict(lambda: {"AssessmentAnswers": [], "Visitdates": [], "woundID": None})
     
@@ -253,7 +253,7 @@ def heal_rate_braden_score(brad,ulcer):
     #merged_df['Visitdate'] = pd.to_datetime(merged_df['Visitdate'])
     
     # Merge based on 'Name' and conditions for 'SOE' and 'Visitdate'
-    merged_df2 = pd.merge(ulcer, merged_df, how='inner', on='Name')
+    merged_df2 = pd.merge(ulcer_b, merged_df, how='inner', on='Name')
     # Filter rows where Visitdate is >= SOE and not greater than 60 days
     merged_df2 = merged_df2[(merged_df2['Visitdate'] >= merged_df2['SOE']) & (merged_df2['Visitdate'] - merged_df2['SOE'] <= pd.Timedelta(days=60))]
     st.write(merged_df)
