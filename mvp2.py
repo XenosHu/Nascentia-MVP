@@ -331,7 +331,7 @@ def heal_logic(result):
             result.at[index, "Categorization"] = categorization
 
     # Dropping the original AssessmentAnswers column
-    result.drop(columns=['assessment_scores'], inplace=True)
+    # result.drop(columns=['assessment_scores'], inplace=True)
     result['last_assessment_score'] = result['Sorted_AssessmentAnswers'].apply(lambda x: x[-1])
     
     #return result
