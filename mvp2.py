@@ -304,7 +304,7 @@ def heal_rate_braden_score(brad,df3):
     #df3.drop(columns=['assessment_scores'], inplace=True)
     
     # Merge based on 'Name' and conditions for 'SOE' and 'Visitdate'
-    merged_df2 = pd.merge(df3, merged_df[['Name', 'Sorted_AssessmentAnswer', 'Sorted_Visitdates', 'last_assessment_score']], how='left', on='Name')
+    merged_df2 = pd.merge(df3, merged_df[['Name', 'Sorted_AssessmentAnswer', 'Sorted_Visitdates']], how='left', on='Name')
     # Filter rows where Visitdate is >= SOE and not greater than 60 days
     merged_df2 = merged_df2[(merged_df2['Visitdate'] >= merged_df2['SOE']) & (merged_df2['Visitdate'] - merged_df2['SOE'] <= pd.Timedelta(days=60))]
     # Reset index if needed
