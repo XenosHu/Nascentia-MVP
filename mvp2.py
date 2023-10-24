@@ -520,6 +520,9 @@ def main():
         heal_rate_braden_score(brad,df3)
         result = heal_rate_braden_score(brad, ulcer)
         result = heal_logic(result)
+        st.write('df3:')
+        st.write(df3)
+        st.write('result:')
         st.write(result)
         Cate_given_brad(result)
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
