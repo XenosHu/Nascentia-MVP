@@ -253,8 +253,8 @@ def heal_rate_braden_score(ulcer_b):
     #merged_df['Visitdate'] = pd.to_datetime(merged_df['Visitdate'])
     
     # Merge based on 'Name' and conditions for 'SOE' and 'Visitdate'
-    merged_df2 = pd.merge(merged_df, ulcer_b, how='left', on='Name')
-    st.write(merged_df2)
+    merged_df2 = pd.merge(ulcer_b, merged_df, how='inner', on='Name')
+    st.write(merged_df)
     # # Filter rows where Visitdate is >= SOE and not greater than 60 days
     # merged_df2 = merged_df2[(merged_df2['Visitdate'] >= merged_df2['SOE']) & (merged_df2['Visitdate'] - merged_df2['SOE'] <= pd.Timedelta(days=60))]
     
