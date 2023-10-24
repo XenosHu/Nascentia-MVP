@@ -490,7 +490,7 @@ def main():
     if ulcer is not None:
 
         process_ulcer_data(ulcer)
-        st.write(f"Length of 'Ulcer Data': {len(ulcer)}")
+        st.write(f"Length of 'Pressure Ulcer Data': {len(ulcer)}")
         #st.write("Preview of 'Ulcer Data' DataFrame:")
         #st.write(ulcer.head(10))
 
@@ -498,15 +498,15 @@ def main():
     if brad is not None:
 
         process_brad_data(brad)
-        st.write(f"Length of 'brad Data': {len(brad)}")
+        st.write(f"Length of 'Physical Assessment Data': {len(brad)}")
         #st.write("Preview of 'brad Data' DataFrame:")
         #st.write(brad.head(10))
 
     # Merge and process data
     if ulcer is not None and brad is not None:
         ulcer_b = merge_and_process_data(ulcer, brad)  # Get the processed DataFrame
-        st.write(f"Length of 'ulcer merge physical assignment Data': {len(ulcer_b)}")
-        st.write("Preview of 'ulcer merge physical assignment Data' DataFrame:")
+        st.write(f"Length of 'Pressure Ulcer Data merge Physical Assessment Data': {len(ulcer_b)}")
+        st.write("Preview of 'Pressure Ulcer Data merge Physical Assessment Data' DataFrame:")
         st.write(ulcer_b.head(10))
 
         # Allow user to input a patient ID
