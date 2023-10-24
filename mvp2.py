@@ -334,7 +334,7 @@ def heal_logic(result):
     # result.drop(columns=['assessment_scores'], inplace=True)
     result['last_assessment_score'] = result['Sorted_AssessmentAnswers'].apply(lambda x: x[-1])
     
-    #return result
+    return result
 
 # #------------------------------------------------------------------------------------------------------
 # def Dist_Cate_Labels(result):
