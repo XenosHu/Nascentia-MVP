@@ -229,10 +229,10 @@ def heal_rate_type(ulcer_b):
     
         if onset_diff < 60 and visit_diff < 60:
             types = group_df['Type'].tolist()
-            assessment_scores = group_df['AssessmentAnswers'].tolist()
+            assessment_scores = group_df['AssessmentAnswer'].tolist()
         else:
             latest_type = group_df.loc[group_df['VisitDate'].idxmax()]['Type']
-            latest_score = group_df.loc[group_df['VisitDate'].idxmax()]['AssessmentAnswers']
+            latest_score = group_df.loc[group_df['VisitDate'].idxmax()]['AssessmentAnswer']
             types = [latest_type]
             assessment_scores = [latest_score]  # Adding the latest assessment score
     
@@ -251,8 +251,8 @@ def heal_rate_type(ulcer_b):
     return df3
 
 def heal_rate_braden_score(brad,df3):    
-    # Dictionary to store unique names as keys and their AssessmentAnswers, Visitdates, and woundID as values
-    name_data = defaultdict(lambda: {"AssessmentAnswers": [], "Visitdates": [], "woundID": None})
+    # Dictionary to store unique names as keys and their AssessmentAnswer, Visitdates, and woundID as values
+    name_data = defaultdict(lambda: {"AssessmentAnswer": [], "Visitdates": [], "woundID": None})
     
     # Sort the merged dataframe by 'Name' and 'Visitdate' to ensure data is ordered correctly
     brad = brad.sort_values(by=['Name', 'Visitdate'])
@@ -267,7 +267,7 @@ def heal_rate_braden_score(brad,df3):
     for _, row in merged_df.iterrows():
         name = row["Name"]
         visit_date = row["Visitdate"]
-        assessment_answer = row["AssessmentAnswers"]
+        assessment_answer = row["AssessmentAnswer"]
     
         # Check if name already exists in the dictionary
         if name_data[name]["Visitdates"]:
@@ -275,30 +275,30 @@ def heal_rate_braden_score(brad,df3):
             last_visit_date = name_data[name]["Visitdates"][0]
             # Check if the visit date difference is less than or equal to 60 days
             if (visit_date - last_visit_date).days <= 60:
-                name_data[name]["AssessmentAnswers"].append(assessment_answer)
+                name_data[name]["AssessmentAnswer"].append(assessment_answer)
                 name_data[name]["Visitdates"].append(visit_date)
             else:
                 # If the visit date difference is more than 60 days, create a new entry
-                name_data[name]["AssessmentAnswers"] = [assessment_answer]
+                name_data[name]["AssessmentAnswer"] = [assessment_answer]
                 name_data[name]["Visitdates"] = [visit_date]
                 # Assign a unique wound ID for the new entry
                 name_data[name]["woundID"] = wound_id_counter
                 wound_id_counter += 1
         else:
             # If there are no previous visit dates, add the current date and score
-            name_data[name]["AssessmentAnswers"].append(assessment_answer)
+            name_data[name]["AssessmentAnswer"].append(assessment_answer)
             name_data[name]["Visitdates"].append(visit_date)
             # Assign a unique wound ID for the new entry
             name_data[name]["woundID"] = wound_id_counter
             wound_id_counter += 1
     
     # Adding new columns to the merged dataframe
-    merged_df["Sorted_AssessmentAnswers"] = merged_df["Name"].apply(lambda x: name_data[x]["AssessmentAnswers"])
+    merged_df["Sorted_AssessmentAnswer"] = merged_df["Name"].apply(lambda x: name_data[x]["AssessmentAnswer"])
     merged_df["Sorted_Visitdates"] = merged_df["Name"].apply(lambda x: name_data[x]["Visitdates"])
     merged_df["woundID"] = merged_df["Name"].apply(lambda x: name_data[x]["woundID"])
     
-    # Dropping the original AssessmentAnswers column
-    #merged_df.drop(columns=['AssessmentAnswers'], inplace=True)
+    # Dropping the original AssessmentAnswer column
+    merged_df.drop(columns=['AssessmentAnswer'], inplace=True)
     merged_df.drop_duplicates(subset=['woundID'], keep='first', inplace=True)
 
     df3.drop(columns=['assessment_scores'], inplace=True)
@@ -316,7 +316,7 @@ def heal_rate_braden_score(brad,df3):
 
 def heal_logic(result):
     for index, row in result.iterrows():
-        assessment_scores_row = row["Sorted_AssessmentAnswers"]
+        assessment_scores_row = row["Sorted_AssessmentAnswer"]
         types = row["Type"]
         types = [types] if isinstance(types, int) else types
         if types is None:
@@ -381,9 +381,9 @@ def heal_logic(result):
             # Adding the categorization to the data DataFrame for the current row
             result.at[index, "Categorization"] = categorization
 
-    # Dropping the original AssessmentAnswers column
+    # Dropping the original AssessmentAnswer column
     # result.drop(columns=['assessment_scores'], inplace=True)
-    result['last_assessment_score'] = result['Sorted_AssessmentAnswers'].apply(lambda x: x[-1])
+    result['last_assessment_score'] = result['Sorted_AssessmentAnswer'].apply(lambda x: x[-1])
     return result
 
 
