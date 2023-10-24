@@ -9,6 +9,7 @@ from datetime import datetime as dt, timedelta
 import numpy as np
 import matplotlib.pyplot as plt
 import streamlit as st
+from collections import defaultdict
 
 def determine_severity(score):
     if 6 <= score <= 12:
@@ -196,6 +197,226 @@ def location_counts(ulcer_b):
     plt.xlabel('Ulcer location count')
     plt.ylabel('Patients count')
     st.pyplot()
+
+    
+def heal_rate_braden_score(ulcer_b):    
+    # Dictionary to store unique names as keys and their AssessmentAnswers, Visitdates, and woundID as values
+    name_data = defaultdict(lambda: {"AssessmentAnswers": [], "Visitdates": [], "woundID": None})
+    
+    # Sort the merged dataframe by 'Name' and 'Visitdate' to ensure data is ordered correctly
+    ulcer_b = ulcer_b.sort_values(by=['Name', 'Visitdate'])
+    
+    # Counter to generate unique wound IDs
+    wound_id_counter = 1
+    merged_df = ulcer_b.copy()
+    
+    # Process the data and group scores, dates, and assign wound IDs within 60-day windows
+    for _, row in merged_df.iterrows():
+        name = row["Name"]
+        visit_date = row["Visitdate"]
+        assessment_answer = row["AssessmentAnswer"]
+    
+        # Check if name already exists in the dictionary
+        if name_data[name]["Visitdates"]:
+            # Check if there are previous visit dates
+            last_visit_date = name_data[name]["Visitdates"][0]
+            # Check if the visit date difference is less than or equal to 60 days
+            if (visit_date - last_visit_date).days <= 60:
+                name_data[name]["AssessmentAnswers"].append(assessment_answer)
+                name_data[name]["Visitdates"].append(visit_date)
+            else:
+                # If the visit date difference is more than 60 days, create a new entry
+                name_data[name]["AssessmentAnswers"] = [assessment_answer]
+                name_data[name]["Visitdates"] = [visit_date]
+                # Assign a unique wound ID for the new entry
+                name_data[name]["woundID"] = wound_id_counter
+                wound_id_counter += 1
+        else:
+            # If there are no previous visit dates, add the current date and score
+            name_data[name]["AssessmentAnswers"].append(assessment_answer)
+            name_data[name]["Visitdates"].append(visit_date)
+            # Assign a unique wound ID for the new entry
+            name_data[name]["woundID"] = wound_id_counter
+            wound_id_counter += 1
+    
+    # Adding new columns to the merged dataframe
+    merged_df["Sorted_AssessmentAnswers"] = merged_df["Name"].apply(lambda x: name_data[x]["AssessmentAnswers"])
+    merged_df["Sorted_Visitdates"] = merged_df["Name"].apply(lambda x: name_data[x]["Visitdates"])
+    merged_df["woundID"] = merged_df["Name"].apply(lambda x: name_data[x]["woundID"])
+    
+    # Dropping the original AssessmentAnswers column
+    merged_df.drop(columns=['AssessmentAnswer'], inplace=True)
+    merged_df.drop_duplicates(subset=['woundID'], keep='first', inplace=True)
+
+    #merged_df['Visitdate'] = pd.to_datetime(merged_df['Visitdate'])
+    
+    # Merge based on 'Name' and conditions for 'SOE' and 'Visitdate'
+    merged_df2 = pd.merge(ulcer_b, merged_df, how='inner', on='Name')
+    
+    # Filter rows where Visitdate is >= SOE and not greater than 60 days
+    merged_df2 = merged_df2[(merged_df2['Visitdate'] >= merged_df2['SOE']) & (merged_df2['Visitdate'] - merged_df2['SOE'] <= pd.Timedelta(days=60))]
+    
+    # Reset index if needed
+    merged_df2.reset_index(drop=True, inplace=True)
+    
+    result = merged_df2
+    return result
+    
+def heal_logic(result):
+    for index, row in result.iterrows():
+        assessment_scores_row = row["Sorted_AssessmentAnswers"]
+        types_str = row["types"]
+
+        # Convert string representation of list to actual list
+        types = ast.literal_eval(types_str)
+    
+        # Check if assessment_scores list is non-empty
+        if len(assessment_scores_row) > 0:
+            # Check the conditions and categorize the data
+            if len(assessment_scores_row) == 1:
+                if assessment_scores_row[0] >= 19:
+                    # check stage
+                    if len(types) ==1 and types[0] ==4:
+                        categorization = "Pending"
+                    elif len(types) ==1 and types[0] ==3:
+                        categorization = "Pending"
+                    else:
+                        categorization = "Healed"
+                else:
+                    if len(types) == 1 and types[0] == 4:
+                        categorization = "Pending"
+                    elif len(types) == 1 and types[0] == 3:
+                        categorization = "Pending"
+                    if len(types) >= 2:
+                        # stage decrease
+                        if types[0] > types[-1]:
+                            categorization = "Healing"
+                        elif types[0] > types[-1] and types[-1] == 4:
+                            categorization = "Healing"
+                        elif types[0] > types[-1] and types[-1] == 3:
+                            categorization = "Healing"
+                        # stage increase
+                        elif types[0] < types[-1]:
+                            categorization = "Worse"
+                        # stage same
+                        else:
+                            categorization = "Healing"
+                    else:
+                        categorization = "Pending"
+            elif len(assessment_scores_row) >= 2:
+                    # check stages
+                if len(types) >= 2:
+                    if types[0] > types[-1]:
+                        categorization = "Healing"
+                    elif types[0] > types[-1] and types[-1] == 4:
+                        categorization = "Healing"
+                    elif types[0] > types[-1] and types[-1] == 3:
+                        categorization = "Healing"
+                    elif types[0] < types[-1]:
+                        categorization = "Worse"
+                    # stage stay same
+                    else:
+                        categorization = "Healing"
+                # only one record
+                else:
+                    categorization = "Healed"
+            else:
+                categorization = "Pending"
+        else:
+            categorization = "Pending"
+    
+        # Adding the categorization to the data DataFrame for the current row
+        result.at[index, "Categorization"] = categorization
+
+    # Dropping the original AssessmentAnswers column
+    result.drop(columns=['assessment_scores'], inplace=True)
+    result['last_assessment_score'] = result['Sorted_AssessmentAnswers'].apply(lambda x: x[-1])
+    
+    # Print the updated data with categorization for each row
+    return result
+
+#------------------------------------------------------------------------------------------------------
+def Dist_Cate_Labels(result):
+    # Count the occurrences of each category
+    category_counts = result['Categorization'].value_counts()
+    
+    # Create a bar plot with counts on top of the bars
+    plt.figure(figsize=(8, 6))
+    ax = category_counts.plot(kind='bar', color='skyblue')
+    plt.title('Count Distribution of Categorization Labels')
+    plt.xlabel('Categorization Labels')
+    plt.ylabel('Count')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    
+    # Add counts on top of the bars
+    for p in ax.patches:
+        ax.annotate(str(p.get_height()), (p.get_x() + p.get_width() / 2., p.get_height()),
+                    ha='center', va='center', xytext=(0, 10), textcoords='offset points')
+    
+    st.pyplot()
+    
+    # # Define your custom color set with four colors
+    # custom_colors = ['#1f77b4',  '#2ca02c', '#ff7f0e','#d62728']
+    
+    # # Group by the 'last_assessment_score' column and 'Categorization', then count the occurrences
+    # result = final_logic_dataset.groupby(['last_assessment_score', 'Categorization']).size().reset_index(name='Count')
+    
+    # # Pivot the result DataFrame to prepare it for plotting
+    # pivot_result = result.pivot(index='last_assessment_score', columns='Categorization', values='Count')
+    
+    # # Create a bar plot with custom colors
+    # ax = pivot_result.plot(kind='bar', stacked=True, color=custom_colors)
+    
+    # # Rest of your code remains the same
+    # plt.xlabel('Last Assessment Score')
+    # plt.ylabel('Count')
+    # plt.title('Count of Categorization by Last Assessment Score')
+    # plt.legend(title='Categorization')
+    # plt.xticks(rotation=90)
+    
+    # # Annotate bars with the count
+    # for p in ax.patches:
+    #     width = p.get_width()
+    #     height = p.get_height()
+    #     x, y = p.get_xy()
+    #     ax.annotate(f'{int(height)}', (x + width / 2, y + height / 2), ha='center')
+    
+    # plt.show()
+    
+    
+    # import matplotlib.pyplot as plt
+    
+    # # Group by the 'last_assessment_score' column and 'Categorization', then calculate the sum of counts
+    # result = final_logic_dataset.groupby(['last_assessment_score', 'Categorization']).size().reset_index(name='Count')
+    
+    # # Calculate total counts for each 'last_assessment_score'
+    # total_counts = result.groupby('last_assessment_score')['Count'].transform('sum')
+    
+    # # Calculate percentages for each label in each group
+    # result['Percentage'] = (result['Count'] / total_counts) * 100
+    
+    # # Pivot the result DataFrame to prepare it for plotting
+    # pivot_result = result.pivot(index='last_assessment_score', columns='Categorization', values='Percentage')
+    
+    # # Create a stacked bar plot for percentages
+    # ax = pivot_result.plot(kind='bar', stacked=True,color=custom_colors)
+    # plt.xlabel('Last Assessment Score')
+    # plt.ylabel('Percentage')
+    # plt.title('Percentage of Categorization by Last Assessment Score')
+    # plt.legend(title='Categorization')
+    # plt.xticks(rotation=45)
+    
+    # # Annotate bars with percentages only
+    # for p in ax.patches:
+    #     width = p.get_width()
+    #     height = p.get_height()
+    #     x, y = p.get_xy()
+    #     if height != 0:
+    #         percentage_value = f'{height:.1f}%'
+    #         ax.annotate(percentage_value, (x + width / 2, y + height / 2), ha='center')
+    
+    # st.pyplot()
     
 def merge_and_process_data(ulcer, brad):
     # Merge two tables
@@ -263,6 +484,9 @@ def main():
         plot_ulcer_counts(ulcer_b)
         braden_score_for_ulcer_patient_counts(ulcer_b)
         location_counts(ulcer_b)
+        heal_rate_braden_score(ulcer_b)
+        heal_logic(result)
+        Dist_Cate_Labels(result)
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
             "(https://drive.google.com/file/d/1gyZnA_mfkNlwyOyjKlLGgIH7LiEUQvZQ/view?usp=share_link)")
 
