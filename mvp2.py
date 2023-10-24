@@ -267,7 +267,7 @@ def heal_logic(result):
     for index, row in result.iterrows():
         assessment_scores_row = row["Sorted_AssessmentAnswers"]
         types = row["Type"]
-        st.write(types if type(types) is int)
+        st.write("Types is ",types," ",type(types)
         if types is None:
             # Handle the case when types is None (customize based on your logic)
             categorization = "Unknown"
