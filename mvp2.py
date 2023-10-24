@@ -405,7 +405,7 @@ def Cate_given_brad(result):
     plt.ylabel('Count')
     plt.title('Count of Categorization by Last Assessment Score')
     plt.legend(title='Categorization')
-    plt.xticks(rotation=90)
+    plt.xticks(rotation=0)
     
     # Annotate bars with the count
     for p in ax.patches:
@@ -438,8 +438,8 @@ def Cate_given_brad_perc(result):
     plt.xlabel('Last Assessment Score')
     plt.ylabel('Percentage')
     plt.title('Percentage of Categorization by Last Assessment Score')
-    plt.legend(title='Categorization')
-    plt.xticks(rotation=45)
+    plt.legend(title='Categorization', bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.xticks(rotation=0)
     
     # Annotate bars with percentages only
     for p in ax.patches:
