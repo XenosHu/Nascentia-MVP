@@ -259,7 +259,8 @@ def heal_rate_braden_score(brad,ulcer):
     
     # Reset index if needed
     merged_df2.reset_index(drop=True, inplace=True)
-    
+    st.write(len(ulcer))
+    st.write(len(merged_df))
     result = merged_df2
     return result
     
@@ -468,7 +469,7 @@ def main():
         heal_rate_braden_score(brad,ulcer)
         result = heal_rate_braden_score(brad, ulcer)
         result = heal_logic(result)
-        st.write(len(result))
+        st.write(result)
         Cate_given_brad(result)
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
             "(https://drive.google.com/file/d/1gyZnA_mfkNlwyOyjKlLGgIH7LiEUQvZQ/view?usp=share_link)")
