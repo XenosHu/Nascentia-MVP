@@ -266,19 +266,7 @@ def heal_rate_braden_score(brad,ulcer):
 def heal_logic(result):
     for index, row in result.iterrows():
         assessment_scores_row = row["Sorted_AssessmentAnswers"]
-        types_str = row["Type"]
-
-        print(f"Row {index} - types_str:", types_str)
-
-        # Convert string representation of list to actual list
-        try:
-            types = ast.literal_eval(types_str)
-        except ValueError as e:
-            print("Error converting types_str to list:", e)
-            types = []
-
-        # Convert string representation of list to actual list
-        types = ast.literal_eval(types_str)
+        types = row["Type"]
     
         # Check if assessment_scores list is non-empty
         if len(assessment_scores_row) > 0:
