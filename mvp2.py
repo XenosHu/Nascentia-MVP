@@ -268,6 +268,15 @@ def heal_logic(result):
         assessment_scores_row = row["Sorted_AssessmentAnswers"]
         types_str = row["Type"]
 
+        print("types_str:", types_str)
+
+        # Convert string representation of list to actual list
+        try:
+            types = ast.literal_eval(types_str)
+        except ValueError as e:
+            print("Error converting types_str to list:", e)
+            types = []
+
         # Convert string representation of list to actual list
         types = ast.literal_eval(types_str)
     
