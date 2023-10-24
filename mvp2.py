@@ -334,7 +334,7 @@ def heal_logic(result):
     result.drop(columns=['assessment_scores'], inplace=True)
     result['last_assessment_score'] = result['Sorted_AssessmentAnswers'].apply(lambda x: x[-1])
     
-    return result
+    #return result
 
 # #------------------------------------------------------------------------------------------------------
 # def Dist_Cate_Labels(result):
@@ -486,7 +486,7 @@ def main():
         braden_score_for_ulcer_patient_counts(ulcer_b)
         location_counts(ulcer_b)
         heal_rate_braden_score(brad,ulcer)
-        #result = heal_logic(result)
+        result = heal_logic(result)
         # Dist_Cate_Labels(result)
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
             "(https://drive.google.com/file/d/1gyZnA_mfkNlwyOyjKlLGgIH7LiEUQvZQ/view?usp=share_link)")
