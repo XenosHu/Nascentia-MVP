@@ -262,99 +262,99 @@ def heal_rate_braden_score(ulcer_b):
     result = merged_df2
     return result
     
-def heal_logic(result):
-    for index, row in result.iterrows():
-        assessment_scores_row = row["Sorted_AssessmentAnswers"]
-        types_str = row["types"]
+# def heal_logic(result):
+#     for index, row in result.iterrows():
+#         assessment_scores_row = row["Sorted_AssessmentAnswers"]
+#         types_str = row["types"]
 
-        # Convert string representation of list to actual list
-        types = ast.literal_eval(types_str)
+#         # Convert string representation of list to actual list
+#         types = ast.literal_eval(types_str)
     
-        # Check if assessment_scores list is non-empty
-        if len(assessment_scores_row) > 0:
-            # Check the conditions and categorize the data
-            if len(assessment_scores_row) == 1:
-                if assessment_scores_row[0] >= 19:
-                    # check stage
-                    if len(types) ==1 and types[0] ==4:
-                        categorization = "Pending"
-                    elif len(types) ==1 and types[0] ==3:
-                        categorization = "Pending"
-                    else:
-                        categorization = "Healed"
-                else:
-                    if len(types) == 1 and types[0] == 4:
-                        categorization = "Pending"
-                    elif len(types) == 1 and types[0] == 3:
-                        categorization = "Pending"
-                    if len(types) >= 2:
-                        # stage decrease
-                        if types[0] > types[-1]:
-                            categorization = "Healing"
-                        elif types[0] > types[-1] and types[-1] == 4:
-                            categorization = "Healing"
-                        elif types[0] > types[-1] and types[-1] == 3:
-                            categorization = "Healing"
-                        # stage increase
-                        elif types[0] < types[-1]:
-                            categorization = "Worse"
-                        # stage same
-                        else:
-                            categorization = "Healing"
-                    else:
-                        categorization = "Pending"
-            elif len(assessment_scores_row) >= 2:
-                    # check stages
-                if len(types) >= 2:
-                    if types[0] > types[-1]:
-                        categorization = "Healing"
-                    elif types[0] > types[-1] and types[-1] == 4:
-                        categorization = "Healing"
-                    elif types[0] > types[-1] and types[-1] == 3:
-                        categorization = "Healing"
-                    elif types[0] < types[-1]:
-                        categorization = "Worse"
-                    # stage stay same
-                    else:
-                        categorization = "Healing"
-                # only one record
-                else:
-                    categorization = "Healed"
-            else:
-                categorization = "Pending"
-        else:
-            categorization = "Pending"
+#         # Check if assessment_scores list is non-empty
+#         if len(assessment_scores_row) > 0:
+#             # Check the conditions and categorize the data
+#             if len(assessment_scores_row) == 1:
+#                 if assessment_scores_row[0] >= 19:
+#                     # check stage
+#                     if len(types) ==1 and types[0] ==4:
+#                         categorization = "Pending"
+#                     elif len(types) ==1 and types[0] ==3:
+#                         categorization = "Pending"
+#                     else:
+#                         categorization = "Healed"
+#                 else:
+#                     if len(types) == 1 and types[0] == 4:
+#                         categorization = "Pending"
+#                     elif len(types) == 1 and types[0] == 3:
+#                         categorization = "Pending"
+#                     if len(types) >= 2:
+#                         # stage decrease
+#                         if types[0] > types[-1]:
+#                             categorization = "Healing"
+#                         elif types[0] > types[-1] and types[-1] == 4:
+#                             categorization = "Healing"
+#                         elif types[0] > types[-1] and types[-1] == 3:
+#                             categorization = "Healing"
+#                         # stage increase
+#                         elif types[0] < types[-1]:
+#                             categorization = "Worse"
+#                         # stage same
+#                         else:
+#                             categorization = "Healing"
+#                     else:
+#                         categorization = "Pending"
+#             elif len(assessment_scores_row) >= 2:
+#                     # check stages
+#                 if len(types) >= 2:
+#                     if types[0] > types[-1]:
+#                         categorization = "Healing"
+#                     elif types[0] > types[-1] and types[-1] == 4:
+#                         categorization = "Healing"
+#                     elif types[0] > types[-1] and types[-1] == 3:
+#                         categorization = "Healing"
+#                     elif types[0] < types[-1]:
+#                         categorization = "Worse"
+#                     # stage stay same
+#                     else:
+#                         categorization = "Healing"
+#                 # only one record
+#                 else:
+#                     categorization = "Healed"
+#             else:
+#                 categorization = "Pending"
+#         else:
+#             categorization = "Pending"
     
-        # Adding the categorization to the data DataFrame for the current row
-        result.at[index, "Categorization"] = categorization
+#         # Adding the categorization to the data DataFrame for the current row
+#         result.at[index, "Categorization"] = categorization
 
-    # Dropping the original AssessmentAnswers column
-    result.drop(columns=['assessment_scores'], inplace=True)
-    result['last_assessment_score'] = result['Sorted_AssessmentAnswers'].apply(lambda x: x[-1])
+#     # Dropping the original AssessmentAnswers column
+#     result.drop(columns=['assessment_scores'], inplace=True)
+#     result['last_assessment_score'] = result['Sorted_AssessmentAnswers'].apply(lambda x: x[-1])
     
-    # Print the updated data with categorization for each row
-    #return result
+#     # Print the updated data with categorization for each row
+#     #return result
 
-#------------------------------------------------------------------------------------------------------
-def Dist_Cate_Labels(result):
-    # Count the occurrences of each category
-    category_counts = result['Categorization'].value_counts()
+# #------------------------------------------------------------------------------------------------------
+# def Dist_Cate_Labels(result):
+#     # Count the occurrences of each category
+#     category_counts = result['Categorization'].value_counts()
     
-    # Create a bar plot with counts on top of the bars
-    plt.figure(figsize=(8, 6))
-    ax = category_counts.plot(kind='bar', color='skyblue')
-    plt.title('Count Distribution of Categorization Labels')
-    plt.xlabel('Categorization Labels')
-    plt.ylabel('Count')
-    plt.xticks(rotation=45)
-    plt.tight_layout()
+#     # Create a bar plot with counts on top of the bars
+#     plt.figure(figsize=(8, 6))
+#     ax = category_counts.plot(kind='bar', color='skyblue')
+#     plt.title('Count Distribution of Categorization Labels')
+#     plt.xlabel('Categorization Labels')
+#     plt.ylabel('Count')
+#     plt.xticks(rotation=45)
+#     plt.tight_layout()
     
-    # Add counts on top of the bars
-    for p in ax.patches:
-        ax.annotate(str(p.get_height()), (p.get_x() + p.get_width() / 2., p.get_height()),
-                    ha='center', va='center', xytext=(0, 10), textcoords='offset points')
+#     # Add counts on top of the bars
+#     for p in ax.patches:
+#         ax.annotate(str(p.get_height()), (p.get_x() + p.get_width() / 2., p.get_height()),
+#                     ha='center', va='center', xytext=(0, 10), textcoords='offset points')
     
-    st.pyplot()
+#     st.pyplot()
     
     # # Define your custom color set with four colors
     # custom_colors = ['#1f77b4',  '#2ca02c', '#ff7f0e','#d62728']
@@ -485,8 +485,9 @@ def main():
         braden_score_for_ulcer_patient_counts(ulcer_b)
         location_counts(ulcer_b)
         heal_rate_braden_score(ulcer_b)
-        result = heal_logic(result)
-        Dist_Cate_Labels(result)
+        st.write(result.head(10))
+        # result = heal_logic(result)
+        # Dist_Cate_Labels(result)
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
             "(https://drive.google.com/file/d/1gyZnA_mfkNlwyOyjKlLGgIH7LiEUQvZQ/view?usp=share_link)")
 
