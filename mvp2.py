@@ -404,7 +404,7 @@ def Cate_given_brad(result):
     plt.xlabel('Last Assessment Score')
     plt.ylabel('Count')
     plt.title('Count of Categorization by Last Assessment Score')
-    plt.legend(title='Categorization')
+    plt.legend(title='Categorization', bbox_to_anchor=(1.05, 1), loc='upper left')
     plt.xticks(rotation=0)
     
     # Annotate bars with the count
@@ -521,13 +521,6 @@ def main():
         df3 = heal_rate_type(ulcer_b)
         result = heal_rate_braden_score(brad, df3)
         result = heal_logic(result)
-        
-        # st.write('df3:')
-        # st.write(df3.columns)
-        # st.write(df3)
-        # st.write('result:')
-        # st.write(result.columns)
-        # st.write(result)
         
         Cate_given_brad(result)
         Cate_given_brad_perc(result)
