@@ -254,88 +254,87 @@ def heal_rate_braden_score(brad,ulcer):
     
     # Merge based on 'Name' and conditions for 'SOE' and 'Visitdate'
     merged_df2 = pd.merge(ulcer, merged_df, how='inner', on='Name')
-    st.write(merged_df2)
-    # # Filter rows where Visitdate is >= SOE and not greater than 60 days
-    # merged_df2 = merged_df2[(merged_df2['Visitdate'] >= merged_df2['SOE']) & (merged_df2['Visitdate'] - merged_df2['SOE'] <= pd.Timedelta(days=60))]
+    # Filter rows where Visitdate is >= SOE and not greater than 60 days
+    merged_df2 = merged_df2[(merged_df2['Visitdate'] >= merged_df2['SOE']) & (merged_df2['Visitdate'] - merged_df2['SOE'] <= pd.Timedelta(days=60))]
     
-    # # Reset index if needed
-    # merged_df2.reset_index(drop=True, inplace=True)
+    # Reset index if needed
+    merged_df2.reset_index(drop=True, inplace=True)
     
-    # result = merged_df2
-    # return result
+    result = merged_df2
+    return result
     
-# def heal_logic(result):
-#     for index, row in result.iterrows():
-#         assessment_scores_row = row["Sorted_AssessmentAnswers"]
-#         types_str = row["types"]
+def heal_logic(result):
+    for index, row in result.iterrows():
+        assessment_scores_row = row["Sorted_AssessmentAnswers"]
+        types_str = row["types"]
 
-#         # Convert string representation of list to actual list
-#         types = ast.literal_eval(types_str)
+        # Convert string representation of list to actual list
+        types = ast.literal_eval(types_str)
     
-#         # Check if assessment_scores list is non-empty
-#         if len(assessment_scores_row) > 0:
-#             # Check the conditions and categorize the data
-#             if len(assessment_scores_row) == 1:
-#                 if assessment_scores_row[0] >= 19:
-#                     # check stage
-#                     if len(types) ==1 and types[0] ==4:
-#                         categorization = "Pending"
-#                     elif len(types) ==1 and types[0] ==3:
-#                         categorization = "Pending"
-#                     else:
-#                         categorization = "Healed"
-#                 else:
-#                     if len(types) == 1 and types[0] == 4:
-#                         categorization = "Pending"
-#                     elif len(types) == 1 and types[0] == 3:
-#                         categorization = "Pending"
-#                     if len(types) >= 2:
-#                         # stage decrease
-#                         if types[0] > types[-1]:
-#                             categorization = "Healing"
-#                         elif types[0] > types[-1] and types[-1] == 4:
-#                             categorization = "Healing"
-#                         elif types[0] > types[-1] and types[-1] == 3:
-#                             categorization = "Healing"
-#                         # stage increase
-#                         elif types[0] < types[-1]:
-#                             categorization = "Worse"
-#                         # stage same
-#                         else:
-#                             categorization = "Healing"
-#                     else:
-#                         categorization = "Pending"
-#             elif len(assessment_scores_row) >= 2:
-#                     # check stages
-#                 if len(types) >= 2:
-#                     if types[0] > types[-1]:
-#                         categorization = "Healing"
-#                     elif types[0] > types[-1] and types[-1] == 4:
-#                         categorization = "Healing"
-#                     elif types[0] > types[-1] and types[-1] == 3:
-#                         categorization = "Healing"
-#                     elif types[0] < types[-1]:
-#                         categorization = "Worse"
-#                     # stage stay same
-#                     else:
-#                         categorization = "Healing"
-#                 # only one record
-#                 else:
-#                     categorization = "Healed"
-#             else:
-#                 categorization = "Pending"
-#         else:
-#             categorization = "Pending"
+        # Check if assessment_scores list is non-empty
+        if len(assessment_scores_row) > 0:
+            # Check the conditions and categorize the data
+            if len(assessment_scores_row) == 1:
+                if assessment_scores_row[0] >= 19:
+                    # check stage
+                    if len(types) ==1 and types[0] ==4:
+                        categorization = "Pending"
+                    elif len(types) ==1 and types[0] ==3:
+                        categorization = "Pending"
+                    else:
+                        categorization = "Healed"
+                else:
+                    if len(types) == 1 and types[0] == 4:
+                        categorization = "Pending"
+                    elif len(types) == 1 and types[0] == 3:
+                        categorization = "Pending"
+                    if len(types) >= 2:
+                        # stage decrease
+                        if types[0] > types[-1]:
+                            categorization = "Healing"
+                        elif types[0] > types[-1] and types[-1] == 4:
+                            categorization = "Healing"
+                        elif types[0] > types[-1] and types[-1] == 3:
+                            categorization = "Healing"
+                        # stage increase
+                        elif types[0] < types[-1]:
+                            categorization = "Worse"
+                        # stage same
+                        else:
+                            categorization = "Healing"
+                    else:
+                        categorization = "Pending"
+            elif len(assessment_scores_row) >= 2:
+                    # check stages
+                if len(types) >= 2:
+                    if types[0] > types[-1]:
+                        categorization = "Healing"
+                    elif types[0] > types[-1] and types[-1] == 4:
+                        categorization = "Healing"
+                    elif types[0] > types[-1] and types[-1] == 3:
+                        categorization = "Healing"
+                    elif types[0] < types[-1]:
+                        categorization = "Worse"
+                    # stage stay same
+                    else:
+                        categorization = "Healing"
+                # only one record
+                else:
+                    categorization = "Healed"
+            else:
+                categorization = "Pending"
+        else:
+            categorization = "Pending"
     
-#         # Adding the categorization to the data DataFrame for the current row
-#         result.at[index, "Categorization"] = categorization
+        # Adding the categorization to the data DataFrame for the current row
+        result.at[index, "Categorization"] = categorization
 
-#     # Dropping the original AssessmentAnswers column
-#     result.drop(columns=['assessment_scores'], inplace=True)
-#     result['last_assessment_score'] = result['Sorted_AssessmentAnswers'].apply(lambda x: x[-1])
+    # Dropping the original AssessmentAnswers column
+    result.drop(columns=['assessment_scores'], inplace=True)
+    result['last_assessment_score'] = result['Sorted_AssessmentAnswers'].apply(lambda x: x[-1])
     
-#     # Print the updated data with categorization for each row
-#     #return result
+    # Print the updated data with categorization for each row
+    #return result
 
 # #------------------------------------------------------------------------------------------------------
 # def Dist_Cate_Labels(result):
@@ -487,8 +486,8 @@ def main():
         braden_score_for_ulcer_patient_counts(ulcer_b)
         location_counts(ulcer_b)
         heal_rate_braden_score(brad,ulcer)
-        #st.write(result.head(10))
-        # result = heal_logic(result)
+        st.write(result.head(10))
+        result = heal_logic(result)
         # Dist_Cate_Labels(result)
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
             "(https://drive.google.com/file/d/1gyZnA_mfkNlwyOyjKlLGgIH7LiEUQvZQ/view?usp=share_link)")
