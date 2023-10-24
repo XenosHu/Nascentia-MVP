@@ -427,11 +427,11 @@ def Cate_given_brad_perc(result):
     # Calculate percentages for each label in each group
     agg_result['Percentage'] = (agg_result['Count'] / total_counts) * 100
     
-    # Pivot the result DataFrame to prepare it for plotting
-    pivot_result = result.pivot(index='last_assessment_score', columns='Categorization', values='Percentage')
+    # Pivot the agg_result DataFrame to prepare it for plotting
+    pivot_result = agg_result.pivot(index='last_assessment_score', columns='Categorization', values='Percentage')
     
     # Create a stacked bar plot for percentages
-    ax = pivot_result.plot(kind='bar', stacked=True,color=custom_colors)
+    ax = pivot_result.plot(kind='bar', stacked=True, color=custom_colors)
     plt.xlabel('Last Assessment Score')
     plt.ylabel('Percentage')
     plt.title('Percentage of Categorization by Last Assessment Score')
