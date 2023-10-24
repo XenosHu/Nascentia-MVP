@@ -288,7 +288,7 @@ def heal_logic(result):
                             categorization = "Pending"
                         elif len(types) == 1 and types[0] == 3:
                             categorization = "Pending"
-                        if len(types) >= 2:
+                        elif len(types) >= 2:
                             # stage decrease
                             if types[0] > types[-1]:
                                 categorization = "Healing"
