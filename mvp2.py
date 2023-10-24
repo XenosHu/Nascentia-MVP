@@ -198,8 +198,51 @@ def location_counts(ulcer_b):
     plt.ylabel('Patients count')
     st.pyplot()
 
+
+def heal_rate_type(ulcer_b):    
     
-def heal_rate_braden_score(brad,ulcer_b):    
+    # Convert date columns to datetime objects for sorting
+    ulcer_b['Onset'] = pd.to_datetime(ulcer_b['Onset'])
+    ulcer_b['VisitDate'] = pd.to_datetime(ulcer_b['Visitdate'])
+    ulcer_b['SOE'] = pd.to_datetime(ulcer_b['SOE'])
+    
+    ulcer_b = ulcer_b.sort_values(by=['Name', 'Location', 'SOE', 'VisitDate'], ascending=[True, True, True, False], inplace=True)
+    
+    # Group by Name, Location, and SOE
+    grouped = ulcer_b.groupby(['Name', 'Location', 'SOE'])
+    
+    # Initialize an empty list to store final results
+    final_results = []
+    
+    # Iterate through groups and construct final results
+    for (name, location, soe), group_df in grouped:
+        onset_diff = (group_df['Onset'].max() - group_df['Onset'].min()).days
+        visit_diff = (group_df['VisitDate'].max() - group_df['VisitDate'].min()).days
+    
+        if onset_diff < 60 and visit_diff < 60:
+            types = group_df['Type'].tolist()
+            assessment_scores = group_df['AssessmentAnswer'].tolist()
+        else:
+            latest_type = group_df.loc[group_df['VisitDate'].idxmax()]['Type']
+            latest_score = group_df.loc[group_df['VisitDate'].idxmax()]['AssessmentAnswer']
+            types = [latest_type]
+            assessment_scores = [latest_score]  # Adding the latest assessment score
+    
+        latest_visit_date = group_df['VisitDate'].max()
+        final_results.append({
+            'Name': name,
+            'Location': location,
+            'SOE': soe,
+            'types': types,
+            'assessment_scores': assessment_scores,
+            'latest_visit_date': latest_visit_date
+        })
+    
+    # Create a DataFrame from final_results list
+    df3 = pd.DataFrame(final_results)
+    return df3
+
+def heal_rate_braden_score(brad,df3):    
     # Dictionary to store unique names as keys and their AssessmentAnswers, Visitdates, and woundID as values
     name_data = defaultdict(lambda: {"AssessmentAnswers": [], "Visitdates": [], "woundID": None})
     
@@ -247,23 +290,22 @@ def heal_rate_braden_score(brad,ulcer_b):
     merged_df["woundID"] = merged_df["Name"].apply(lambda x: name_data[x]["woundID"])
     
     # Dropping the original AssessmentAnswers column
-    merged_df.drop(columns=['AssessmentAnswer'], inplace=True)
+    merged_df.drop(columns=['AssessmentAnswers'], inplace=True)
     merged_df.drop_duplicates(subset=['woundID'], keep='first', inplace=True)
 
-    #merged_df['Visitdate'] = pd.to_datetime(merged_df['Visitdate'])
+    df3.drop(columns=['assessment_scores'], inplace=True)
     
     # Merge based on 'Name' and conditions for 'SOE' and 'Visitdate'
-    merged_df2 = pd.merge(ulcer_b, merged_df, how='inner', on='Name')
+    merged_df2 = pd.merge(df3, merged_df, how='inner', on='Name')
     # Filter rows where Visitdate is >= SOE and not greater than 60 days
     merged_df2 = merged_df2[(merged_df2['Visitdate'] >= merged_df2['SOE']) & (merged_df2['Visitdate'] - merged_df2['SOE'] <= pd.Timedelta(days=60))]
-    st.write(merged_df)
     # Reset index if needed
     merged_df2.reset_index(drop=True, inplace=True)
     # st.write(len(ulcer))
     # st.write(len(merged_df))
     result = merged_df2
     return result
-    
+
 def heal_logic(result):
     for index, row in result.iterrows():
         assessment_scores_row = row["Sorted_AssessmentAnswers"]
@@ -466,7 +508,8 @@ def main():
         plot_ulcer_counts(ulcer_b)
         braden_score_for_ulcer_patient_counts(ulcer_b)
         location_counts(ulcer_b)
-        heal_rate_braden_score(brad,ulcer)
+        df3 = heal_rate_type(ulcer_b)
+        heal_rate_braden_score(brad,df3)
         result = heal_rate_braden_score(brad, ulcer)
         result = heal_logic(result)
         st.write(result)
