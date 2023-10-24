@@ -416,39 +416,38 @@ def Cate_given_brad(result):
     
     st.pyplot()
     
+
+def Cate_given_brad_perc(result):    
+    # Group by the 'last_assessment_score' column and 'Categorization', then calculate the sum of counts
+    agg_result = result.groupby(['last_assessment_score', 'Categorization']).size().reset_index(name='Count')
     
-    # import matplotlib.pyplot as plt
+    # Calculate total counts for each 'last_assessment_score'
+    total_counts = agg_result.groupby('last_assessment_score')['Count'].transform('sum')
     
-    # # Group by the 'last_assessment_score' column and 'Categorization', then calculate the sum of counts
-    # result = final_logic_dataset.groupby(['last_assessment_score', 'Categorization']).size().reset_index(name='Count')
+    # Calculate percentages for each label in each group
+    agg_result['Percentage'] = (agg_result['Count'] / total_counts) * 100
     
-    # # Calculate total counts for each 'last_assessment_score'
-    # total_counts = result.groupby('last_assessment_score')['Count'].transform('sum')
+    # Pivot the result DataFrame to prepare it for plotting
+    pivot_result = result.pivot(index='last_assessment_score', columns='Categorization', values='Percentage')
     
-    # # Calculate percentages for each label in each group
-    # result['Percentage'] = (result['Count'] / total_counts) * 100
+    # Create a stacked bar plot for percentages
+    ax = pivot_result.plot(kind='bar', stacked=True,color=custom_colors)
+    plt.xlabel('Last Assessment Score')
+    plt.ylabel('Percentage')
+    plt.title('Percentage of Categorization by Last Assessment Score')
+    plt.legend(title='Categorization')
+    plt.xticks(rotation=45)
     
-    # # Pivot the result DataFrame to prepare it for plotting
-    # pivot_result = result.pivot(index='last_assessment_score', columns='Categorization', values='Percentage')
+    # Annotate bars with percentages only
+    for p in ax.patches:
+        width = p.get_width()
+        height = p.get_height()
+        x, y = p.get_xy()
+        if height != 0:
+            percentage_value = f'{height:.1f}%'
+            ax.annotate(percentage_value, (x + width / 2, y + height / 2), ha='center')
     
-    # # Create a stacked bar plot for percentages
-    # ax = pivot_result.plot(kind='bar', stacked=True,color=custom_colors)
-    # plt.xlabel('Last Assessment Score')
-    # plt.ylabel('Percentage')
-    # plt.title('Percentage of Categorization by Last Assessment Score')
-    # plt.legend(title='Categorization')
-    # plt.xticks(rotation=45)
-    
-    # # Annotate bars with percentages only
-    # for p in ax.patches:
-    #     width = p.get_width()
-    #     height = p.get_height()
-    #     x, y = p.get_xy()
-    #     if height != 0:
-    #         percentage_value = f'{height:.1f}%'
-    #         ax.annotate(percentage_value, (x + width / 2, y + height / 2), ha='center')
-    
-    # st.pyplot()
+    st.pyplot()
     
 def merge_and_process_data(ulcer, brad):
     # Merge two tables
@@ -519,13 +518,16 @@ def main():
         df3 = heal_rate_type(ulcer_b)
         result = heal_rate_braden_score(brad, df3)
         result = heal_logic(result)
-        st.write('df3:')
-        st.write(df3.columns)
-        st.write(df3)
-        st.write('result:')
-        st.write(result.columns)
-        st.write(result)
+        
+        # st.write('df3:')
+        # st.write(df3.columns)
+        # st.write(df3)
+        # st.write('result:')
+        # st.write(result.columns)
+        # st.write(result)
+        
         Cate_given_brad(result)
+        Cate_given_brad_perc(result)
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
             "(https://drive.google.com/file/d/1gyZnA_mfkNlwyOyjKlLGgIH7LiEUQvZQ/view?usp=share_link)")
 
