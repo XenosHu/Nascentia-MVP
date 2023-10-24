@@ -301,7 +301,7 @@ def heal_rate_braden_score(brad,df3):
     merged_df.drop(columns=['AssessmentAnswer'], inplace=True)
     merged_df.drop_duplicates(subset=['woundID'], keep='first', inplace=True)
 
-    df3.drop(columns=['assessment_scores'], inplace=True)
+    #df3.drop(columns=['assessment_scores'], inplace=True)
     
     # Merge based on 'Name' and conditions for 'SOE' and 'Visitdate'
     merged_df2 = pd.merge(df3, merged_df, how='inner', on='Name')
