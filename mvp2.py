@@ -267,64 +267,67 @@ def heal_logic(result):
     for index, row in result.iterrows():
         assessment_scores_row = row["Sorted_AssessmentAnswers"]
         types = row["Type"]
-    
-        # Check if assessment_scores list is non-empty
-        if len(assessment_scores_row) > 0:
-            # Check the conditions and categorize the data
-            if len(assessment_scores_row) == 1:
-                if assessment_scores_row[0] >= 19:
-                    # check stage
-                    if len(types) ==1 and types[0] ==4:
-                        categorization = "Pending"
-                    elif len(types) ==1 and types[0] ==3:
-                        categorization = "Pending"
+        if types is None:
+            # Handle the case when types is None (customize based on your logic)
+            categorization = "Unknown"
+        else:    
+            # Check if assessment_scores list is non-empty
+            if len(assessment_scores_row) > 0:
+                # Check the conditions and categorize the data
+                if len(assessment_scores_row) == 1:
+                    if assessment_scores_row[0] >= 19:
+                        # check stage
+                        if len(types) ==1 and types[0] ==4:
+                            categorization = "Pending"
+                        elif len(types) ==1 and types[0] ==3:
+                            categorization = "Pending"
+                        else:
+                            categorization = "Healed"
                     else:
-                        categorization = "Healed"
-                else:
-                    if len(types) == 1 and types[0] == 4:
-                        categorization = "Pending"
-                    elif len(types) == 1 and types[0] == 3:
-                        categorization = "Pending"
+                        if len(types) == 1 and types[0] == 4:
+                            categorization = "Pending"
+                        elif len(types) == 1 and types[0] == 3:
+                            categorization = "Pending"
+                        if len(types) >= 2:
+                            # stage decrease
+                            if types[0] > types[-1]:
+                                categorization = "Healing"
+                            elif types[0] > types[-1] and types[-1] == 4:
+                                categorization = "Healing"
+                            elif types[0] > types[-1] and types[-1] == 3:
+                                categorization = "Healing"
+                            # stage increase
+                            elif types[0] < types[-1]:
+                                categorization = "Worse"
+                            # stage same
+                            else:
+                                categorization = "Healing"
+                        else:
+                            categorization = "Pending"
+                elif len(assessment_scores_row) >= 2:
+                        # check stages
                     if len(types) >= 2:
-                        # stage decrease
                         if types[0] > types[-1]:
                             categorization = "Healing"
                         elif types[0] > types[-1] and types[-1] == 4:
                             categorization = "Healing"
                         elif types[0] > types[-1] and types[-1] == 3:
                             categorization = "Healing"
-                        # stage increase
                         elif types[0] < types[-1]:
                             categorization = "Worse"
-                        # stage same
+                        # stage stay same
                         else:
                             categorization = "Healing"
+                    # only one record
                     else:
-                        categorization = "Pending"
-            elif len(assessment_scores_row) >= 2:
-                    # check stages
-                if len(types) >= 2:
-                    if types[0] > types[-1]:
-                        categorization = "Healing"
-                    elif types[0] > types[-1] and types[-1] == 4:
-                        categorization = "Healing"
-                    elif types[0] > types[-1] and types[-1] == 3:
-                        categorization = "Healing"
-                    elif types[0] < types[-1]:
-                        categorization = "Worse"
-                    # stage stay same
-                    else:
-                        categorization = "Healing"
-                # only one record
+                        categorization = "Healed"
                 else:
-                    categorization = "Healed"
+                    categorization = "Pending"
             else:
                 categorization = "Pending"
-        else:
-            categorization = "Pending"
-    
-        # Adding the categorization to the data DataFrame for the current row
-        result.at[index, "Categorization"] = categorization
+        
+            # Adding the categorization to the data DataFrame for the current row
+            result.at[index, "Categorization"] = categorization
 
     # Dropping the original AssessmentAnswers column
     result.drop(columns=['assessment_scores'], inplace=True)
