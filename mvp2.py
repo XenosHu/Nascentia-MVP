@@ -317,7 +317,7 @@ def heal_rate_braden_score(brad,df3):
 def heal_logic(result):
     for index, row in result.iterrows():
         assessment_scores_row = row["Sorted_AssessmentAnswer"]
-        types = row["Type"]
+        types = row["types"]
         types = [types] if isinstance(types, int) else types
         if types is None:
             # Handle the case when types is None (customize based on your logic)
