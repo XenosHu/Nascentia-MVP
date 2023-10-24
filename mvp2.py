@@ -448,7 +448,7 @@ def Cate_given_brad_perc(result):
         x, y = p.get_xy()
         if height != 0:
             percentage_value = f'{height:.1f}%'
-            ax.annotate(percentage_value, (x + width / 2, y + height / 2), ha='center')
+            ax.annotate(percentage_value, (x + width / 2, y + height / 2), ha='center', fontsize = 8)
     
     st.pyplot()
     
