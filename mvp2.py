@@ -229,10 +229,10 @@ def heal_rate_type(ulcer_b):
     
         if onset_diff < 60 and visit_diff < 60:
             types = group_df['Type'].tolist()
-            assessment_scores = group_df['AssessmentAnswer'].tolist()
+            assessment_scores = group_df['AssessmentAnswers'].tolist()
         else:
             latest_type = group_df.loc[group_df['VisitDate'].idxmax()]['Type']
-            latest_score = group_df.loc[group_df['VisitDate'].idxmax()]['AssessmentAnswer']
+            latest_score = group_df.loc[group_df['VisitDate'].idxmax()]['AssessmentAnswers']
             types = [latest_type]
             assessment_scores = [latest_score]  # Adding the latest assessment score
     
@@ -267,7 +267,7 @@ def heal_rate_braden_score(brad,df3):
     for _, row in merged_df.iterrows():
         name = row["Name"]
         visit_date = row["Visitdate"]
-        assessment_answer = row["AssessmentAnswer"]
+        assessment_answer = row["AssessmentAnswers"]
     
         # Check if name already exists in the dictionary
         if name_data[name]["Visitdates"]:
@@ -298,7 +298,7 @@ def heal_rate_braden_score(brad,df3):
     merged_df["woundID"] = merged_df["Name"].apply(lambda x: name_data[x]["woundID"])
     
     # Dropping the original AssessmentAnswers column
-    merged_df.drop(columns=['AssessmentAnswers'], inplace=True)
+    #merged_df.drop(columns=['AssessmentAnswers'], inplace=True)
     merged_df.drop_duplicates(subset=['woundID'], keep='first', inplace=True)
 
     df3.drop(columns=['assessment_scores'], inplace=True)
