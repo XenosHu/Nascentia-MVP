@@ -200,13 +200,21 @@ def location_counts(ulcer_b):
 
 
 def heal_rate_type(ulcer_b):    
-    
+    # Check if ulcer_b is not None
+    if ulcer_b is None:
+        return pd.DataFrame()  # Return an empty DataFrame or handle it based on your logic
+
     # Convert date columns to datetime objects for sorting
     ulcer_b['Onset'] = pd.to_datetime(ulcer_b['Onset'])
     ulcer_b['VisitDate'] = pd.to_datetime(ulcer_b['Visitdate'])
     ulcer_b['SOE'] = pd.to_datetime(ulcer_b['SOE'])
     
-    ulcer_b = ulcer_b.sort_values(by=['Name', 'Location', 'SOE', 'VisitDate'], ascending=[True, True, True, False], inplace=True)
+    # Check if sort_values is successful before assigning to ulcer_b
+    try:
+        ulcer_b = ulcer_b.sort_values(by=['Name', 'Location', 'SOE', 'VisitDate'], ascending=[True, True, True, False])
+    except AttributeError as e:
+        print(f"Error sorting DataFrame: {e}")
+        return pd.DataFrame()  # Return an empty DataFrame or handle it based on your logic
     
     # Group by Name, Location, and SOE
     grouped = ulcer_b.groupby(['Name', 'Location', 'SOE'])
