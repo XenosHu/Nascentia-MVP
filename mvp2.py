@@ -333,29 +333,8 @@ def heal_logic(result):
     # Dropping the original AssessmentAnswers column
     # result.drop(columns=['assessment_scores'], inplace=True)
     result['last_assessment_score'] = result['Sorted_AssessmentAnswers'].apply(lambda x: x[-1])
-    
     return result
 
-#------------------------------------------------------------------------------------------------------
-# def Dist_Cate_Labels(result):
-#     # Count the occurrences of each category
-#     category_counts = result['Categorization'].value_counts()
-    
-#     # Create a bar plot with counts on top of the bars
-#     plt.figure(figsize=(8, 6))
-#     ax = category_counts.plot(kind='bar', color='skyblue')
-#     plt.title('Count Distribution of Categorization Labels')
-#     plt.xlabel('Categorization Labels')
-#     plt.ylabel('Count')
-#     plt.xticks(rotation=45)
-#     plt.tight_layout()
-    
-#     # Add counts on top of the bars
-#     for p in ax.patches:
-#         ax.annotate(str(p.get_height()), (p.get_x() + p.get_width() / 2., p.get_height()),
-#                     ha='center', va='center', xytext=(0, 10), textcoords='offset points')
-    
-#     st.pyplot()
 
 def Cate_given_brad(result):
     # Define your custom color set with four colors
