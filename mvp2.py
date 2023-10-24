@@ -259,8 +259,8 @@ def heal_rate_braden_score(brad,ulcer):
     
     # Reset index if needed
     merged_df2.reset_index(drop=True, inplace=True)
-    st.write(len(ulcer))
-    st.write(len(merged_df))
+    # st.write(len(ulcer))
+    # st.write(len(merged_df))
     result = merged_df2
     return result
     
