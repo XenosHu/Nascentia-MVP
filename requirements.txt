@@ -1,6 +1,5 @@
 pandas
 numpy
-ast
 matplotlib
 scikit-learn
 scipy
