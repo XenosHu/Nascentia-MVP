@@ -478,8 +478,10 @@ def merge_and_process_data(ulcer, brad):
     return ulcer_b  # Return the processed DataFrame
     
 def main():
+    image_path = "https://pasteboard.co/puvCz1hGPpm3.png"
+    st.image(image_path, use_column_width=True)
     st.title("Nascentia Pressure Ulcer Data Analyzer")
-
+    
     # Call the function to upload CSV file for Ulcer dataset
     ulcer = upload_ulcer_csv()
 
