@@ -478,7 +478,7 @@ def merge_and_process_data(ulcer, brad):
     return ulcer_b  # Return the processed DataFrame
     
 def main():
-    image_path = "https://pasteboard.co/puvCz1hGPpm3.png"
+    image_path = "nascentia_logo.png"
     st.image(image_path, use_column_width=True)
     st.title("Nascentia Pressure Ulcer Data Analyzer")
     
