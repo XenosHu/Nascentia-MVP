@@ -10,9 +10,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 import streamlit as st
 from collections import defaultdict
+from fpdf import FPDF
 
-# def create_pdf(html_content, output_path):
-#     HTML(string=html_content).write_pdf(output_path)
+
+def create_pdf(html_content, output_path):
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+    pdf.multi_cell(0, 10, html_content)
+    pdf.output(output_path)
 
 def determine_severity(score):
     if 6 <= score <= 12:
@@ -538,13 +544,13 @@ def main():
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
             "(https://drive.google.com/file/d/1gyZnA_mfkNlwyOyjKlLGgIH7LiEUQvZQ/view?usp=share_link)")
 
-    #     # Add a button to generate PDF
-    # if st.button("Generate PDF"):
-    #     # Get the HTML content of the current Streamlit page
-    #     html_content = st.report_thread.get_report_ctx().html
+    # Add a button to generate PDF
+    if st.button("Generate PDF"):
+        # Get the HTML content of the current Streamlit page
+        html_content = st.report_thread.get_report_ctx().html
 
-    #     # Generate PDF and save it
-    #     create_pdf(html_content, "output.pdf")
+        # Generate PDF and save it
+        create_pdf(html_content, "output.pdf")
 
 
         
