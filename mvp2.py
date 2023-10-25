@@ -15,6 +15,8 @@ import subprocess
 subprocess.run(["pip", "install", "fpdf"])
 from fpdf import FPDF
 
+st.set_option('deprecation.showPyplotGlobalUse', False)
+
 def create_pdf(html_content, output_path):
     pdf = FPDF()
     pdf.add_page()
@@ -409,7 +411,7 @@ def Cate_given_brad(result):
     pivot_result = agg_result.pivot(index='last_assessment_score', columns='Categorization', values='Count')
     
     # Create a bar plot with custom colors
-    fig, ax = pivot_result.plot(kind='bar', stacked=True, color=custom_colors)
+    ax = pivot_result.plot(kind='bar', stacked=True, color=custom_colors)
     
     # Rest of your code remains the same
     plt.xlabel('Last Assessment Score')
@@ -425,7 +427,7 @@ def Cate_given_brad(result):
         x, y = p.get_xy()
         ax.annotate(f'{int(height)}', (x + width / 2, y + height / 2), ha='center', fontsize = 8)
     
-    st.pyplot(fig)
+    st.pyplot()
     
 
 def Cate_given_brad_perc(result):    
