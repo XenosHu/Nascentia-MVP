@@ -10,9 +10,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import streamlit as st
 from collections import defaultdict
-pip install fpdf
-from fpdf import FPDF
+import subprocess
 
+subprocess.run(["pip", "install", "fpdf"])
+from fpdf import FPDF
 
 def create_pdf(html_content, output_path):
     pdf = FPDF()
