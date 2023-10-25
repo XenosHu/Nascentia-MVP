@@ -5,4 +5,4 @@ matplotlib
 scikit-learn
 scipy
 streamlit==1.15.0
-
+WeasyPrint
