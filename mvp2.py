@@ -10,6 +10,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import streamlit as st
 from collections import defaultdict
+from weasyprint import HTML
+
+def create_pdf(html_content, output_path):
+    HTML(string=html_content).write_pdf(output_path)
 
 def determine_severity(score):
     if 6 <= score <= 12:
