@@ -10,6 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import streamlit as st
 from collections import defaultdict
+pip install fpdf
 from fpdf import FPDF
 
 
