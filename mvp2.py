@@ -479,7 +479,7 @@ def merge_and_process_data(ulcer, brad):
     
 def main():
     image_path = "nascentia_logo.png"
-    st.image(image_path, use_column_width=True)
+    st.image(image_path, width = 100)
     st.title("Nascentia Pressure Ulcer Data Analyzer")
     
     # Call the function to upload CSV file for Ulcer dataset
