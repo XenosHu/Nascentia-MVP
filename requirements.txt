@@ -4,5 +4,5 @@ numpy
 matplotlib
 scikit-learn
 scipy
-streamlit==1.15.0
+streamlit==1.26.0
 
