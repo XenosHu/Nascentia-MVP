@@ -539,6 +539,14 @@ def main():
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
             "(https://drive.google.com/file/d/1gyZnA_mfkNlwyOyjKlLGgIH7LiEUQvZQ/view?usp=share_link)")
 
+        # Add a button to generate PDF
+    if st.button("Generate PDF"):
+        # Get the HTML content of the current Streamlit page
+        html_content = st.report_thread.get_report_ctx().html
+
+        # Generate PDF and save it
+        create_pdf(html_content, "output.pdf")
+
 
         
 if __name__ == "__main__":
