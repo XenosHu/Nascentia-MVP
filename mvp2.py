@@ -544,16 +544,20 @@ def SVM(brad):
     label_encoder = LabelEncoder()
     sub_brad['got_ulcer'] = sub_brad['got_ulcer'].astype(int)
 
+    # # Separate numeric and non-numeric columns
+    # numeric_columns = sub_brad.select_dtypes(include=[np.number]).columns
+    # non_numeric_columns = sub_brad.columns.difference(numeric_columns)
+
+    # # Scale only numeric features
+    # scaler = StandardScaler()
+    # sub_brad[numeric_columns] = scaler.fit_transform(sub_brad[numeric_columns])
+    sub_brad = scaler.fit_transform(sub_brad)
     # Split the data into training and testing sets
     X = sub_brad[features]
     y = sub_brad[target]
 
-    # Scale features
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
-
     # Train-test split with scaled features
-    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.1, random_state=seed)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=seed)
 
     # Train the SVM model
     svm_model = SVC(kernel='rbf', C=1, gamma=0.1, max_iter=1000, random_state=seed)
@@ -562,22 +566,12 @@ def SVM(brad):
     # Make predictions on the test set
     svm_pred = svm_model.predict(X_test)
 
-    # Calculate accuracy
-    svm_accuracy = accuracy_score(y_test, svm_pred)
-    print(f"SVM Accuracy: {svm_accuracy}")
+    # Create a new DataFrame for predictions
+    pred_data = pd.DataFrame({'svm_pred': svm_pred}, index=X_test.index)
 
-    # Create confusion matrix
-    conf_matrix = confusion_matrix(y_test, svm_pred)
-    print("Confusion Matrix:")
-    print(conf_matrix)
-
-    # Calculate AUC
-    svm_auc_value = roc_auc_score(y_test, svm_pred)
-    print(f"SVM AUC: {svm_auc_value}")
-
-    # Plot decision boundary
-    svm_plot_data = pd.concat([pd.DataFrame(X_test, columns=features), pd.DataFrame(y_test, columns=[target])], axis=1)
-    svm_plot_data['svm_pred'] = svm_model.predict(X_test)
+    # Merge predictions with svm_plot_data
+    svm_plot_data = pd.concat([pd.DataFrame(X_test, columns=features), pd.DataFrame(y_test, columns=[target]), pred_data],
+                             axis=1)
 
     # Create a column indicating correct or incorrect predictions
     svm_plot_data['prediction_correct'] = svm_plot_data['got_ulcer'] == svm_plot_data['svm_pred']
