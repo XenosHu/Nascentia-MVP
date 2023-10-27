@@ -69,6 +69,7 @@ def upload_brad_csv():
     return None
 
 def process_birth_data(birth):
+    birth['DOB'] = pd.to_datetime(birth['DOB'])
     birth['DOB'] = birth['DOB'].dt.year
     birth['Name'] = birth['Name'].str.split('Last').str[1].str.split(', First').str.join('-')
     birth = birth[birth['DOB'].notna()]
