@@ -17,8 +17,8 @@ from sklearn.metrics import accuracy_score, confusion_matrix, roc_auc_score
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import GridSearchCV
 
-subprocess.run(["pip", "install", "fpdf"])
-st.set_option('deprecation.showPyplotGlobalUse', False)
+# subprocess.run(["pip", "install", "fpdf"])
+# st.set_option('deprecation.showPyplotGlobalUse', False)
 
 def determine_severity(score):
     if 6 <= score <= 12:
@@ -31,6 +31,55 @@ def determine_severity(score):
         return 'Healthy'
     else:
         return 'Unknown'
+
+def upload_birth_csv():
+    uploaded_file = st.file_uploader("Choose a CSV file for Birthday dataset", type="csv")
+
+    if uploaded_file is not None:
+        try:
+            birth = pd.read_csv(uploaded_file)
+            st.success("Physical Assessment dataset uploaded successfully.")
+            return birth
+        except Exception as e:
+            st.error(f"Error: {e}")
+    return None
+
+def upload_ulcer_csv():
+    uploaded_file = st.file_uploader("Choose a CSV file for Ulcer dataset", type="csv")
+
+    if uploaded_file is not None:
+        try:
+            ulcer = pd.read_csv(uploaded_file)
+            st.success("Ulcer dataset uploaded successfully.")
+            return ulcer
+        except Exception as e:
+            st.error(f"Error: {e}")
+    return None
+
+def upload_brad_csv():
+    uploaded_file = st.file_uploader("Choose a CSV file for Physical Assessment dataset", type="csv")
+
+    if uploaded_file is not None:
+        try:
+            brad = pd.read_csv(uploaded_file)
+            st.success("Physical Assessment dataset uploaded successfully.")
+            return brad
+        except Exception as e:
+            st.error(f"Error: {e}")
+    return None
+
+def process_birth_data(birth):
+    birth['DOB'] = birth['DOB'].dt.year
+    birth['Name'] = birth['Name'].str.split('Last').str[1].str.split(', First').str.join('-')
+    birth = birth[birth['DOB'].notna()]
+    birth = birth.sort_values('DOB', ascending=True)
+
+    dup_birth = birth[birth['Name'].duplicated(keep=False)]
+    dup_birth = dup_birth.sort_values('Name', ascending=True)
+
+    st.write(f"Length of 'birth': {len(birth)}")
+    st.write("Preview of 'birth' DataFrame:")
+    st.write(birth.head())
 
 def process_ulcer_data(ulcer):
     ulcer['Name'] = ulcer['Name'].str.split('Last').str[1].str.split(', First').str.join('-')
@@ -71,58 +120,7 @@ def process_brad_data(brad):
     brad['Visitdate'] = pd.to_datetime(brad['Visitdate'])
     brad['Worker_name'] = brad['Textbox65'].str.split(':').str[1].str.split(',').str[0]
     brad['Worker_type'] = brad['Textbox65'].str.rsplit(',').str[1]
-
-
-def upload_birth_csv():
-    uploaded_file = st.file_uploader("Choose a CSV file for Birthday dataset", type="csv")
-
-    if uploaded_file is not None:
-        try:
-            birth = pd.read_csv(uploaded_file)
-            st.success("Physical Assessment dataset uploaded successfully.")
-            return birth
-        except Exception as e:
-            st.error(f"Error: {e}")
-    return None
-
-def upload_ulcer_csv():
-    uploaded_file = st.file_uploader("Choose a CSV file for Ulcer dataset", type="csv")
-
-    if uploaded_file is not None:
-        try:
-            ulcer = pd.read_csv(uploaded_file)
-            st.success("Ulcer dataset uploaded successfully.")
-            return ulcer
-        except Exception as e:
-            st.error(f"Error: {e}")
-    return None
-
-def upload_brad_csv():
-    uploaded_file = st.file_uploader("Choose a CSV file for Physical Assessment dataset", type="csv")
-
-    if uploaded_file is not None:
-        try:
-            brad = pd.read_csv(uploaded_file)
-            st.success("Physical Assessment dataset uploaded successfully.")
-            return brad
-        except Exception as e:
-            st.error(f"Error: {e}")
-    return None
-
-
-def process_birth_data(birth):
-    birth['DOB'] = birth['DOB'].dt.year
-    birth['Name'] = birth['Name'].str.split('Last').str[1].str.split(', First').str.join('-')
-    birth = birth[birth['DOB'].notna()]
-    birth = birth.sort_values('DOB', ascending=True)
-
-    dup_birth = birth[birth['Name'].duplicated(keep=False)]
-    dup_birth = dup_birth.sort_values('Name', ascending=True)
-
-    st.write(f"Length of 'birth': {len(birth)}")
-    st.write("Preview of 'birth' DataFrame:")
-    st.write(birth.head())
-
+    
 def plot_patient_data(patient_id, brad):
     # Filter data for the specified patient
     sub = brad[brad['Name'] == patient_id]
@@ -629,14 +627,12 @@ def main():
 
     # Display the processed Ulcer dataset
     if birth is not None:
-
-        process_ulcer_data(birth)
+        process_birth_data(birth)
         st.write(f"Length of 'Birthday Data': {len(birth)}")
         #st.write("Preview of 'Ulcer Data' DataFrame:")
         #st.write(ulcer.head(10))
     
     if ulcer is not None:
-
         process_ulcer_data(ulcer)
         st.write(f"Length of 'Pressure Ulcer Data': {len(ulcer)}")
         #st.write("Preview of 'Ulcer Data' DataFrame:")
@@ -644,7 +640,6 @@ def main():
 
     # Display the processed brad dataset
     if brad is not None:
-
         process_brad_data(brad)
         brad = duration(brad)
         st.write(f"Length of 'Physical Assessment Data': {len(brad)}")
