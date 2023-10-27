@@ -549,7 +549,7 @@ def SVM(brad):
     # non_numeric_columns = sub_brad.columns.difference(numeric_columns)
 
     # # Scale only numeric features
-    # scaler = StandardScaler()
+    scaler = StandardScaler()
     # sub_brad[numeric_columns] = scaler.fit_transform(sub_brad[numeric_columns])
     sub_brad = scaler.fit_transform(sub_brad)
     # Split the data into training and testing sets
