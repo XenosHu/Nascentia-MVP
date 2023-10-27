@@ -529,7 +529,8 @@ def SVM(brad):
     seed = 42
 
     # Select features and target variable
-    features = ["AssessmentAnswer", "ServiceCode", "Severity", "Worker_type", "Age_as_of_visit", "duration"]
+    features = ["AssessmentAnswer", "Severity", "Age_as_of_visit", "duration"]
+    #features = ["AssessmentAnswer", "ServiceCode", "Severity", "Worker_type", "Age_as_of_visit", "duration"]
     target = 'got_ulcer'
 
     # Create a subset of brad with only selected columns
