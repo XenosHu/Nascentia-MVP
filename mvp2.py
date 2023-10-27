@@ -78,10 +78,6 @@ def process_birth_data(birth):
     dup_birth = birth[birth['Name'].duplicated(keep=False)]
     dup_birth = dup_birth.sort_values('Name', ascending=True)
 
-    st.write(f"Length of 'birth': {len(birth)}")
-    st.write("Preview of 'birth' DataFrame:")
-    st.write(birth.head())
-
 def process_ulcer_data(ulcer):
     ulcer['Name'] = ulcer['Name'].str.split('Last').str[1].str.split(', First').str.join('-')
 
@@ -676,6 +672,7 @@ def main():
         Cate_given_brad(result)
         Cate_given_brad_perc(result)
         find_worse(result)
+        SVM(brad)
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
             "(https://drive.google.com/file/d/1snQ3VCuuk-yga4JHz1W_h15UQ5-kKnWq/view?usp=sharing)")
         
