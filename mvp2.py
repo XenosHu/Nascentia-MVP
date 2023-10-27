@@ -622,11 +622,9 @@ def main():
     image_path = "nascentia_logo.png"
     st.image(image_path, width = 100)
     st.title("Nascentia Pressure Ulcer Data Analyzer")
-    
-    # Call the function to upload CSV file for Ulcer dataset
-    ulcer = upload_ulcer_csv()
 
-    # Call the function to upload CSV file for Brad dataset
+    birth = upload_birth_csv()
+    ulcer = upload_ulcer_csv()
     brad = upload_brad_csv()
 
     # Display the processed Ulcer dataset
