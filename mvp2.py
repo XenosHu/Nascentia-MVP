@@ -460,6 +460,12 @@ def find_worse(result):
     worse_result = result[result['Categorization'] == 'Worse']
     st.write('Patients whose condition got worse: ')
     st.write(worse_result)
+    
+def got_ulcer(brad,ulcer_b):
+    brad['got_ulcer'] = brad["Name"].apply(lambda x: x in list(ulcer_b["Name"]))
+    brad[brad['got_ulcer']== True].sort_values('Name',ascending = True)
+
+    return brad
 
 def duration(brad):
     dura = brad.groupby(['Name', 'Visitdate']).agg(list).reset_index()
@@ -478,6 +484,19 @@ def duration(brad):
     brad = pd.merge(brad, dura[['Name', 'duration']].drop_duplicates(), on='Name', how='left')
     brad = brad.dropna()
     return brad
+
+# predictive modeling --------------------------------------------------------------------------------------#
+
+def find_categorical_columns(data):
+    # Identify columns with object data type
+    categorical_columns = [col for col, dtype in data.dtypes.items() if pd.api.types.is_object_dtype(dtype)]
+    return categorical_columns
+
+def convert_to_factors(data, categorical_columns):
+    data[categorical_columns] = data[categorical_columns].apply(lambda col: col.astype('category'))
+    return data
+
+
 
 def merge_and_process_data(ulcer, brad):
     # Merge two tables
