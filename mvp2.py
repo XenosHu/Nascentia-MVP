@@ -14,7 +14,7 @@ import subprocess
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, confusion_matrix, roc_auc_score
-from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.model_selection import GridSearchCV
 
 # subprocess.run(["pip", "install", "fpdf"])
@@ -526,15 +526,13 @@ def convert_to_factors(data, categorical_columns):
 def SVM(brad):
     seed = 42
     
-    # Assuming brad is your dataframe
-    
     # Convert categorical columns to factors
     categorical_columns = find_categorical_columns(brad)
-    brad[categorical_columns] = brad[categorical_columns].apply(lambda col: col.astype('category'))
+    brad = convert_to_factors(brad, categorical_columns)
     
     # Convert the 'got_ulcer' column to binary labels
     label_encoder = LabelEncoder()
-    brad['got_ulcer'] = brad['got_ulcer'].astype(int)
+    brad['got_ulcer'] = label_encoder.fit_transform(brad['got_ulcer'])
     
     # Select features and target variable
     features = ["AssessmentAnswer", "ServiceCode", "Severity", "Worker_type", "Age_as_of_visit", "duration"]
@@ -543,7 +541,12 @@ def SVM(brad):
     # Split the data into training and testing sets
     X = brad[features]
     y = brad[target]
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=seed)
+    
+    # Standardize features
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+    
+    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.1, random_state=seed)
     
     # Train the SVM model
     svm_model = SVC(kernel='rbf', C=1, gamma=0.1, max_iter=1000, random_state=seed)
