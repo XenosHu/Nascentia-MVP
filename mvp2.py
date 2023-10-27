@@ -683,7 +683,7 @@ def main():
         Cate_given_brad_perc(result)
         find_worse(result)
 
-        #SVM(brad)
+        SVM(brad)
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
             "(https://drive.google.com/file/d/1snQ3VCuuk-yga4JHz1W_h15UQ5-kKnWq/view?usp=sharing)")
         
