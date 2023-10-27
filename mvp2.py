@@ -11,6 +11,12 @@ import matplotlib.pyplot as plt
 import streamlit as st
 from collections import defaultdict
 import subprocess
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score, confusion_matrix, roc_auc_score
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import GridSearchCV
+import seaborn as sns
 
 subprocess.run(["pip", "install", "fpdf"])
 st.set_option('deprecation.showPyplotGlobalUse', False)
