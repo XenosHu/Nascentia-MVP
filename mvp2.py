@@ -539,7 +539,7 @@ def SVM(brad):
     brad['got_ulcer'] = label_encoder.fit_transform(brad['got_ulcer'])
     
     # Select features and target variable
-    features = ["AssessmentAnswer", "ServiceCode", "Severity", "Worker_type", "Age_as_of_visit", "duration"]
+    features = ["AssessmentAnswer", "ServiceCode", "Severity", "Worker_type", "duration", "Age_as_of_visit"]
     target = 'got_ulcer'
     
     # Split the data into training and testing sets
@@ -647,7 +647,6 @@ def main():
         process_brad_data(brad)
         brad = duration(brad)
         st.write(f"Length of 'Physical Assessment Data': {len(brad)}")
-        st.write(brad)
     
     if brad is not None and birth is not None:
         brad = merge_with_birth(brad, birth)
