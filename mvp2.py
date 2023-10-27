@@ -8,7 +8,7 @@ import ast
 from datetime import datetime as dt, timedelta
 import numpy as np
 import matplotlib.pyplot as plt
-import plotly.express as px
+from plotly import colors, express as px, graph_objects as go, offline as pyo
 import streamlit as st
 from collections import defaultdict
 import subprocess
