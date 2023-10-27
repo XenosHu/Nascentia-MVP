@@ -668,8 +668,8 @@ def main():
 
     if brad is not None:
         plot_severity_counts(brad)
-        print(brad.columns)
-        SVM(brad)
+        st.write(brad.columns)
+        
     if ulcer is not None and brad is not None:
         plot_ulcer_counts(ulcer_b)
         braden_score_for_ulcer_patient_counts(ulcer_b)
@@ -681,7 +681,8 @@ def main():
         Cate_given_brad(result)
         Cate_given_brad_perc(result)
         find_worse(result)
- 
+        st.write(brad.columns)
+        #SVM(brad)
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
             "(https://drive.google.com/file/d/1snQ3VCuuk-yga4JHz1W_h15UQ5-kKnWq/view?usp=sharing)")
         
