@@ -520,8 +520,12 @@ def find_categorical_columns(data):
     return categorical_columns
 
 def convert_to_factors(data, categorical_columns):
-    data[categorical_columns] = data[categorical_columns].apply(lambda col: col.astype('category'))
+    data = pd.get_dummies(data, columns=categorical_columns)
     return data
+
+# def convert_to_factors(data, categorical_columns):
+#     data[categorical_columns] = data[categorical_columns].apply(lambda col: col.astype('category'))
+#     return data
 
 def SVM(brad):
     seed = 42
