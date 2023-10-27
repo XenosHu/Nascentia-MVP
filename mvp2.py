@@ -543,7 +543,7 @@ def SVM(brad):
 
     # Convert the 'got_ulcer' column to binary labels
     label_encoder = LabelEncoder()
-    sub_brad['got_ulcer'] = sub_brad['got_ulcer'].astype(int)
+    sub_brad.loc[:, 'got_ulcer'] = sub_brad['got_ulcer'].astype(int)
 
     # # Separate numeric and non-numeric columns
     # numeric_columns = sub_brad.select_dtypes(include=[np.number]).columns
