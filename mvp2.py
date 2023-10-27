@@ -475,7 +475,7 @@ def duration(brad):
     # Reset the index to have a clean DataFrame
     dura.reset_index(inplace=True)
     # Merge 'brad_b' with 'brad_v' on the 'Name' column
-    brad = pd.merge(brad, dura[['Name', 'duration']], on='Name', how='left')
+    brad = pd.merge(brad, dura[['Name', 'duration']], on='Name')
     brad = brad.dropna()
     return brad
 
