@@ -106,7 +106,7 @@ def process_ulcer_data(ulcer):
     
     ulcer["Type"] = ulcer["Type"].astype(int)
 
-    print("After modification - Unique values in 'Type':", ulcer['Type'].unique())
+    st.write("After modification - Unique values in 'Type':", ulcer['Type'].unique())
 
     return ulcer  # Return the modified DataFrame
 
@@ -244,7 +244,7 @@ def heal_rate_type(ulcer_b):
     try:
         ulcer_b = ulcer_b.sort_values(by=['Name', 'Location', 'SOE', 'VisitDate'], ascending=[True, True, True, False])
     except AttributeError as e:
-        print(f"Error sorting DataFrame: {e}")
+        st.write(f"Error sorting DataFrame: {e}")
         return pd.DataFrame()  # Return an empty DataFrame or handle it based on your logic
     
     # Group by Name, Location, and SOE
@@ -543,8 +543,12 @@ def SVM(brad):
     target = 'got_ulcer'
     
     # Split the data into training and testing sets
-    X = brad[features]
-    y = brad[target]
+    if set(features + [target]).issubset(brad.columns):
+        # Split the data into training and testing sets
+        X = brad[features]
+        y = brad[target]
+    else:
+        st.write("Columns not found in the specified order.")
     
     # Standardize features
     scaler = StandardScaler()
@@ -561,16 +565,16 @@ def SVM(brad):
     
     # Calculate accuracy
     svm_accuracy = accuracy_score(y_test, svm_pred)
-    print(f"SVM Accuracy: {svm_accuracy}")
+    st.write(f"SVM Accuracy: {svm_accuracy}")
     
     # Create confusion matrix
     conf_matrix = confusion_matrix(y_test, svm_pred)
-    print("Confusion Matrix:")
-    print(conf_matrix)
+    st.write("Confusion Matrix:")
+    st.write(conf_matrix)
     
     # Calculate AUC
     svm_auc_value = roc_auc_score(y_test, svm_pred)
-    print(f"SVM AUC: {svm_auc_value}")
+    st.write(f"SVM AUC: {svm_auc_value}")
     
     # Plot decision boundary
     svm_plot_data = pd.concat([X_test, y_test], axis=1)
@@ -668,7 +672,6 @@ def main():
 
     if brad is not None:
         plot_severity_counts(brad)
-        st.write(brad.columns)
         
     if ulcer is not None and brad is not None:
         plot_ulcer_counts(ulcer_b)
@@ -681,7 +684,7 @@ def main():
         Cate_given_brad(result)
         Cate_given_brad_perc(result)
         find_worse(result)
-        st.write(brad.columns)
+
         #SVM(brad)
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
             "(https://drive.google.com/file/d/1snQ3VCuuk-yga4JHz1W_h15UQ5-kKnWq/view?usp=sharing)")
