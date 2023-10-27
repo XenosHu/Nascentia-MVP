@@ -550,7 +550,12 @@ def SVM(brad):
     
     # Standardize features
     scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
+    # Ensure X is assigned before applying scaling
+    if 'X' in locals():
+        X_scaled = scaler.fit_transform(X)
+    else:
+        print("X is not assigned.")
+
     
     X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.1, random_state=seed)
     
