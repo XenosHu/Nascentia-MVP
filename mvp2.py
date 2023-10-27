@@ -553,50 +553,50 @@ def SVM(brad):
     # Ensure X is assigned before applying scaling
     if 'X' in locals():
         X_scaled = scaler.fit_transform(X)
+        
+        # Split the data into training and testing sets
+        X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.1, random_state=seed)
+        
+        # Train the SVM model
+        svm_model = SVC(kernel='rbf', C=1, gamma=0.1, max_iter=1000, random_state=seed)
+        svm_model.fit(X_train, y_train)
+        
+        # Make predictions on the test set
+        svm_pred = svm_model.predict(X_test)
+        
+        # Calculate accuracy
+        svm_accuracy = accuracy_score(y_test, svm_pred)
+        print(f"SVM Accuracy: {svm_accuracy}")
+        
+        # Create confusion matrix
+        conf_matrix = confusion_matrix(y_test, svm_pred)
+        print("Confusion Matrix:")
+        print(conf_matrix)
+        
+        # Calculate AUC
+        svm_auc_value = roc_auc_score(y_test, svm_pred)
+        print(f"SVM AUC: {svm_auc_value}")
+        
+        # Plot decision boundary
+        svm_plot_data = pd.concat([X_test, y_test], axis=1)
+        svm_plot_data['svm_pred'] = svm_model.predict(X_test)
+        
+        # Create a column indicating correct or incorrect predictions
+        svm_plot_data['prediction_correct'] = svm_plot_data['got_ulcer'] == svm_plot_data['svm_pred']
+        
+        # Plot SVM decision boundary with jitter using Plotly
+        fig = px.scatter(svm_plot_data, x='AssessmentAnswer', y='Age_as_of_visit', color='prediction_correct',
+                         symbol='got_ulcer', opacity=0.7, size_max=10,
+                         color_discrete_map={True: 'green', False: 'red'},
+                         symbol_map={0: 'circle', 1: 'square'})
+        
+        fig.update_layout(title_text="SVM Decision Boundary",
+                          xaxis_title="AssessmentAnswer",
+                          yaxis_title="Age_as_of_visit",
+                          legend_title="Prediction Correctness")
+        fig.show()
     else:
         print("X is not assigned.")
-
-    
-    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.1, random_state=seed)
-    
-    # Train the SVM model
-    svm_model = SVC(kernel='rbf', C=1, gamma=0.1, max_iter=1000, random_state=seed)
-    svm_model.fit(X_train, y_train)
-    
-    # Make predictions on the test set
-    svm_pred = svm_model.predict(X_test)
-    
-    # Calculate accuracy
-    svm_accuracy = accuracy_score(y_test, svm_pred)
-    st.write(f"SVM Accuracy: {svm_accuracy}")
-    
-    # Create confusion matrix
-    conf_matrix = confusion_matrix(y_test, svm_pred)
-    st.write("Confusion Matrix:")
-    st.write(conf_matrix)
-    
-    # Calculate AUC
-    svm_auc_value = roc_auc_score(y_test, svm_pred)
-    st.write(f"SVM AUC: {svm_auc_value}")
-    
-    # Plot decision boundary
-    svm_plot_data = pd.concat([X_test, y_test], axis=1)
-    svm_plot_data['svm_pred'] = svm_model.predict(X_test)
-    
-    # Create a column indicating correct or incorrect predictions
-    svm_plot_data['prediction_correct'] = svm_plot_data['got_ulcer'] == svm_plot_data['svm_pred']
-    
-    # Plot SVM decision boundary with jitter using Plotly
-    fig = px.scatter(svm_plot_data, x='AssessmentAnswer', y='Age_as_of_visit', color='prediction_correct',
-                     symbol='got_ulcer', opacity=0.7, size_max=10,
-                     color_discrete_map={True: 'green', False: 'red'},
-                     symbol_map={0: 'circle', 1: 'square'})
-    
-    fig.update_layout(title_text="SVM Decision Boundary",
-                      xaxis_title="AssessmentAnswer",
-                      yaxis_title="Age_as_of_visit",
-                      legend_title="Prediction Correctness")
-    fig.show()
 
 # ----------------------------------------------------------------------------------------------------------------#
 
