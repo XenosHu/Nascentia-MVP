@@ -2,6 +2,7 @@ fpdf
 pandas
 numpy
 matplotlib
+plotly
 scikit-learn
 scipy
 streamlit==1.26.0
