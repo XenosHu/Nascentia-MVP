@@ -561,7 +561,7 @@ def SVM(brad):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=seed)
 
     # Train the SVM model
-    svm_model = SVC(kernel='rbf', C=1, gamma=0.1, max_iter=1000, random_state=seed)
+    svm_model = SVC(kernel='rbf', C=1, gamma=0.1, max_iter=5000, random_state=seed)
     svm_model.fit(X_train, y_train)
 
     # Make predictions on the test set
