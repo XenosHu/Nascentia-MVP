@@ -536,9 +536,9 @@ def SVM(brad):
     # Create a subset of brad with only selected columns
     sub_brad = brad[features + [target]]
 
-    # Convert categorical columns to factors
-    categorical_columns = find_categorical_columns(sub_brad)
-    sub_brad[categorical_columns] = sub_brad[categorical_columns].apply(lambda col: col.astype('category'))
+    # # Convert categorical columns to factors
+    # categorical_columns = find_categorical_columns(sub_brad)
+    # sub_brad[categorical_columns] = sub_brad[categorical_columns].apply(lambda col: col.astype('category'))
 
     # Convert the 'got_ulcer' column to binary labels
     label_encoder = LabelEncoder()
