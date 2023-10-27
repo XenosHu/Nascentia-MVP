@@ -647,6 +647,7 @@ def main():
         process_brad_data(brad)
         brad = duration(brad)
         st.write(f"Length of 'Physical Assessment Data': {len(brad)}")
+        st.write(brad)
     
     if brad is not None and birth is not None:
         brad = merge_with_birth(brad, birth)
