@@ -106,8 +106,6 @@ def process_ulcer_data(ulcer):
     
     ulcer["Type"] = ulcer["Type"].astype(int)
 
-    st.write("After modification - Unique values in 'Type':", ulcer['Type'].unique())
-
     return ulcer  # Return the modified DataFrame
 
 def process_brad_data(brad):
