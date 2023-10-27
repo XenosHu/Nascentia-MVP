@@ -18,8 +18,8 @@ from sklearn.metrics import accuracy_score, confusion_matrix, roc_auc_score
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.model_selection import GridSearchCV
 
-# subprocess.run(["pip", "install", "fpdf"])
-# st.set_option('deprecation.showPyplotGlobalUse', False)
+#subprocess.run(["pip", "install", "fpdf"])
+st.set_option('deprecation.showPyplotGlobalUse', False)
 
 def determine_severity(score):
     if 6 <= score <= 12:
