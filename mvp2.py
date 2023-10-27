@@ -72,6 +72,19 @@ def process_brad_data(brad):
     brad['Worker_name'] = brad['Textbox65'].str.split(':').str[1].str.split(',').str[0]
     brad['Worker_type'] = brad['Textbox65'].str.rsplit(',').str[1]
 
+
+def upload_birth_csv():
+    uploaded_file = st.file_uploader("Choose a CSV file for Birthday dataset", type="csv")
+
+    if uploaded_file is not None:
+        try:
+            birth = pd.read_csv(uploaded_file)
+            st.success("Physical Assessment dataset uploaded successfully.")
+            return birth
+        except Exception as e:
+            st.error(f"Error: {e}")
+    return None
+
 def upload_ulcer_csv():
     uploaded_file = st.file_uploader("Choose a CSV file for Ulcer dataset", type="csv")
 
@@ -95,6 +108,20 @@ def upload_brad_csv():
         except Exception as e:
             st.error(f"Error: {e}")
     return None
+
+
+def process_birth_data(birth):
+    birth['DOB'] = birth['DOB'].dt.year
+    birth['Name'] = birth['Name'].str.split('Last').str[1].str.split(', First').str.join('-')
+    birth = birth[birth['DOB'].notna()]
+    birth = birth.sort_values('DOB', ascending=True)
+
+    dup_birth = birth[birth['Name'].duplicated(keep=False)]
+    dup_birth = dup_birth.sort_values('Name', ascending=True)
+
+    st.write(f"Length of 'birth': {len(birth)}")
+    st.write("Preview of 'birth' DataFrame:")
+    st.write(birth.head())
 
 def plot_patient_data(patient_id, brad):
     # Filter data for the specified patient
@@ -562,6 +589,15 @@ def SVM(brad):
                       legend_title="Prediction Correctness")
     fig.show()
 
+# ----------------------------------------------------------------------------------------------------------------#
+
+def merge_with_birth(brad, birth):
+
+    brad = brad.merge(birth, left_on='Name', right_on='Name')
+    brad = brad.dropna()
+    brad['Age_as_of_visit'] = (brad['Visitdate'].dt.year - brad['DOB']).astype(int)
+    return brad
+
 def merge_and_process_data(ulcer, brad):
     # Merge two tables
     ulcer_b = ulcer.merge(brad, left_on='Name', right_on='Name')
@@ -580,7 +616,7 @@ def merge_and_process_data(ulcer, brad):
     ulcer_b = ulcer_b.drop(columns=['MaxAllowedDate'])
     ulcer_b = ulcer_b.sort_values('Name', ascending=True)
 
-    return ulcer_b  # Return the processed DataFrame
+    return ulcer_b  
     
 def main():
     image_path = "nascentia_logo.png"
@@ -594,6 +630,13 @@ def main():
     brad = upload_brad_csv()
 
     # Display the processed Ulcer dataset
+    if birth is not None:
+
+        process_ulcer_data(birth)
+        st.write(f"Length of 'Birthday Data': {len(birth)}")
+        #st.write("Preview of 'Ulcer Data' DataFrame:")
+        #st.write(ulcer.head(10))
+    
     if ulcer is not None:
 
         process_ulcer_data(ulcer)
@@ -607,10 +650,10 @@ def main():
         process_brad_data(brad)
         brad = duration(brad)
         st.write(f"Length of 'Physical Assessment Data': {len(brad)}")
-        #st.write("Preview of 'brad Data' DataFrame:")
-        #st.write(brad.head(10))
+    
+    if brad is not None and birth is not None:
+        brad = merge_with_birth(brad, birth)
 
-    # Merge and process data
     if ulcer is not None and brad is not None:
         brad = got_ulcer(brad,ulcer)
         ulcer_b = merge_and_process_data(ulcer, brad)  # Get the processed DataFrame
