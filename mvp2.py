@@ -13,16 +13,7 @@ from collections import defaultdict
 import subprocess
 
 subprocess.run(["pip", "install", "fpdf"])
-from fpdf import FPDF
-
 st.set_option('deprecation.showPyplotGlobalUse', False)
-
-# def create_pdf(html_content, output_path):
-#     pdf = FPDF()
-#     pdf.add_page()
-#     pdf.set_font("Arial", size=12)
-#     pdf.multi_cell(0, 10, html_content)
-#     pdf.output(output_path)
 
 def determine_severity(score):
     if 6 <= score <= 12:
@@ -469,7 +460,25 @@ def find_worse(result):
     worse_result = result[result['Categorization'] == 'Worse']
     st.write('Patients whose condition got worse: ')
     st.write(worse_result)
+
+def duration(brad):
+    dura = brad.groupby(['Name', 'Visitdate']).agg(list).reset_index()
     
+    # Sort the DataFrame by 'Visitdate' within each 'Name' group
+    dura.sort_values(by=['Name', 'Visitdate'], inplace=True)
+    
+    # Group by 'Name' and select the first and last visit dates
+    dura['first_visit'] = dura.groupby('Name')['Visitdate'].transform('first')
+    dura['last_visit'] = dura.groupby('Name')['Visitdate'].transform('last')
+    dura['duration'] = (dura['last_visit'] - dura['first_visit']).dt.days
+    
+    # Reset the index to have a clean DataFrame
+    dura.reset_index(inplace=True)
+    # Merge 'brad_b' with 'brad_v' on the 'Name' column
+    brad = pd.merge(brad, dura[['Name', 'duration']], on='Name', how='left')
+    brad = brad.dropna()
+    return brad
+
 def merge_and_process_data(ulcer, brad):
     # Merge two tables
     ulcer_b = ulcer.merge(brad, left_on='Name', right_on='Name')
@@ -513,6 +522,7 @@ def main():
     if brad is not None:
 
         process_brad_data(brad)
+        brad = duration(brad)
         st.write(f"Length of 'Physical Assessment Data': {len(brad)}")
         #st.write("Preview of 'brad Data' DataFrame:")
         #st.write(brad.head(10))
@@ -547,16 +557,6 @@ def main():
         find_worse(result)
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
             "(https://drive.google.com/file/d/1snQ3VCuuk-yga4JHz1W_h15UQ5-kKnWq/view?usp=sharing)")
-
-    # # Add a button to generate PDF
-    # if st.button("Generate PDF"):
-    #     # Get the HTML content of the current Streamlit page
-    #     html_content = st.report_thread.get_report_ctx().html
-
-    #     # Generate PDF and save it
-    #     create_pdf(html_content, "output.pdf")
-
-
         
 if __name__ == "__main__":
     main()
