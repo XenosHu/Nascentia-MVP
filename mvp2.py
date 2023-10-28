@@ -588,6 +588,9 @@ def SVM(brad):
     st.write(f"SVM Accuracy: {svm_accuracy}")
     
     # Create confusion matrix
+    conf_matrix = confusion_matrix(y_test, svm_pred)
+    
+    # Display confusion matrix with labels
     conf_matrix_display = pd.DataFrame(conf_matrix, index=['Actual 0', 'Actual 1'], columns=['Predicted 0', 'Predicted 1'])
     st.write("Confusion Matrix:")
     st.write(conf_matrix_display)
