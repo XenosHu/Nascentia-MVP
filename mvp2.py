@@ -607,14 +607,14 @@ def SVM(brad):
     
     # Use GridSearchCV for hyperparameter tuning with cross-validation
     grid_search = GridSearchCV(svm_classifier, param_grid, cv=5, scoring='accuracy', verbose=1)
-    grid_search.fit(X_train_scaled, y_train)
+    grid_search.fit(X_train, y_train)
     
     # Get the best parameters
     best_params = grid_search.best_params_
     
     # Train the final model with the best parameters on the entire training set
     svm_model = SVC(**best_params)
-    svm_model.fit(X_train_scaled, y_train)
+    svm_model.fit(X_train, y_train)
 
     end_time = time.time()
     elapsed_time = round(end_time - start_time, 2)
