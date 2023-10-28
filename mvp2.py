@@ -123,35 +123,40 @@ def plot_patient_data(patient_id, brad):
     sub = brad[brad['Name'] == patient_id]
     sub = sub.sort_values('Visitdate', ascending=True)
 
-    fig = px.line(sub, x='Visitdate', y='AssessmentAnswer', markers=True, line_shape='linear')
-    
-    # Customize the layout
-    fig.update_layout(
-        title=f'Assessment Braden score of Patient {patient_id} over Time',
-        xaxis_title='Visit Date',
-        yaxis_title='Assessment Answer',
-        showlegend=True,
-        template='plotly_dark',  # Choose a template that suits your style
-    )
-    
-    # Display the interactive plot using Streamlit
-    st.plotly_chart(fig)
+    # Plot line chart
+    plt.figure(figsize=(10, 6))
+    plt.plot(sub['Visitdate'], sub['AssessmentAnswer'], marker='o', linestyle='-')
+    plt.title(f'Assessment Braden score of Patient {patient_id} over Time')
+    plt.xlabel('Visit Date')
+    plt.ylabel('Assessment Answer')
+    plt.tight_layout()
 
+    # Display the plot using Streamlit
+    st.set_option('deprecation.showPyplotGlobalUse', False)
+    st.pyplot()
 
 def plot_ulcer_counts(ulcer):
     # Create a filtered DataFrame with unique patients, keeping the most recent record
     unique_ulcer_patients = ulcer.sort_values('SOE', ascending=False).drop_duplicates('Name')
 
-    # Plot bar chart for Pressure Ulcer Count by Type using Plotly Express
-    type_counts = unique_ulcer_patients['Type'].value_counts().sort_index().reset_index()
-    type_counts.columns = ['Type', 'Count']
+    # Plot bar chart for Pressure Ulcer Count by Type
+    type_counts = unique_ulcer_patients['Type'].value_counts().sort_index()
 
-    fig = px.bar(type_counts, x='Type', y='Count', title='Pressure Ulcer Count by Type',
-                 labels={'Type': 'Ulcer Type', 'Count': 'Count'},
-                 color_discrete_sequence=px.colors.diverging.RdYlGn)
+    colors = plt.cm.RdYlGn(np.linspace(1, 0, len(type_counts)))
+    plt.figure(figsize=(10, 6))
+    type_counts.plot(kind='bar', title='Pressure Ulcer Count by Type', color = colors)
+    plt.xlabel('Type')
+    plt.ylabel('Count')
 
-    # Display the interactive plot using Streamlit
-    st.plotly_chart(fig)
+    # Add labels for each bar
+    for i, count in enumerate(type_counts):
+        plt.text(i, count + 0.1, str(count), ha='center', va='bottom')
+
+    plt.xticks(rotation=0, ha='center')
+    plt.tight_layout()
+
+    # Display the plot using Streamlit
+    st.pyplot()
 
 
 def plot_severity_counts(brad):
@@ -570,17 +575,9 @@ def SVM(brad):
     sub_brad = brad[features + [target]]
     sub_brad = convert_to_factors(sub_brad,["ServiceCode", "Worker_type"])
 
-    # # Convert categorical columns to factors
-    # categorical_columns = find_categorical_columns(sub_brad)
-    # sub_brad[categorical_columns] = sub_brad[categorical_columns].apply(lambda col: col.astype('category'))
-
     # Convert the 'got_ulcer' column to binary labels
     label_encoder = LabelEncoder()
     sub_brad.loc[:, 'got_ulcer'] = sub_brad['got_ulcer'].astype(int)
-
-    # # Separate numeric and non-numeric columns
-    # numeric_columns = sub_brad.select_dtypes(include=[np.number]).columns
-    # non_numeric_columns = sub_brad.columns.difference(numeric_columns)
 
     # Scale only numeric features
     scaler = StandardScaler()
@@ -602,9 +599,22 @@ def SVM(brad):
 
     start_time = time.time()
 
-    # Train the SVM model
-    svm_model = SVC(kernel='rbf', C=1, gamma=0.1, max_iter=20000, random_state=seed)
-    svm_model.fit(X_train, y_train)
+    # Define the parameter grid for tuning
+    param_grid = {'C': [1], 'gamma': [0.1], 'kernel': ['rbf'], 'max_iter': [1000]}
+    
+    # Create an SVM classifier
+    svm_classifier = SVC()
+    
+    # Use GridSearchCV for hyperparameter tuning with cross-validation
+    grid_search = GridSearchCV(svm_classifier, param_grid, cv=5, scoring='accuracy', verbose=1)
+    grid_search.fit(X_train_scaled, y_train)
+    
+    # Get the best parameters
+    best_params = grid_search.best_params_
+    
+    # Train the final model with the best parameters on the entire training set
+    svm_model = SVC(**best_params)
+    svm_model.fit(X_train_scaled, y_train)
 
     end_time = time.time()
     elapsed_time = round(end_time - start_time, 2)
