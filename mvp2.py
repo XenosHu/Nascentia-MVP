@@ -566,7 +566,7 @@ def SVM(brad):
     complexity_factor = 0.0001  # Adjust this based on your model and dataset complexity
 
     estimated_time = dataset_size * complexity_factor
-    print(f"Estimated time to train SVM model: {estimated_time} seconds")
+    st.write(f"Estimated time to train SVM model: {estimated_time} seconds")
 
     start_time = time.time()
 
@@ -576,7 +576,7 @@ def SVM(brad):
 
     end_time = time.time()
     elapsed_time = end_time - start_time
-    print(f"Actual time taken to train SVM model: {elapsed_time} seconds")
+    st.write(f"Actual time taken to train SVM model: {elapsed_time} seconds")
 
     # Make predictions on the test set
     svm_pred = svm_model.predict(X_test)
