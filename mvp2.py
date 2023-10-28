@@ -759,7 +759,7 @@ def main():
         Cate_given_brad(result)
         Cate_given_brad_perc(result)
         find_worse(result)
-        heal_speed_by_age(result)
+        #heal_speed_by_age(result)
 
         SVM(brad)
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
