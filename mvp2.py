@@ -477,56 +477,56 @@ def Cate_given_brad_perc(result):
     
     st.pyplot()
 
-def calculate_healing_speed(row):
-    assessment_scores = row['Sorted_AssessmentAnswer']
-    visit_dates = row['Sorted_Visitdates']
+# def calculate_healing_speed(row):
+#     assessment_scores = row['Sorted_AssessmentAnswer']
+#     visit_dates = row['Sorted_Visitdates']
 
-    # Check if the categorization is 'healing' or 'healed'
-    if len(assessment_scores) >= 2 and len(visit_dates) >= 2:
-        first_score = assessment_scores[0]
-        last_score = assessment_scores[-1]
-        first_date = pd.to_datetime(visit_dates[0])
-        last_date = pd.to_datetime(visit_dates[-1])
+#     # Check if the categorization is 'healing' or 'healed'
+#     if len(assessment_scores) >= 2 and len(visit_dates) >= 2:
+#         first_score = assessment_scores[0]
+#         last_score = assessment_scores[-1]
+#         first_date = pd.to_datetime(visit_dates[0])
+#         last_date = pd.to_datetime(visit_dates[-1])
 
-        # Check if the dates are different before dividing
-        if (last_date - first_date).days != 0:
-            # Calculate the healing speed in units per day
-            if last_score >= 19 and first_score < 19:
-                healing_speed = (last_score - first_score) / (last_date - first_date).days
-                return healing_speed
-    # Return None if conditions are not met
-    return None
+#         # Check if the dates are different before dividing
+#         if (last_date - first_date).days != 0:
+#             # Calculate the healing speed in units per day
+#             if last_score >= 19 and first_score < 19:
+#                 healing_speed = (last_score - first_score) / (last_date - first_date).days
+#                 return healing_speed
+#     # Return None if conditions are not met
+#     return None
 
-def heal_speed_by_age(result):
-    # Apply the function row-wise
-    result['HealingSpeed'] = result.apply(calculate_healing_speed, axis=1)
-    result = result.dropna(subset=['HealingSpeed'])
+# def heal_speed_by_age(result):
+#     # Apply the function row-wise
+#     result['HealingSpeed'] = result.apply(calculate_healing_speed, axis=1)
+#     result = result.dropna(subset=['HealingSpeed'])
     
-    age_bins = np.arange(0, 106, 5)
+#     age_bins = np.arange(0, 106, 5)
     
-    # Create age groups and calculate average healing speed for each group
-    result['AgeGroup'] = pd.cut(result['Age_as_of_visit'], bins=age_bins, right=False)
-    age_grouped = result.groupby('AgeGroup')['HealingSpeed'].mean()
+#     # Create age groups and calculate average healing speed for each group
+#     result['AgeGroup'] = pd.cut(result['Age_as_of_visit'], bins=age_bins, right=False)
+#     age_grouped = result.groupby('AgeGroup')['HealingSpeed'].mean()
     
-    # Plotting the distribution
-    plt.figure(figsize=(10, 6))
-    plt.bar(age_grouped.index.astype(str), age_grouped.values, color='skyblue')
-    plt.xlabel('Age Group')
-    plt.ylabel('Average Healing Speed')
-    plt.title('Average Healing Speed by Age Group (5-year intervals)')
-    plt.xticks(rotation=45)
-    st.pyplot()
+#     # Plotting the distribution
+#     plt.figure(figsize=(10, 6))
+#     plt.bar(age_grouped.index.astype(str), age_grouped.values, color='skyblue')
+#     plt.xlabel('Age Group')
+#     plt.ylabel('Average Healing Speed')
+#     plt.title('Average Healing Speed by Age Group (5-year intervals)')
+#     plt.xticks(rotation=45)
+#     st.pyplot()
     
-    # Group the filtered dataframe by 'Age' and calculate the average healing speed for each age group
-    age_healing_speed = result.groupby('Age')['HealingSpeed'].mean()
-    # Plotting the distribution
-    plt.figure(figsize=(10, 6))
-    plt.bar(age_healing_speed.index, age_healing_speed.values, color='skyblue')
-    plt.xlabel('Age')
-    plt.ylabel('Average Healing Speed')
-    plt.title('Average Healing Speed by Age')
-    plt.xticks(rotation=45)
-    st.pyplot()
+#     # Group the filtered dataframe by 'Age' and calculate the average healing speed for each age group
+#     age_healing_speed = result.groupby('Age')['HealingSpeed'].mean()
+#     # Plotting the distribution
+#     plt.figure(figsize=(10, 6))
+#     plt.bar(age_healing_speed.index, age_healing_speed.values, color='skyblue')
+#     plt.xlabel('Age')
+#     plt.ylabel('Average Healing Speed')
+#     plt.title('Average Healing Speed by Age')
+#     plt.xticks(rotation=45)
+#     st.pyplot()
 
 def find_worse(result):
     worse_result = result[result['Categorization'] == 'Worse']
@@ -754,6 +754,7 @@ def main():
         df3 = heal_rate_type(ulcer_b)
         result = heal_rate_braden_score(brad, df3)
         result = heal_logic(result)
+        st.write(result)
         
         Cate_given_brad(result)
         Cate_given_brad_perc(result)
