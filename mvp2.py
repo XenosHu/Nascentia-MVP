@@ -599,21 +599,8 @@ def SVM(brad):
 
     start_time = time.time()
 
-    # Define the parameter grid for tuning
-    param_grid = {'C': [1], 'gamma': [0.1], 'kernel': ['rbf'], 'max_iter': [1000]}
-    
-    # Create an SVM classifier
-    svm_classifier = SVC()
-    
-    # Use GridSearchCV for hyperparameter tuning with cross-validation
-    grid_search = GridSearchCV(svm_classifier, param_grid, cv=5, scoring='accuracy', verbose=1)
-    grid_search.fit(X_train, y_train)
-    
-    # Get the best parameters
-    best_params = grid_search.best_params_
-    
-    # Train the final model with the best parameters on the entire training set
-    svm_model = SVC(**best_params)
+   # Train the SVM model
+    svm_model = SVC(kernel='rbf', C=1, gamma=0.1, max_iter=20000, random_state=seed)
     svm_model.fit(X_train, y_train)
 
     end_time = time.time()
