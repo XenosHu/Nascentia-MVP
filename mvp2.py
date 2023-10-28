@@ -665,7 +665,7 @@ def SVM(brad):
                       legend_title="Prediction Correctness")
     
     # Show the figure
-    st.plotly_chart(fig，dpi = 100)
+    st.plotly_chart(fig, dpi = 100)
 
 # ----------------------------------------------------------------------------------------------------------------#
 
