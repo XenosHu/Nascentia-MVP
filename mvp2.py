@@ -12,6 +12,7 @@ from plotly import colors, express as px, graph_objects as go, offline as pyo
 import streamlit as st
 from collections import defaultdict
 import subprocess
+import time
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, confusion_matrix, roc_auc_score
@@ -560,9 +561,22 @@ def SVM(brad):
     # Train-test split with scaled features
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=seed)
 
+    # Estimate time to train SVM model
+    dataset_size = len(X_train)
+    complexity_factor = 0.0001  # Adjust this based on your model and dataset complexity
+
+    estimated_time = dataset_size * complexity_factor
+    print(f"Estimated time to train SVM model: {estimated_time} seconds")
+
+    start_time = time.time()
+
     # Train the SVM model
     svm_model = SVC(kernel='rbf', C=1, gamma=0.1, max_iter=20000, random_state=seed)
     svm_model.fit(X_train, y_train)
+
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print(f"Actual time taken to train SVM model: {elapsed_time} seconds")
 
     # Make predictions on the test set
     svm_pred = svm_model.predict(X_test)
