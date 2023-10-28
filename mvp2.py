@@ -331,18 +331,13 @@ def heal_rate_braden_score(brad,df3):
     # Dropping the original AssessmentAnswer column
     merged_df.drop(columns=['AssessmentAnswer'], inplace=True)
     merged_df.drop_duplicates(subset=['woundID'], keep='first', inplace=True)
-    
-    #df3.drop(columns=['assessment_scores'], inplace=True)
-    
+        
     # Merge based on 'Name' and conditions for 'SOE' and 'Visitdate'
-    merged_df2 = pd.merge(df3, merged_df[['Name', 'Sorted_AssessmentAnswer', 'Visitdate', 'Sorted_Visitdates']], how='left', on='Name')
+    result = pd.merge(df3, merged_df[['Name', 'Sorted_AssessmentAnswer', 'Visitdate', 'Sorted_Visitdates']], how='left', on='Name')
     # Filter rows where Visitdate is >= SOE and not greater than 60 days
-    merged_df2 = merged_df2[(merged_df2['Visitdate'] >= merged_df2['SOE']) & (merged_df2['Visitdate'] - merged_df2['SOE'] <= pd.Timedelta(days=60))]
+    result = result[(result['Visitdate'] >= merged_df2['SOE']) & (merged_df2['Visitdate'] - merged_df2['SOE'] <= pd.Timedelta(days=60))]
     # Reset index if needed
-    merged_df2.reset_index(drop=True, inplace=True)
-    # st.write(len(ulcer))
-    # st.write(len(merged_df))
-    result = merged_df2
+    result.reset_index(drop=True, inplace=True)
     return result
 
 def heal_logic(result):
@@ -447,7 +442,6 @@ def Cate_given_brad(result):
     
     st.pyplot()
     
-
 def Cate_given_brad_perc(result):    
 
     custom_colors = ['#1f77b4',  '#2ca02c', '#ff7f0e','#d62728']
@@ -483,6 +477,60 @@ def Cate_given_brad_perc(result):
     
     st.pyplot()
 
+def calculate_healing_speed(result):
+    for index, row in result.iterrows():
+        assessment_scores = row['Sorted_AssessmentAnswers']
+        visit_dates = row['Sorted_Visitdates']
+
+    # Check if the categorization is 'healing' or 'healed'
+    if len(assessment_scores) >= 2 and len(visit_dates) >= 2:
+        first_score = assessment_scores[0]
+        last_score = assessment_scores[-1]
+        first_date = pd.to_datetime(visit_dates[0])
+        last_date = pd.to_datetime(visit_dates[-1])
+
+        # Check if the dates are different before dividing
+        if (last_date - first_date).days != 0:
+            # Calculate the healing speed in units per day
+            if last_score >= 19 and first_score < 19:
+                healing_speed = (last_score - first_score) / (last_date - first_date).days
+                return healing_speed
+    # Return None if conditions are not met
+    return None
+
+def heal_speed_by_age(result)
+    # Define age ranges
+    result['HealingSpeed'] = result.apply(calculate_healing_speed, axis=1)
+    result = result.dropna(subset=['HealingSpeed'])
+    #result = result[result['HealingSpeed'] <= 2]
+    
+    age_bins = np.arange(0, 106, 5)
+    
+    # Create age groups and calculate average healing speed for each group
+    result['AgeGroup'] = pd.cut(result['Age'], bins=age_bins, right=False)
+    age_grouped = brad.groupby('AgeGroup')['HealingSpeed'].mean()
+    
+    # Plotting the distribution
+    plt.figure(figsize=(10, 6))
+    plt.bar(age_grouped.index.astype(str), age_grouped.values, color='skyblue')
+    plt.xlabel('Age Group')
+    plt.ylabel('Average Healing Speed')
+    plt.title('Average Healing Speed by Age Group (5-year intervals)')
+    plt.xticks(rotation=45)
+    st.pyplot()
+    
+    # Group the filtered dataframe by 'Age' and calculate the average healing speed for each age group
+    age_healing_speed = result.groupby('Age')['HealingSpeed'].mean()
+    # Plotting the distribution
+    plt.figure(figsize=(10, 6))
+    plt.bar(age_healing_speed.index, age_healing_speed.values, color='skyblue')
+    plt.xlabel('Age')
+    plt.ylabel('Average Healing Speed')
+    plt.title('Average Healing Speed by Age')
+    plt.xticks(rotation=45)
+    st.pyplot()
+
+
 def find_worse(result):
     worse_result = result[result['Categorization'] == 'Worse']
     st.write('Patients whose condition got worse: ')
@@ -491,7 +539,6 @@ def find_worse(result):
 def got_ulcer(brad,ulcer_b):
     brad['got_ulcer'] = brad["Name"].apply(lambda x: x in list(ulcer_b["Name"]))
     brad[brad['got_ulcer']== True].sort_values('Name',ascending = True)
-
     return brad
 
 def duration(brad):
@@ -511,6 +558,7 @@ def duration(brad):
     brad = pd.merge(brad, dura[['Name', 'duration']].drop_duplicates(), on='Name', how='left')
     brad = brad.dropna()
     return brad
+
 
 # predictive modeling --------------------------------------------------------------------------------------#
 
@@ -713,6 +761,7 @@ def main():
         Cate_given_brad(result)
         Cate_given_brad_perc(result)
         find_worse(result)
+        heal_speed_by_age(result)
 
         SVM(brad)
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
