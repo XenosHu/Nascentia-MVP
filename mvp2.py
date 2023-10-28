@@ -505,7 +505,7 @@ def heal_speed_by_age(result):
     age_bins = np.arange(0, 106, 5)
     
     # Create age groups and calculate average healing speed for each group
-    result['AgeGroup'] = pd.cut(result['Age'], bins=age_bins, right=False)
+    result['AgeGroup'] = pd.cut(result['Age_as_of_visit'], bins=age_bins, right=False)
     age_grouped = result.groupby('AgeGroup')['HealingSpeed'].mean()
     
     # Plotting the distribution
