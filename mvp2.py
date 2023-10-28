@@ -498,7 +498,7 @@ def calculate_healing_speed(result):
     # Return None if conditions are not met
     return None
 
-def heal_speed_by_age(result)
+def heal_speed_by_age(result):
     # Define age ranges
     result['HealingSpeed'] = result.apply(calculate_healing_speed, axis=1)
     result = result.dropna(subset=['HealingSpeed'])
