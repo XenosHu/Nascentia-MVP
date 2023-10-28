@@ -496,9 +496,12 @@ def calculate_healing_speed(row):
     return None
 
 def heal_speed_by_age(result):
+    
     # Apply the function row-wise
     result['HealingSpeed'] = result.apply(calculate_healing_speed, axis=1)
     result = result.dropna(subset=['HealingSpeed'])
+    # Remove outliers where healing speed is larger than the threshold
+    result = result[result['HealingSpeed'] <=  2]
     
     age_bins = np.arange(0, 106, 5)
     
@@ -514,18 +517,7 @@ def heal_speed_by_age(result):
     plt.title('Average Healing Speed by Age Group (5-year intervals)')
     plt.xticks(rotation=45)
     st.pyplot()
-    
-    # Group the filtered dataframe by 'Age' and calculate the average healing speed for each age group
-    age_healing_speed = result.groupby('Age_as_of_visit')['HealingSpeed'].mean()
-    # Plotting the distribution
-    plt.figure(figsize=(10, 6))
-    plt.bar(age_healing_speed.index, age_healing_speed.values, color='skyblue')
-    plt.xlabel('Age')
-    plt.ylabel('Average Healing Speed')
-    plt.title('Average Healing Speed by Age')
-    plt.xticks(rotation=45)
-    st.pyplot()
-
+ 
 def find_worse(result):
     worse_result = result[result['Categorization'] == 'Worse']
     st.write('Patients whose condition got worse: ')
