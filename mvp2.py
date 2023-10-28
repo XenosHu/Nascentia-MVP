@@ -287,8 +287,6 @@ def heal_rate_braden_score(brad,df3):
     
     # Sort the merged dataframe by 'Name' and 'Visitdate' to ensure data is ordered correctly
     brad = brad.sort_values(by=['Name', 'Visitdate'])
-    # ulcer_b['SOE'] = pd.to_datetime(ulcer_b['SOE'])
-    # ulcer_b['Visitdate'] = pd.to_datetime(ulcer_b['Visitdate'])
 
     # Counter to generate unique wound IDs
     wound_id_counter = 1
@@ -333,7 +331,7 @@ def heal_rate_braden_score(brad,df3):
     merged_df.drop_duplicates(subset=['woundID'], keep='first', inplace=True)
         
     # Merge based on 'Name' and conditions for 'SOE' and 'Visitdate'
-    result = pd.merge(df3, merged_df[['Name', 'Sorted_AssessmentAnswer', 'Visitdate', 'Sorted_Visitdates']], how='left', on='Name')
+    result = pd.merge(df3, merged_df[['Name', 'Sorted_AssessmentAnswer', 'Visitdate', 'Sorted_Visitdates', 'Age_as_of_visit']], how='left', on='Name')
     # Filter rows where Visitdate is >= SOE and not greater than 60 days
     result = result[(result['Visitdate'] >= result['SOE']) & (result['Visitdate'] - result['SOE'] <= pd.Timedelta(days=60))]
     # Reset index if needed
@@ -752,6 +750,7 @@ def main():
         braden_score_for_ulcer_patient_counts(ulcer_b)
         location_counts(ulcer_b)
         df3 = heal_rate_type(ulcer_b)
+        st.write(df3)
         result = heal_rate_braden_score(brad, df3)
         result = heal_logic(result)
         st.write(result)
