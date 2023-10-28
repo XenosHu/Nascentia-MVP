@@ -574,7 +574,7 @@ def SVM(brad):
     seed = 42
 
     # Select features and target variable
-    features = ["AssessmentAnswer", "Age_as_of_visit", "duration"]
+    features = ["AssessmentAnswer", "Age_as_of_visit", "duration","Age_as_of_visit"]
     #features = ["AssessmentAnswer", "ServiceCode", "Severity", "Worker_type", "Age_as_of_visit", "duration"]
     target = 'got_ulcer'
 
