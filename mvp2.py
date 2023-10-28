@@ -594,7 +594,7 @@ def SVM(brad):
     dataset_size = len(X_train)
     complexity_factor = 0.0001  # Adjust this based on your model and dataset complexity
 
-    estimated_time = round(dataset_size * complexity_factor*4, 2)
+    estimated_time = round(dataset_size * complexity_factor*5, 2)
     st.write(f"Estimated time to train SVM model: {estimated_time} seconds")
 
     start_time = time.time()
