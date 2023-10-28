@@ -477,10 +477,9 @@ def Cate_given_brad_perc(result):
     
     st.pyplot()
 
-def calculate_healing_speed(result):
-    for index, row in result.iterrows():
-        assessment_scores = row['Sorted_AssessmentAnswer']
-        visit_dates = row['Sorted_Visitdates']
+def calculate_healing_speed(row):
+    assessment_scores = row['Sorted_AssessmentAnswer']
+    visit_dates = row['Sorted_Visitdates']
 
     # Check if the categorization is 'healing' or 'healed'
     if len(assessment_scores) >= 2 and len(visit_dates) >= 2:
@@ -499,16 +498,15 @@ def calculate_healing_speed(result):
     return None
 
 def heal_speed_by_age(result):
-    # Define age ranges
+    # Apply the function row-wise
     result['HealingSpeed'] = result.apply(calculate_healing_speed, axis=1)
     result = result.dropna(subset=['HealingSpeed'])
-    #result = result[result['HealingSpeed'] <= 2]
     
     age_bins = np.arange(0, 106, 5)
     
     # Create age groups and calculate average healing speed for each group
     result['AgeGroup'] = pd.cut(result['Age'], bins=age_bins, right=False)
-    age_grouped = brad.groupby('AgeGroup')['HealingSpeed'].mean()
+    age_grouped = result.groupby('AgeGroup')['HealingSpeed'].mean()
     
     # Plotting the distribution
     plt.figure(figsize=(10, 6))
@@ -529,7 +527,6 @@ def heal_speed_by_age(result):
     plt.title('Average Healing Speed by Age')
     plt.xticks(rotation=45)
     st.pyplot()
-
 
 def find_worse(result):
     worse_result = result[result['Categorization'] == 'Worse']
