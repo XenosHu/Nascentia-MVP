@@ -479,7 +479,7 @@ def Cate_given_brad_perc(result):
 
 def calculate_healing_speed(result):
     for index, row in result.iterrows():
-        assessment_scores = row['Sorted_AssessmentAnswers']
+        assessment_scores = row['Sorted_AssessmentAnswer']
         visit_dates = row['Sorted_Visitdates']
 
     # Check if the categorization is 'healing' or 'healed'
