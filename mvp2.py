@@ -614,7 +614,7 @@ def SVM(brad):
     start_time = time.time()
 
     # Train the SVM model
-    svm_model = SVC(kernel='rbf', C=1, gamma=0.1, max_iter=20000, random_state=seed)
+    svm_model = SVC(kernel='rbf', C=1, gamma=0.1, max_iter=30000, random_state=seed)
     svm_model.fit(X_train, y_train)
 
     end_time = time.time()
