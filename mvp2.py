@@ -600,7 +600,7 @@ def SVM(brad):
     
     # Create a column indicating correct or incorrect predictions
     svm_plot_data['prediction_correct'] = svm_plot_data['got_ulcer'] == svm_plot_data['svm_pred']
-    inv_svm_plot_data = scaler.inverse_transform(svm_plot_data[['AssessmentAnswer', 'Age_as_of_visit']]))
+    inv_svm_plot_data = scaler.inverse_transform(svm_plot_data[['AssessmentAnswer', 'Age_as_of_visit']])
     
     # Plot SVM decision boundary with jitter using Plotly
     fig = px.scatter(inv_svm_plot_data, x='AssessmentAnswer', y='Age_as_of_visit', color='prediction_correct',
