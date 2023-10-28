@@ -516,7 +516,7 @@ def heal_speed_by_age(result):
     st.pyplot()
     
     # Group the filtered dataframe by 'Age' and calculate the average healing speed for each age group
-    age_healing_speed = result.groupby('Age')['HealingSpeed'].mean()
+    age_healing_speed = result.groupby('Age_as_of_visit')['HealingSpeed'].mean()
     # Plotting the distribution
     plt.figure(figsize=(10, 6))
     plt.bar(age_healing_speed.index, age_healing_speed.values, color='skyblue')
@@ -566,20 +566,22 @@ def convert_to_factors(data, categorical_columns):
     data = pd.get_dummies(data, columns=categorical_columns)
     return data
 
-# def convert_to_factors(data, categorical_columns):
-#     data[categorical_columns] = data[categorical_columns].apply(lambda col: col.astype('category'))
-#     return data
+def convert_to_factors(data, categorical_columns):
+    for col in categorical_columns:
+        data[col] = data[col].astype('category').cat.codes
+    return data
 
 def SVM(brad):
     seed = 42
 
     # Select features and target variable
-    features = ["AssessmentAnswer", "Age_as_of_visit", "duration"]
-    #features = ["AssessmentAnswer", "ServiceCode", "Severity", "Worker_type", "Age_as_of_visit", "duration"]
+    #features = ["AssessmentAnswer", "Age_as_of_visit", "duration"]
+    features = ["AssessmentAnswer", "ServiceCode", "Severity", "Worker_type", "Age_as_of_visit", "duration"]
     target = 'got_ulcer'
 
     # Create a subset of brad with only selected columns
     sub_brad = brad[features + [target]]
+    sub_brad = convert_to_factors(sub_brad,["ServiceCode", "Worker_type"])
 
     # # Convert categorical columns to factors
     # categorical_columns = find_categorical_columns(sub_brad)
@@ -750,10 +752,8 @@ def main():
         braden_score_for_ulcer_patient_counts(ulcer_b)
         location_counts(ulcer_b)
         df3 = heal_rate_type(ulcer_b)
-        st.write(df3)
         result = heal_rate_braden_score(brad, df3)
         result = heal_logic(result)
-        st.write(result)
         
         Cate_given_brad(result)
         Cate_given_brad_perc(result)
