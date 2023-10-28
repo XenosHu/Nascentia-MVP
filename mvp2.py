@@ -565,7 +565,7 @@ def SVM(brad):
     dataset_size = len(X_train)
     complexity_factor = 0.0001  # Adjust this based on your model and dataset complexity
 
-    estimated_time = round(dataset_size * complexity_factor*2, 2)
+    estimated_time = round(dataset_size * complexity_factor*4, 2)
     st.write(f"Estimated time to train SVM model: {estimated_time} seconds")
 
     start_time = time.time()
@@ -578,11 +578,13 @@ def SVM(brad):
     elapsed_time = round(end_time - start_time, 2)
     st.write(f"Actual time taken to train SVM model: {elapsed_time} seconds")
 
+    X_test_original = scaler.inverse_transform(X_test)
+
     # Make predictions on the test set
     svm_pred = svm_model.predict(X_test)
     
     # Calculate accuracy
-    svm_accuracy = accuracy_score(y_test, svm_pred)
+    svm_accuracy = round(accuracy_score(y_test, svm_pred),4)
     st.write(f"SVM Accuracy: {svm_accuracy}")
     
     # Create confusion matrix
@@ -591,7 +593,7 @@ def SVM(brad):
     st.write(conf_matrix)
     
     # Calculate AUC
-    svm_auc_value = roc_auc_score(y_test, svm_pred)
+    svm_auc_value = round(roc_auc_score(y_test, svm_pred),4)
     st.write(f"SVM AUC: {svm_auc_value}")
     
     # Plot decision boundary
