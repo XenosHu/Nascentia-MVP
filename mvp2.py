@@ -148,7 +148,7 @@ def plot_ulcer_counts(ulcer):
 
     fig = px.bar(type_counts, x='Type', y='Count', title='Pressure Ulcer Count by Type',
                  labels={'Type': 'Ulcer Type', 'Count': 'Count'},
-                 color_discrete_sequence=px.colors.sequential.RdYlGn_r)
+                 color_discrete_sequence=px.colors.diverging.RdYlGn)
 
     # Display the interactive plot using Streamlit
     st.plotly_chart(fig)
