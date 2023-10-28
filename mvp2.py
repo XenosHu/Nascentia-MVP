@@ -588,9 +588,9 @@ def SVM(brad):
     st.write(f"SVM Accuracy: {svm_accuracy}")
     
     # Create confusion matrix
-    conf_matrix = confusion_matrix(y_test, svm_pred)
+    conf_matrix_display = pd.DataFrame(conf_matrix, index=['Actual 0', 'Actual 1'], columns=['Predicted 0', 'Predicted 1'])
     st.write("Confusion Matrix:")
-    st.write(conf_matrix)
+    st.write(conf_matrix_display)
     
     # Calculate AUC
     svm_auc_value = round(roc_auc_score(y_test, svm_pred),4)
@@ -609,6 +609,9 @@ def SVM(brad):
                      symbol='got_ulcer', opacity=0.7, size_max=10,
                      color_discrete_map={True: 'green', False: 'red'},
                      symbol_map={0: 'circle', 1: 'square'})
+
+    fig.update_xaxes(range=[Inv_X_test['AssessmentAnswer'].min(), Inv_X_test['AssessmentAnswer'].max()],
+                 tickmode='linear', dtick=1)
     
     fig.update_layout(title_text="SVM Decision Boundary",
                       xaxis_title="AssessmentAnswer",
