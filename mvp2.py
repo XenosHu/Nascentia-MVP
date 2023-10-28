@@ -123,40 +123,35 @@ def plot_patient_data(patient_id, brad):
     sub = brad[brad['Name'] == patient_id]
     sub = sub.sort_values('Visitdate', ascending=True)
 
-    # Plot line chart
-    plt.figure(figsize=(10, 6))
-    plt.plot(sub['Visitdate'], sub['AssessmentAnswer'], marker='o', linestyle='-')
-    plt.title(f'Assessment Braden score of Patient {patient_id} over Time')
-    plt.xlabel('Visit Date')
-    plt.ylabel('Assessment Answer')
-    plt.tight_layout()
+    fig = px.line(sub, x='Visitdate', y='AssessmentAnswer', markers=True, line_shape='linear')
+    
+    # Customize the layout
+    fig.update_layout(
+        title=f'Assessment Braden score of Patient {patient_id} over Time',
+        xaxis_title='Visit Date',
+        yaxis_title='Assessment Answer',
+        showlegend=True,
+        template='plotly_dark',  # Choose a template that suits your style
+    )
+    
+    # Display the interactive plot using Streamlit
+    st.plotly_chart(fig)
 
-    # Display the plot using Streamlit
-    st.set_option('deprecation.showPyplotGlobalUse', False)
-    st.pyplot()
 
 def plot_ulcer_counts(ulcer):
     # Create a filtered DataFrame with unique patients, keeping the most recent record
     unique_ulcer_patients = ulcer.sort_values('SOE', ascending=False).drop_duplicates('Name')
 
-    # Plot bar chart for Pressure Ulcer Count by Type
-    type_counts = unique_ulcer_patients['Type'].value_counts().sort_index()
+    # Plot bar chart for Pressure Ulcer Count by Type using Plotly Express
+    type_counts = unique_ulcer_patients['Type'].value_counts().sort_index().reset_index()
+    type_counts.columns = ['Type', 'Count']
 
-    colors = plt.cm.RdYlGn(np.linspace(1, 0, len(type_counts)))
-    plt.figure(figsize=(10, 6))
-    type_counts.plot(kind='bar', title='Pressure Ulcer Count by Type', color = colors)
-    plt.xlabel('Type')
-    plt.ylabel('Count')
+    fig = px.bar(type_counts, x='Type', y='Count', title='Pressure Ulcer Count by Type',
+                 labels={'Type': 'Ulcer Type', 'Count': 'Count'},
+                 color_discrete_sequence=px.colors.sequential.RdYlGn)
 
-    # Add labels for each bar
-    for i, count in enumerate(type_counts):
-        plt.text(i, count + 0.1, str(count), ha='center', va='bottom')
-
-    plt.xticks(rotation=0, ha='center')
-    plt.tight_layout()
-
-    # Display the plot using Streamlit
-    st.pyplot()
+    # Display the interactive plot using Streamlit
+    st.plotly_chart(fig)
 
 
 def plot_severity_counts(brad):
