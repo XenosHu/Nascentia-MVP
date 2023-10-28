@@ -577,6 +577,8 @@ def SVM(brad):
     end_time = time.time()
     elapsed_time = round(end_time - start_time, 2)
     st.write(f"Actual time taken to train SVM model: {elapsed_time} seconds")
+
+    Inv_X_test = pd.DataFrame(scaler.inverse_transform(X_test), columns=X_test.columns)
     
     # Make predictions on the test set
     svm_pred = svm_model.predict(X_test)
@@ -600,10 +602,10 @@ def SVM(brad):
     
     # Create a column indicating correct or incorrect predictions
     svm_plot_data['prediction_correct'] = svm_plot_data['got_ulcer'] == svm_plot_data['svm_pred']
-    inv_svm_plot_data = scaler.inverse_transform(svm_plot_data[['AssessmentAnswer', 'Age_as_of_visit']])
     
     # Plot SVM decision boundary with jitter using Plotly
-    fig = px.scatter(inv_svm_plot_data, x='AssessmentAnswer', y='Age_as_of_visit', color='prediction_correct',
+    fig = px.scatter(Inv_X_test.join(svm_plot_data[['got_ulcer', 'prediction_correct']]), 
+                     x='AssessmentAnswer', y='Age_as_of_visit', color='prediction_correct',
                      symbol='got_ulcer', opacity=0.7, size_max=10,
                      color_discrete_map={True: 'green', False: 'red'},
                      symbol_map={0: 'circle', 1: 'square'})
