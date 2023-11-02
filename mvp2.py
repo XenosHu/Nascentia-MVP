@@ -531,7 +531,9 @@ def got_ulcer(brad,ulcer_b):
     return brad
 
 def vulnerable(brad):
-    vul = brad[(brad['Severity'] == "High Risk") & (brad['got_ulcer'] == False)]
+    brad = brad.sort_values('AssessmentAnswers', ascending = False)
+    sub = brad.drop_duplicates(subset=['Name'], keep='first', inplace=True)
+    vul = sub[(sub['Severity'] == "High Risk") & (sub['got_ulcer'] == False)]
     st.write('Patients who are vulnerable and might get pressure ulcers in the future: ')
     st.write(vul)
 
