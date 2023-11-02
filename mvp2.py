@@ -170,17 +170,15 @@ def plot_ulcer_counts_by_month(ulcer):
     # Plot bar chart for Pressure Ulcer Count by Type and sorted by month
     type_counts_by_month = pd.crosstab(unique_ulcer_patients['Month'], unique_ulcer_patients['Type']).fillna(0)
     type_counts_by_month = type_counts_by_month.div(type_counts_by_month.sum(axis=1), axis=0) * 100
+    st.write(type_counts_by_month)
+    # plt.figure(figsize=(12, 8))
+    # type_counts_by_month.plot(kind='bar', title='Historical distribution of pressure ulcer by Type' stacked=True, colormap='viridis')
+    # plt.xlabel('Time')
+    # plt.ylabel('Percentage')
 
-    #colors = plt.cm.RdYlGn(np.linspace(1, 0, len(type_counts)))
-    plt.figure(figsize=(10, 6))
-    type_counts_by_month.plot(kind='bar', stacked=True, colormap='viridis')
-    plt.title('Pressure Ulcer Count by Type and Month')
-    plt.xlabel('Month')
-    plt.ylabel('Percentage')
-
-    # Display the plot using Streamlit
-    st.pyplot()
-
+    # # Display the plot using Streamlit
+    # st.pyplot()
+    
 def plot_severity_counts(brad):
     
     unique_brad_patients = brad.sort_values('Visitdate', ascending=False).drop_duplicates('Name')
@@ -757,7 +755,7 @@ def main():
         
     if ulcer is not None and brad is not None:
         plot_ulcer_counts(ulcer_b)
-        #plot_ulcer_counts_by_month(ulcer_b)
+        plot_ulcer_counts_by_month(ulcer_b)
         braden_score_for_ulcer_patient_counts(ulcer_b)
         location_counts(ulcer_b)
         
