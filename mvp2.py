@@ -564,12 +564,13 @@ def SVM(brad):
 
     # Select features and target variable
     #features = ["AssessmentAnswer", "Age_as_of_visit", "duration"]
-    features = ["AssessmentAnswer", "ServiceCode", "Worker_type", "Age_as_of_visit", "duration"]
+    features = ["AssessmentAnswer", "ServiceCode", "Visitdate", "Worker_type", "Age_as_of_visit", "duration"]
     target = 'got_ulcer'
 
     # Create a subset of brad with only selected columns
     sub_brad = brad[features + [target]]
     sub_brad = convert_to_factors(sub_brad,["ServiceCode", "Worker_type"])
+    sub_brad["Visitdate"] = sub_brad["Visitdate"].dt.month.astype(int)
 
     # Convert the 'got_ulcer' column to binary labels
     label_encoder = LabelEncoder()
