@@ -555,10 +555,6 @@ def find_categorical_columns(data):
     return categorical_columns
 
 def convert_to_factors(data, categorical_columns):
-    data = pd.get_dummies(data, columns=categorical_columns)
-    return data
-
-def convert_to_factors(data, categorical_columns):
     for col in categorical_columns:
         data[col] = data[col].astype('category').cat.codes
     return data
