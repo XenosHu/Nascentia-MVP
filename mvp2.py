@@ -569,7 +569,7 @@ def convert_to_factors(data, categorical_columns):
     return data
 
 def SVM(brad):
-    seed = 42
+    seed = 1031
 
     # Select features and target variable
     #features = ["AssessmentAnswer", "Age_as_of_visit", "duration"]
