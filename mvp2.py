@@ -281,7 +281,7 @@ def heal_rate_type(ulcer_b):
     df3 = pd.DataFrame(final_results)
     return df3
 
-def heal_rate_braden_score(brad,df3):    
+def heal_rate_braden_score(brad):    
     # Dictionary to store unique names as keys and their AssessmentAnswer, Visitdates, and woundID as values
     name_data = defaultdict(lambda: {"AssessmentAnswer": [], "Visitdates": [], "woundID": None})
     
@@ -329,7 +329,9 @@ def heal_rate_braden_score(brad,df3):
     # Dropping the original AssessmentAnswer column
     merged_df.drop(columns=['AssessmentAnswer'], inplace=True)
     merged_df.drop_duplicates(subset=['woundID'], keep='first', inplace=True)
-        
+    return merged_df
+
+def heal_rate_merge(merged_df,df3): 
     # Merge based on 'Name' and conditions for 'SOE' and 'Visitdate'
     result = pd.merge(df3, merged_df[['Name', 'Sorted_AssessmentAnswer', 'Visitdate', 'Sorted_Visitdates', 'Age_as_of_visit']], how='left', on='Name')
     # Filter rows where Visitdate is >= SOE and not greater than 60 days
@@ -495,19 +497,19 @@ def calculate_healing_speed(row):
     # Return None if conditions are not met
     return None
 
-def heal_speed_by_age(result):
+def heal_speed_by_age(merged_df):
     
     # Apply the function row-wise
-    result['HealingSpeed'] = result.apply(calculate_healing_speed, axis=1)
-    result = result.dropna(subset=['HealingSpeed'])
+    merged_df['HealingSpeed'] = merged_df.apply(calculate_healing_speed, axis=1)
+    merged_df = merged_df.dropna(subset=['HealingSpeed'])
     # Remove outliers where healing speed is larger than the threshold
-    result = result[result['HealingSpeed'] <=  2]
+    merged_df = merged_df[merged_df['HealingSpeed'] <=  2]
     
     age_bins = np.arange(0, 106, 5)
     
     # Create age groups and calculate average healing speed for each group
-    result['AgeGroup'] = pd.cut(result['Age_as_of_visit'], bins=age_bins, right=False)
-    age_grouped = result.groupby('AgeGroup')['HealingSpeed'].mean()
+    merged_df['AgeGroup'] = pd.cut(merged_df['Age_as_of_visit'], bins=age_bins, right=False)
+    age_grouped = merged_df.groupby('AgeGroup')['HealingSpeed'].mean()
     
     # Plotting the distribution
     plt.figure(figsize=(10, 6))
@@ -732,14 +734,16 @@ def main():
         plot_ulcer_counts(ulcer_b)
         braden_score_for_ulcer_patient_counts(ulcer_b)
         location_counts(ulcer_b)
+        
         df3 = heal_rate_type(ulcer_b)
-        result = heal_rate_braden_score(brad, df3)
+        merged_df = heal_rate_braden_score(brad)
+        result = heal_rate_merge(merged_df,df3)
         result = heal_logic(result)
         
         Cate_given_brad(result)
         Cate_given_brad_perc(result)
         find_worse(result)
-        heal_speed_by_age(result)
+        heal_speed_by_age(merged_df)
 
         SVM(brad)
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
