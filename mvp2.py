@@ -40,7 +40,7 @@ def upload_birth_csv():
     if uploaded_file is not None:
         try:
             birth = pd.read_csv(uploaded_file)
-            st.success("Physical Assessment dataset uploaded successfully.")
+            st.success("Birthday dataset uploaded successfully.")
             return birth
         except Exception as e:
             st.error(f"Error: {e}")
