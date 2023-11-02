@@ -531,7 +531,7 @@ def got_ulcer(brad,ulcer_b):
     return brad
 
 def vulnerable(brad):
-    vul = brad[brad['Severity'] == "High Risk" & brad['got_ulcer'] == False]
+    vul = brad[(brad['Severity'] == "High Risk") & (brad['got_ulcer'] == False)]
     st.write('Patients who are vulnerable and might get pressure ulcers in the future: ')
     st.write(vul)
 
