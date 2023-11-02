@@ -35,7 +35,8 @@ def determine_severity(score):
         return 'Unknown'
 
 def upload_birth_csv():
-    uploaded_file = st.file_uploader("## **Choose a CSV file for Birthday dataset**", type="csv")
+    st.subheader("**Choose a CSV file for Birthday dataset**")
+    uploaded_file = st.file_uploader("", type="csv")
 
     if uploaded_file is not None:
         try:
@@ -47,7 +48,8 @@ def upload_birth_csv():
     return None
 
 def upload_ulcer_csv():
-    uploaded_file = st.file_uploader("## **Choose a CSV file for Ulcer dataset**", type="csv")
+    st.subheader("**Choose a CSV file for Ulcer dataset**")
+    uploaded_file = st.file_uploader("", type="csv")
 
     if uploaded_file is not None:
         try:
@@ -59,7 +61,8 @@ def upload_ulcer_csv():
     return None
 
 def upload_brad_csv():
-    uploaded_file = st.file_uploader("## **Choose a CSV file for Physical Assessment dataset**", type="csv")
+    st.subheader("**Choose a CSV file for Physical Assessment dataset**")
+    uploaded_file = st.file_uploader("", type="csv")
 
     if uploaded_file is not None:
         try:
