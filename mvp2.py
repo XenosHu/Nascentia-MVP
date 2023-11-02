@@ -530,6 +530,11 @@ def got_ulcer(brad,ulcer_b):
     brad[brad['got_ulcer']== True].sort_values('Name',ascending = True)
     return brad
 
+def vulnerable(brad):
+    vul = brad[brad['Severity'] == "High Risk" & brad['got_ulcer'] == False]
+    st.write('Patients who are vulnerable and might get pressure ulcers in the future: ')
+    st.write(vul)
+
 def duration(brad):
     dura = brad.groupby(['Name', 'Visitdate']).agg(list).reset_index()
     
@@ -743,6 +748,7 @@ def main():
         Cate_given_brad(result)
         Cate_given_brad_perc(result)
         find_worse(result)
+        vulnerable(brad)
         heal_speed_by_age(merged_df)
 
         SVM(brad)
