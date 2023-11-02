@@ -163,29 +163,23 @@ def plot_ulcer_counts(ulcer):
 
 
 def plot_ulcer_counts_by_month(ulcer):
-    # Convert 'SOE' column to datetime
-    ulcer['SOE'] = pd.to_datetime(ulcer['SOE'])
 
-    # Extract month from 'SOE' column
-    ulcer['Month'] = ulcer['SOE'].dt.to_period('M')
-
-    # Create a filtered DataFrame with unique patients, keeping the most recent record
     unique_ulcer_patients = ulcer.sort_values('SOE', ascending=False).drop_duplicates('Name')
+    unique_ulcer_patients['Month'] = unique_ulcer_patients['SOE'].dt.to_period('M')
 
     # Plot bar chart for Pressure Ulcer Count by Type and sorted by month
     type_counts_by_month = pd.crosstab(unique_ulcer_patients['Month'], unique_ulcer_patients['Type']).fillna(0)
     type_counts_by_month = type_counts_by_month.div(type_counts_by_month.sum(axis=1), axis=0) * 100
 
-    plt.figure(figsize=(12, 8))
+    #colors = plt.cm.RdYlGn(np.linspace(1, 0, len(type_counts)))
+    plt.figure(figsize=(10, 6))
     type_counts_by_month.plot(kind='bar', stacked=True, colormap='viridis')
     plt.title('Pressure Ulcer Count by Type and Month')
     plt.xlabel('Month')
     plt.ylabel('Percentage')
-    plt.xticks(rotation=45, ha='right')
 
     # Display the plot using Streamlit
     st.pyplot()
-
 
 def plot_severity_counts(brad):
     
@@ -729,14 +723,10 @@ def main():
     if birth is not None:
         process_birth_data(birth)
         st.write(f"Length of 'Birthday Data': {len(birth)}")
-        #st.write("Preview of 'Ulcer Data' DataFrame:")
-        #st.write(ulcer.head(10))
     
     if ulcer is not None:
         process_ulcer_data(ulcer)
         st.write(f"Length of 'Pressure Ulcer Data': {len(ulcer)}")
-        #st.write("Preview of 'Ulcer Data' DataFrame:")
-        #st.write(ulcer.head(10))
 
     # Display the processed brad dataset
     if brad is not None:
