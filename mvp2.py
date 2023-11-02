@@ -757,7 +757,7 @@ def main():
         
     if ulcer is not None and brad is not None:
         plot_ulcer_counts(ulcer_b)
-        plot_ulcer_counts_by_month(ulcer_b)
+        #plot_ulcer_counts_by_month(ulcer_b)
         braden_score_for_ulcer_patient_counts(ulcer_b)
         location_counts(ulcer_b)
         
