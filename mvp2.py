@@ -162,6 +162,31 @@ def plot_ulcer_counts(ulcer):
     st.pyplot()
 
 
+def plot_ulcer_counts_by_month(ulcer):
+    # Convert 'SOE' column to datetime
+    ulcer['SOE'] = pd.to_datetime(ulcer['SOE'])
+
+    # Extract month from 'SOE' column
+    ulcer['Month'] = ulcer['SOE'].dt.to_period('M')
+
+    # Create a filtered DataFrame with unique patients, keeping the most recent record
+    unique_ulcer_patients = ulcer.sort_values('SOE', ascending=False).drop_duplicates('Name')
+
+    # Plot bar chart for Pressure Ulcer Count by Type and sorted by month
+    type_counts_by_month = pd.crosstab(unique_ulcer_patients['Month'], unique_ulcer_patients['Type']).fillna(0)
+    type_counts_by_month = type_counts_by_month.div(type_counts_by_month.sum(axis=1), axis=0) * 100
+
+    plt.figure(figsize=(12, 8))
+    type_counts_by_month.plot(kind='bar', stacked=True, colormap='viridis')
+    plt.title('Pressure Ulcer Count by Type and Month')
+    plt.xlabel('Month')
+    plt.ylabel('Percentage')
+    plt.xticks(rotation=45, ha='right')
+
+    # Display the plot using Streamlit
+    st.pyplot()
+
+
 def plot_severity_counts(brad):
     
     unique_brad_patients = brad.sort_values('Visitdate', ascending=False).drop_duplicates('Name')
@@ -742,6 +767,7 @@ def main():
         
     if ulcer is not None and brad is not None:
         plot_ulcer_counts(ulcer_b)
+        plot_ulcer_counts_by_month(ulcer_b)
         braden_score_for_ulcer_patient_counts(ulcer_b)
         location_counts(ulcer_b)
         
