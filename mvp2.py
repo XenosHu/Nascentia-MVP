@@ -49,7 +49,7 @@ def upload_birth_csv():
 
 def upload_ulcer_csv():
     st.subheader("**Choose a CSV file for Ulcer dataset**")
-    uploaded_file = st.file_uploader("", type="csv")
+    uploaded_file = st.file_uploader(" ", type="csv")
 
     if uploaded_file is not None:
         try:
@@ -62,7 +62,7 @@ def upload_ulcer_csv():
 
 def upload_brad_csv():
     st.subheader("**Choose a CSV file for Physical Assessment dataset**")
-    uploaded_file = st.file_uploader("", type="csv")
+    uploaded_file = st.file_uploader("  ", type="csv")
 
     if uploaded_file is not None:
         try:
