@@ -169,7 +169,7 @@ def plot_ulcer_counts_by_month(ulcer):
     ulcer['Month'] = pd.to_datetime(ulcer['SOE']).dt.to_period('M').astype(str)
     
     # Plot bar chart for Pressure Ulcer Count by Type and sorted by month
-    type_counts_by_month = pd.crosstab(unique_ulcer_patients['Month'], unique_ulcer_patients['Type']).fillna(0)
+    type_counts_by_month = pd.crosstab(ulcer['Month'], ulcer['Type']).fillna(0)
     type_counts_by_month = type_counts_by_month.div(type_counts_by_month.sum(axis=1), axis=0) * 100    
     type_counts_by_month = type_counts_by_month.sort_values('Month', ascending = True)
     
