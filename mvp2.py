@@ -147,7 +147,7 @@ def plot_ulcer_counts(ulcer):
 
     colors = plt.cm.RdYlGn(np.linspace(1, 0, len(type_counts)))
     plt.figure(figsize=(10, 6))
-    type_counts.plot(kind='bar', title='Pressure Ulcer Count by Type', color = colors)
+    type_counts.plot(kind='bar', title='Pressure ulcer count by Type for all unique patients', color = colors)
     plt.xlabel('Type')
     plt.ylabel('Count')
 
@@ -213,7 +213,7 @@ def plot_severity_counts(brad):
     colors = plt.cm.RdYlGn(np.linspace(1, 0, len(type_counts)))
     
     plt.figure(figsize=(10, 6))
-    type_counts.plot(kind='bar', title='Severity levels count over all', color = colors)
+    type_counts.plot(kind='bar', title='Severity levels count for all unique patients', color = colors)
     plt.xlabel('Severity')
     plt.ylabel('Count')
 
@@ -226,6 +226,51 @@ def plot_severity_counts(brad):
 
     # Display the plot using Streamlit
     st.pyplot()
+
+def plot_severity_counts_by_month(brad):
+    sub = brad.sort_values('Visitdate', ascending=False).copy()
+    
+    sub['Month'] = pd.to_datetime(sub['Visitdate']).dt.to_period('M').astype(str)
+    sub['Quarter'] = pd.to_datetime(sub['Visitdate']).dt.to_period('Q').astype(str)
+    sub['Year'] = pd.to_datetime(sub['Visitdate']).dt.to_period('Y').astype(str)
+    
+    # Plot bar chart for Pressure Ulcer Count by Type and sorted by month
+    severity_counts_by_month = pd.crosstab(sub['Month'], sub['Severity']).fillna(0)
+    severity_counts_by_month = severity_counts_by_month.div(severity_counts_by_month.sum(axis=1), axis=0) * 100    
+    severity_counts_by_month = severity_counts_by_month.sort_values('Month', ascending=True)
+    
+    custom_colors = ['#006837', '#b7e075', '#febe6f', '#a50026']   
+    
+    # Default number of bars to display
+    default_num_bars = 16
+    num_bars = st.slider('Display Window', min_value=1, max_value=len(type_counts_by_month)-default_num_bars+1, value=1)
+
+    # Dropdown menu to choose time grouping
+    time_grouping = st.selectbox('Choose Time Grouping', ['Month', 'Quarter', 'Year'])
+
+    # Resample the data based on the chosen time grouping
+    if time_grouping == 'Quarter':
+        severity_counts_by_month = pd.crosstab(sub['Quarter'], sub['Severity']).fillna(0)
+        severity_counts_by_month = severity_counts_by_month.div(severity_counts_by_month.sum(axis=1), axis=0) * 100    
+        severity_counts_by_month = severity_counts_by_month.sort_values('Quarter', ascending=True)
+    elif time_grouping == 'Year':
+        severity_counts_by_month = pd.crosstab(sub['Year'], sub['Severity']).fillna(0)
+        severity_counts_by_month = severity_counts_by_month.div(severity_counts_by_month.sum(axis=1), axis=0) * 100    
+        severity_counts_by_month = severity_counts_by_month.sort_values('Year', ascending=True)
+
+    # Plotting the chart with the selected window of bars
+    plt.figure(figsize=(10, 6))
+    ax = severity_counts_by_month.iloc[num_bars:num_bars+default_num_bars].plot(kind='bar', title=f'Historical distribution of level of severity ({time_grouping})', stacked=True, color=custom_colors)
+    
+    plt.xlabel('Time')
+    plt.ylabel('Percentage')
+    
+    # Move the legend to the right, outside the plot
+    ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+
+    # Display the plot using Streamlit
+    st.pyplot()
+
 
 def braden_score_for_ulcer_patient_counts(ulcer_b):
     # Sort and count the Latest_Assessment_Score
@@ -769,7 +814,7 @@ def main():
         st.write(ulcer_b)
 
         # Allow user to input a patient ID
-        patient_id = st.text_input("Enter Patient ID (in format of First-Last, e.g. 12-345) for their Braden score history:")
+        patient_id = st.text_input("**Enter Patient ID (in format of First-Last, e.g. 12-345) for their Braden score history:**")
         
         # Check if the patient ID is provided
         if patient_id:
@@ -778,6 +823,7 @@ def main():
 
     if brad is not None:
         plot_severity_counts(brad)
+        plot_severity_counts_by_month(brad)
         
     if ulcer is not None and brad is not None:
         plot_ulcer_counts(ulcer_b)
