@@ -164,14 +164,12 @@ def plot_ulcer_counts(ulcer):
 
 def plot_ulcer_counts_by_month(ulcer):
 
-    #unique_ulcer_patients = ulcer.sort_values('SOE', ascending=False).drop_duplicates('Name', keep='first')
-    #unique_ulcer_patients['Month'] = pd.to_datetime(unique_ulcer_patients['SOE']).dt.to_period('M').astype(str)
     ulcer['Month'] = pd.to_datetime(ulcer['SOE']).dt.to_period('M').astype(str)
     
     # Plot bar chart for Pressure Ulcer Count by Type and sorted by month
     type_counts_by_month = pd.crosstab(ulcer['Month'], ulcer['Type']).fillna(0)
     type_counts_by_month = type_counts_by_month.div(type_counts_by_month.sum(axis=1), axis=0) * 100    
-    type_counts_by_month = type_counts_by_month.sort_values('Month', ascending = True)
+    type_counts_by_month = type_counts_by_month.sort_values('Month', ascending=True)
 
     custom_colors = ['#006837',  '#b7e075', '#febe6f','#a50026']   
     
@@ -179,9 +177,22 @@ def plot_ulcer_counts_by_month(ulcer):
     default_num_bars = 16
     num_bars = st.slider('Display Window', min_value=1, max_value=len(type_counts_by_month)-default_num_bars+1, value=1)
 
+    # Dropdown menu to choose time grouping
+    time_grouping = st.selectbox('Choose Time Grouping', ['Month', 'Quarter', 'Year'])
+
+    # Group by the selected time grouping
+    if time_grouping == 'Quarter':
+        type_counts_by_month.index = pd.to_datetime(type_counts_by_month.index)
+        type_counts_by_month = type_counts_by_month.groupby(pd.PeriodIndex(type_counts_by_month.index, freq='Q')).sum()
+        type_counts_by_month.index = type_counts_by_month.index.astype(str)
+    elif time_grouping == 'Year':
+        type_counts_by_month.index = pd.to_datetime(type_counts_by_month.index)
+        type_counts_by_month = type_counts_by_month.groupby(pd.Grouper(freq='Y')).sum()
+        type_counts_by_month.index = type_counts_by_month.index.astype(str)
+
     # Plotting the chart with the selected window of bars
     plt.figure(figsize=(10, 6))
-    ax = type_counts_by_month.iloc[num_bars:num_bars+default_num_bars].plot(kind='bar', title='Historical distribution of pressure ulcer by Type', stacked=True, color = custom_colors)
+    ax = type_counts_by_month.iloc[num_bars:num_bars+default_num_bars].plot(kind='bar', title=f'Historical distribution of pressure ulcer by Type ({time_grouping})', stacked=True, color=custom_colors)
     
     plt.xlabel('Time')
     plt.ylabel('Percentage')
@@ -191,6 +202,7 @@ def plot_ulcer_counts_by_month(ulcer):
 
     # Display the plot using Streamlit
     st.pyplot()
+
     
 def plot_severity_counts(brad):
     
