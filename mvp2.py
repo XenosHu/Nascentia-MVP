@@ -354,7 +354,7 @@ def high_loc(ulcer_b):
     name_counts = location_count_name_counts['Name_Count']
 
     loc = location_count_name_counts[location_count_name_counts['Location_Count'] >=10]
-    st.write(patients with more than 10 ulcers:)
+    st.write("patients with more than 10 ulcers:")
     st.write(loc)
 
 def heal_rate_type(ulcer_b):    
