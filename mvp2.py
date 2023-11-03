@@ -173,6 +173,9 @@ def plot_ulcer_counts_by_month(ulcer):
     type_counts_by_month = type_counts_by_month.div(type_counts_by_month.sum(axis=1), axis=0) * 100    
     type_counts_by_month = type_counts_by_month.sort_values('Month', ascending = True)
 
+    # Get the number of types for colormap
+    num_types = len(type_counts_by_month.columns)
+    
     # Manually assign colors based on values 1, 2, 3, and 4
     custom_colors = {1: 'green', 2: 'lightgreen', 3: 'orange', 4: 'red'}
     
