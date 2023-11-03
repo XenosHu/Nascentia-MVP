@@ -831,6 +831,8 @@ def main():
     brad = upload_brad_csv()
 
     # Display the processed Ulcer dataset
+    st.subheader("Data Outlook")
+    
     if birth is not None:
         process_birth_data(birth)
         st.write(f"Length of 'Birthday Data': {len(birth)}")
@@ -857,6 +859,7 @@ def main():
         st.write(ulcer_b)
 
         # Allow user to input a patient ID
+        st.subheader("Patient Search")
         patient_id = st.text_input("**Enter Patient ID (in format of First-Last, e.g. 12-345) for their Braden score history:**")
         
         # Check if the patient ID is provided
@@ -865,11 +868,11 @@ def main():
             plot_patient_data(patient_id, brad)
 
     if brad is not None:
+        st.subheader("Overview")
         plot_severity_counts(brad)
         plot_severity_counts_by_month(brad)
         
     if ulcer is not None and brad is not None:
-        st.subheader("Overview")
         plot_ulcer_counts(ulcer_b)
         plot_ulcer_counts_by_month(ulcer_b)
         braden_score_for_ulcer_patient_counts(ulcer_b)
