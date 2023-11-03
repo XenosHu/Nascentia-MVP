@@ -173,8 +173,12 @@ def plot_ulcer_counts_by_month(ulcer):
     type_counts_by_month = type_counts_by_month.div(type_counts_by_month.sum(axis=1), axis=0) * 100    
     type_counts_by_month = type_counts_by_month.sort_values('Month', ascending = True)
     
+    # Slider for controlling the number of bars displayed
+    num_bars = st.slider('Number of Bars to Display', min_value=1, max_value=len(type_counts_by_month), value=len(type_counts_by_month))
+
+    # Plotting the chart with the selected number of bars
     plt.figure(figsize=(10, 6))
-    type_counts_by_month.plot(kind='bar', title='Historical distribution of pressure ulcer by Type', stacked=True, colormap='viridis')
+    type_counts_by_month.head(num_bars).plot(kind='bar', title='Historical distribution of pressure ulcer by Type', stacked=True, colormap='viridis')
     plt.xlabel('Time')
     plt.ylabel('Percentage')
 
