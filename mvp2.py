@@ -74,6 +74,8 @@ def upload_brad_csv():
     return None
 
 def filter_date(ulcer, brad):
+    ulcer['SOE'] = pd.to_datetime(ulcer['SOE'])
+    brad['SOE'] = pd.to_datetime(brad['Visitdate'])
     min_date = pd.Timestamp(min(ulcer['SOE'].min(), brad['Visitdate'].min()))
     max_date = pd.Timestamp(max(ulcer['SOE'].max(), brad['Visitdate'].max()))
 
