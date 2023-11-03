@@ -207,26 +207,30 @@ def plot_ulcer_counts_by_month(ulcer):
 
     # Resample the data based on the chosen time grouping
     if time_grouping == 'Quarter':
-            type_counts_by_month = pd.crosstab(sub['Quarter'], sub['Type']).fillna(0)
-            type_counts_by_month = type_counts_by_month.div(type_counts_by_month.sum(axis=1), axis=0) * 100    
-            type_counts_by_month = type_counts_by_month.sort_values('Quarter', ascending=True)
+        type_counts_by_month = pd.crosstab(sub['Quarter'], sub['Type']).fillna(0)
+        type_counts_by_month = type_counts_by_month.div(type_counts_by_month.sum(axis=1), axis=0) * 100    
+        type_counts_by_month = type_counts_by_month.sort_values('Quarter', ascending=True)
     elif time_grouping == 'Year':
-            type_counts_by_month = pd.crosstab(sub['Year'], sub['Type']).fillna(0)
-            type_counts_by_month = type_counts_by_month.div(type_counts_by_month.sum(axis=1), axis=0) * 100    
-            type_counts_by_month = type_counts_by_month.sort_values('Year', ascending=True)
+        type_counts_by_month = pd.crosstab(sub['Year'], sub['Type']).fillna(0)
+        type_counts_by_month = type_counts_by_month.div(type_counts_by_month.sum(axis=1), axis=0) * 100    
+        type_counts_by_month = type_counts_by_month.sort_values('Year', ascending=True)
 
-    # Plotting the chart with the selected window of bars
-    plt.figure(figsize=(10, 6))
-    ax = type_counts_by_month.iloc[num_bars:num_bars+default_num_bars].plot(kind='bar', title=f'Historical distribution of pressure ulcer by Type ({time_grouping})', stacked=True, color=custom_colors)
-    
-    plt.xlabel('Time')
-    plt.ylabel('Percentage')
-    
-    # Move the legend to the right, outside the plot
-    ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+    # Check if there is data available for plotting
+    if not type_counts_by_month.empty:
+        # Plotting the chart with the selected window of bars
+        plt.figure(figsize=(10, 6))
+        ax = type_counts_by_month.iloc[num_bars:num_bars+default_num_bars].plot(kind='bar', title=f'Historical distribution of pressure ulcer by Type ({time_grouping})', stacked=True, color=custom_colors)
+        
+        plt.xlabel('Time')
+        plt.ylabel('Percentage')
+        
+        # Move the legend to the right, outside the plot
+        ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
-    # Display the plot using Streamlit
-    st.pyplot()
+        # Display the plot using Streamlit
+        st.pyplot()
+    else:
+        st.warning("No data available for the selected time grouping.")
     
 def plot_severity_counts(brad):
     
@@ -281,18 +285,22 @@ def plot_severity_counts_by_month(brad):
         severity_counts_by_month = severity_counts_by_month.div(severity_counts_by_month.sum(axis=1), axis=0) * 100    
         severity_counts_by_month = severity_counts_by_month.sort_values('Year', ascending=True)
 
-    # Plotting the chart with the selected window of bars
-    plt.figure(figsize=(10, 6))
-    ax = severity_counts_by_month.iloc[num_bars:num_bars+default_num_bars].plot(kind='bar', title=f'Historical distribution of level of severity ({time_grouping})', stacked=True, color=custom_colors)
-    
-    plt.xlabel('Time')
-    plt.ylabel('Percentage')
-    
-    # Move the legend to the right, outside the plot
-    ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+    # Check if there is data available for plotting
+    if not severity_counts_by_month.empty:
+        # Plotting the chart with the selected window of bars
+        plt.figure(figsize=(10, 6))
+        ax = severity_counts_by_month.iloc[num_bars:num_bars+default_num_bars].plot(kind='bar', title=f'Historical distribution of level of severity ({time_grouping})', stacked=True, color=custom_colors)
+        
+        plt.xlabel('Time')
+        plt.ylabel('Percentage')
+        
+        # Move the legend to the right, outside the plot
+        ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
-    # Display the plot using Streamlit
-    st.pyplot()
+        # Display the plot using Streamlit
+        st.pyplot()
+    else:
+        st.warning("No data available for the selected time grouping.")
 
 
 def braden_score_for_ulcer_patient_counts(ulcer_b):
