@@ -783,6 +783,12 @@ def main():
     image_path = "nascentia_logo.png"
     st.image(image_path, width = 100)
     st.title("Nascentia Pressure Ulcer Data Analyzer")
+    st.subheader("Instructions:")
+    st.write("**1. Pull the equivalent data from the database for the past 3 years from the day intended for analysis.**")
+    st.write("**2. Save the data as \".csv\" format and upload them in the correct order.**")
+    st.write("**3. Wait for the system to process and plot the analysis results.**")
+    st.write("**4. Try manipulating plots with interactive tables and widgets.**")
+    st.write("**Note: The machine learning model will be trained with historical data and predict the results of the most recent patients. Those who are predicted to get an ulcer but actually do not may be interpreted by the model as being vulnerable to getting an ulcer in the future.**")
 
     birth = upload_birth_csv()
     ulcer = upload_ulcer_csv()
