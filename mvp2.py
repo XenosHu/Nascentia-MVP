@@ -163,13 +163,16 @@ def plot_ulcer_counts(ulcer):
 
 
 def plot_ulcer_counts_by_month(ulcer):
-    ulcer['Month'] = pd.to_datetime(ulcer['SOE']).dt.to_period('M').astype(str)
+    sub = ulcer.copy()
+    sub['Month'] = pd.to_datetime(sub['SOE']).dt.to_period('M').astype(str)
+    sub['Quarter'] = pd.to_datetime(sub['SOE']).dt.to_period('Q').astype(str)
+    sub['Year'] = pd.to_datetime(sub['SOE']).dt.to_period('Y').astype(str)
     
     # Plot bar chart for Pressure Ulcer Count by Type and sorted by month
-    type_counts_by_month = pd.crosstab(ulcer['Month'], ulcer['Type']).fillna(0)
+    type_counts_by_month = pd.crosstab(sub['Month'], sub['Type']).fillna(0)
     type_counts_by_month = type_counts_by_month.div(type_counts_by_month.sum(axis=1), axis=0) * 100    
     type_counts_by_month = type_counts_by_month.sort_values('Month', ascending=True)
-
+    
     custom_colors = ['#006837', '#b7e075', '#febe6f', '#a50026']   
     
     # Default number of bars to display
@@ -181,9 +184,13 @@ def plot_ulcer_counts_by_month(ulcer):
 
     # Resample the data based on the chosen time grouping
     if time_grouping == 'Quarter':
-        type_counts_by_month = type_counts_by_month.resample('Q').sum()
+            type_counts_by_month = pd.crosstab(sub['Quarter'], sub['Type']).fillna(0)
+            type_counts_by_month = type_counts_by_month.div(type_counts_by_month.sum(axis=1), axis=0) * 100    
+            type_counts_by_month = type_counts_by_month.sort_values('Quarter', ascending=True)
     elif time_grouping == 'Year':
-        type_counts_by_month = type_counts_by_month.resample('Y').sum()
+            type_counts_by_month = pd.crosstab(sub['Year'], sub['Type']).fillna(0)
+            type_counts_by_month = type_counts_by_month.div(type_counts_by_month.sum(axis=1), axis=0) * 100    
+            type_counts_by_month = type_counts_by_month.sort_values('Year', ascending=True)
 
     # Plotting the chart with the selected window of bars
     plt.figure(figsize=(10, 6))
