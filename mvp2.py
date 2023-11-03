@@ -181,7 +181,7 @@ def plot_ulcer_counts_by_month(ulcer):
 
     # Plotting the chart with the selected window of bars
     plt.figure(figsize=(10, 6))
-    ax = type_counts_by_month.iloc[num_bars:num_bars+default_num_bars].plot(kind='bar', title='Historical distribution of pressure ulcer by Type', stacked=True, colormap= custom_colors)
+    ax = type_counts_by_month.iloc[num_bars:num_bars+default_num_bars].plot(kind='bar', title='Historical distribution of pressure ulcer by Type', stacked=True, color = custom_colors)
     
     plt.xlabel('Time')
     plt.ylabel('Percentage')
