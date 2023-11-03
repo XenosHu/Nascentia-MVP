@@ -73,6 +73,23 @@ def upload_brad_csv():
             st.error(f"Error: {e}")
     return None
 
+def filter_date(ulcer, brad):
+    min_date = pd.Timestamp(min(ulcer['SOE'].min(), brad['Visitdate'].min()))
+    max_date = pd.Timestamp(max(ulcer['SOE'].max(), brad['Visitdate'].max()))
+
+    # Range slider for 'SOE' and 'Visitdate'
+    date_range = st.date_input('You can choose to filter data by Date Range', min_value=min_date, max_value=max_date, value=(min_date, max_date))
+
+    # Filter ulcer data
+    ulcer = ulcer[(ulcer['SOE'] >= date_range[0]) & (ulcer['SOE'] <= date_range[1])]
+
+    # Filter brad data
+    brad = brad[(brad['Visitdate'] >= date_range[0]) & (brad['Visitdate'] <= date_range[1])]
+
+    st.write(f"Length of Filtered 'Pressure Ulcer Data': {len(ulcer)}")
+    st.write(f"Length of Filtered 'Physical Assessment Data': {len(brad)}")
+
+
 def process_birth_data(birth):
     birth['DOB'] = pd.to_datetime(birth['DOB'])
     birth['DOB'] = birth['DOB'].dt.year
@@ -810,23 +827,7 @@ def main():
         st.write(f"Length of 'Physical Assessment Data': {len(brad)}")
 
     if ulcer is not None and brad is not None:
-        # Combine date ranges from both datasets
-        min_date = min(ulcer['SOE'].min(), brad['Visitdate'].min())
-        max_date = max(ulcer['SOE'].max(), brad['Visitdate'].max())
-
-        # Range slider for 'SOE' and 'Visitdate'
-        date_range = st.slider('You can choose to filter data by Date Range', min_value=min_date, max_value=max_date, value=(min_date, max_date))
-
-        # Filter ulcer data
-        filtered_ulcer = ulcer[(ulcer['SOE'] >= date_range[0]) & (ulcer['SOE'] <= date_range[1])]
-
-        # Filter brad data
-        filtered_brad = brad[(brad['Visitdate'] >= date_range[0]) & (brad['Visitdate'] <= date_range[1])]
-
-        st.write(f"Length of Filtered 'Pressure Ulcer Data': {len(filtered_ulcer)}")
-        st.write(f"Length of Filtered 'Physical Assessment Data': {len(filtered_brad)}")
-    
-    if brad is not None and birth is not None:
+        filter_date(ulcer, brad)
         brad = merge_with_birth(brad, birth)
 
     if ulcer is not None and brad is not None:
