@@ -808,6 +808,23 @@ def main():
         process_brad_data(brad)
         brad = duration(brad)
         st.write(f"Length of 'Physical Assessment Data': {len(brad)}")
+
+    if ulcer is not None and brad is not None:
+        # Combine date ranges from both datasets
+        min_date = min(ulcer['SOE'].min(), brad['Visitdate'].min())
+        max_date = max(ulcer['SOE'].max(), brad['Visitdate'].max())
+
+        # Range slider for 'SOE' and 'Visitdate'
+        date_range = st.slider('You can choose to filter data by Date Range', min_value=min_date, max_value=max_date, value=(min_date, max_date))
+
+        # Filter ulcer data
+        filtered_ulcer = ulcer[(ulcer['SOE'] >= date_range[0]) & (ulcer['SOE'] <= date_range[1])]
+
+        # Filter brad data
+        filtered_brad = brad[(brad['Visitdate'] >= date_range[0]) & (brad['Visitdate'] <= date_range[1])]
+
+        st.write(f"Length of Filtered 'Pressure Ulcer Data': {len(filtered_ulcer)}")
+        st.write(f"Length of Filtered 'Physical Assessment Data': {len(filtered_brad)}")
     
     if brad is not None and birth is not None:
         brad = merge_with_birth(brad, birth)
