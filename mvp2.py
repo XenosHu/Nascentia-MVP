@@ -81,7 +81,7 @@ def filter_date(ulcer, brad):
     max_date = pd.to_datetime(max(ulcer['SOE'].max(), brad['Visitdate'].max()))
 
     st.subheader("Filter the data by dates:")
-    st.write("**leave it unchanged if no adjustment needed, refresh the page to reset the dataset.**")
+    st.write("**Leave it unchanged if no adjustment needed, refresh the page to reset the dataset.**")
     start_date = st.date_input('**Choose start date:**', min_value=min_date.date(), max_value=max_date.date(), value=min_date.date())
     end_date = st.date_input('**Choose end date:**', min_value=min_date.date(), max_value=max_date.date(), value=max_date.date())
     
