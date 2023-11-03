@@ -163,7 +163,6 @@ def plot_ulcer_counts(ulcer):
 
 
 def plot_ulcer_counts_by_month(ulcer):
-
     ulcer['Month'] = pd.to_datetime(ulcer['SOE']).dt.to_period('M').astype(str)
     
     # Plot bar chart for Pressure Ulcer Count by Type and sorted by month
@@ -171,7 +170,7 @@ def plot_ulcer_counts_by_month(ulcer):
     type_counts_by_month = type_counts_by_month.div(type_counts_by_month.sum(axis=1), axis=0) * 100    
     type_counts_by_month = type_counts_by_month.sort_values('Month', ascending=True)
 
-    custom_colors = ['#006837',  '#b7e075', '#febe6f','#a50026']   
+    custom_colors = ['#006837', '#b7e075', '#febe6f', '#a50026']   
     
     # Default number of bars to display
     default_num_bars = 16
@@ -180,16 +179,11 @@ def plot_ulcer_counts_by_month(ulcer):
     # Dropdown menu to choose time grouping
     time_grouping = st.selectbox('Choose Time Grouping', ['Month', 'Quarter', 'Year'])
 
+    # Resample the data based on the chosen time grouping
     if time_grouping == 'Quarter':
-        type_counts_by_month.index = pd.to_datetime(type_counts_by_month.index)
-        type_counts_by_month = type_counts_by_month.groupby(pd.PeriodIndex(type_counts_by_month.index, freq='Q')).sum()
-        type_counts_by_month.index = type_counts_by_month.index.astype(str)
-        type_counts_by_month.reset_index(inplace=True)
+        type_counts_by_month = type_counts_by_month.resample('Q').sum()
     elif time_grouping == 'Year':
-        type_counts_by_month.index = pd.to_datetime(type_counts_by_month.index)
-        type_counts_by_month = type_counts_by_month.groupby(pd.Grouper(freq='Y')).sum()
-        type_counts_by_month.index = type_counts_by_month.index.astype(str)
-        type_counts_by_month.reset_index(inplace=True)
+        type_counts_by_month = type_counts_by_month.resample('Y').sum()
 
     # Plotting the chart with the selected window of bars
     plt.figure(figsize=(10, 6))
@@ -203,7 +197,6 @@ def plot_ulcer_counts_by_month(ulcer):
 
     # Display the plot using Streamlit
     st.pyplot()
-
     
 def plot_severity_counts(brad):
     
