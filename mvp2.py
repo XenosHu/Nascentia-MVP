@@ -834,7 +834,7 @@ def main():
         st.write(f"Length of 'Physical Assessment Data': {len(brad)}")
 
     if ulcer is not None and brad is not None:
-        filter_date(ulcer, brad)
+        ulcer, brad = filter_date(ulcer, brad)
         brad = merge_with_birth(brad, birth)
 
     if ulcer is not None and brad is not None:
