@@ -169,7 +169,7 @@ def plot_ulcer_counts(ulcer):
     type_counts = unique_ulcer_patients['Type'].value_counts().sort_index()
 
     colors = plt.cm.RdYlGn(np.linspace(1, 0, len(type_counts)))
-    plt.figure(=(10, 6))
+    plt.figure(figsize=(10, 6))
     type_counts.plot(kind='bar', title='Pressure ulcer count by Type for all unique patients', color = colors)
     plt.xlabel('Type')
     plt.ylabel('Count')
