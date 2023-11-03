@@ -173,7 +173,11 @@ def plot_ulcer_counts_by_month(ulcer):
     type_counts_by_month = type_counts_by_month.div(type_counts_by_month.sum(axis=1), axis=0) * 100    
     type_counts_by_month = type_counts_by_month.sort_values('Month', ascending = True)
 
-    colors = plt.cm.RdYlGn(np.linspace(1, 0, num_types))
+    # Manually assign colors based on values 1, 2, 3, and 4
+    custom_colors = {1: 'green', 2: 'lightgreen', 3: 'orange', 4: 'red'}
+    
+    # Map the colors to the type columns
+    colors = [custom_colors.get(i, 'grey') for i in range(1, num_types + 1)]
     
     # Default number of bars to display
     default_num_bars = 16
