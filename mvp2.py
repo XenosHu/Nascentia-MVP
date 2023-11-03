@@ -75,7 +75,7 @@ def upload_brad_csv():
 
 def filter_date(ulcer, brad):
     ulcer['SOE'] = pd.to_datetime(ulcer['SOE'])
-    brad['SOE'] = pd.to_datetime(brad['Visitdate'])
+    brad['Visitdate'] = pd.to_datetime(brad['Visitdate'])
 
     min_date = pd.to_datetime(min(ulcer['SOE'].min(), brad['Visitdate'].min()))
     max_date = pd.to_datetime(max(ulcer['SOE'].max(), brad['Visitdate'].max()))
@@ -84,13 +84,12 @@ def filter_date(ulcer, brad):
     date_range = st.date_input('You can choose to filter data by Date Range', min_value=min_date, max_value=max_date, value=(min_date, max_date))
 
     # Filter ulcer data
-    ulcer = ulcer[(ulcer['SOE'] >= date_range[0]) & (ulcer['SOE'] <= date_range[1])]
+    filtered_ulcer = ulcer[(ulcer['SOE'] >= date_range[0]) & (ulcer['SOE'] <= date_range[1])]
 
     # Filter brad data
-    brad = brad[(brad['Visitdate'] >= date_range[0]) & (brad['Visitdate'] <= date_range[1])]
+    filtered_brad = brad[(brad['Visitdate'] >= date_range[0]) & (brad['Visitdate'] <= date_range[1])]
 
-    st.write(f"Length of Filtered 'Pressure Ulcer Data': {len(ulcer)}")
-    st.write(f"Length of Filtered 'Physical Assessment Data': {len(brad)}")
+    return filtered_ulcer, filtered_brad
 
 
 def process_birth_data(birth):
