@@ -172,15 +172,22 @@ def plot_ulcer_counts_by_month(ulcer):
     type_counts_by_month = pd.crosstab(ulcer['Month'], ulcer['Type']).fillna(0)
     type_counts_by_month = type_counts_by_month.div(type_counts_by_month.sum(axis=1), axis=0) * 100    
     type_counts_by_month = type_counts_by_month.sort_values('Month', ascending = True)
-    
-    # Slider for controlling the number of bars displayed
-    num_bars = st.slider('Number of Bars to Display', min_value=1, max_value=len(type_counts_by_month), value=len(type_counts_by_month))
 
-    # Plotting the chart with the selected number of bars
+    colors = plt.cm.RdYlGn(np.linspace(1, 0, num_types))
+    
+    # Default number of bars to display
+    default_num_bars = 16
+    num_bars = st.slider('Display Window', min_value=1, max_value=len(type_counts_by_month)-default_num_bars+1, value=1)
+
+    # Plotting the chart with the selected window of bars
     plt.figure(figsize=(10, 6))
-    type_counts_by_month.head(num_bars).plot(kind='bar', title='Historical distribution of pressure ulcer by Type', stacked=True, colormap='viridis')
+    ax = type_counts_by_month.iloc[num_bars:num_bars+default_num_bars].plot(kind='bar', title='Historical distribution of pressure ulcer by Type', stacked=True, colormap= colors)
+    
     plt.xlabel('Time')
     plt.ylabel('Percentage')
+    
+    # Move the legend to the right, outside the plot
+    ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
     # Display the plot using Streamlit
     st.pyplot()
