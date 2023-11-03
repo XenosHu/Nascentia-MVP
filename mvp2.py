@@ -164,23 +164,22 @@ def plot_ulcer_counts(ulcer):
 
 def plot_ulcer_counts_by_month(ulcer):
 
-    unique_ulcer_patients = ulcer.sort_values('SOE', ascending=False).drop_duplicates('Name', keep='first')
-    unique_ulcer_patients['Month'] = pd.to_datetime(unique_ulcer_patients['SOE']).dt.to_period('M').astype(str)
+    #unique_ulcer_patients = ulcer.sort_values('SOE', ascending=False).drop_duplicates('Name', keep='first')
+    #unique_ulcer_patients['Month'] = pd.to_datetime(unique_ulcer_patients['SOE']).dt.to_period('M').astype(str)
+    ulcer['Month'] = pd.to_datetime(ulcer['SOE']).dt.to_period('M').astype(str)
     
     # Plot bar chart for Pressure Ulcer Count by Type and sorted by month
     type_counts_by_month = pd.crosstab(unique_ulcer_patients['Month'], unique_ulcer_patients['Type']).fillna(0)
     type_counts_by_month = type_counts_by_month.div(type_counts_by_month.sum(axis=1), axis=0) * 100    
     type_counts_by_month = type_counts_by_month.sort_values('Month', ascending = True)
-
-    st.write(type_counts_by_month)
     
-    # plt.figure(figsize=(12, 8))
-    # type_counts_by_month.plot(kind='bar', title='Historical distribution of pressure ulcer by Type' stacked=True, colormap='viridis')
-    # plt.xlabel('Time')
-    # plt.ylabel('Percentage')
+    plt.figure(figsize=(10, 6))
+    type_counts_by_month.plot(kind='bar', title='Historical distribution of pressure ulcer by Type', stacked=True, colormap='viridis')
+    plt.xlabel('Time')
+    plt.ylabel('Percentage')
 
-    # # Display the plot using Streamlit
-    # st.pyplot()
+    # Display the plot using Streamlit
+    st.pyplot()
     
 def plot_severity_counts(brad):
     
