@@ -84,17 +84,16 @@ def filter_date(ulcer, brad):
     end_date = st.date_input('Choose end date:', min_value=min_date.date(), max_value=max_date.date(), value=max_date.date())
     
     # Convert date_range to datetime for comparison
-    start_date = (pd.to_datetime(start_date[0]), pd.to_datetime(start_date[1]))
-    end_date = (pd.to_datetime(end_date[0]), pd.to_datetime(end_date[1]))
+    start_date = pd.to_datetime(start_date)
+    end_date = pd.to_datetime(end_date)
 
     # Filter ulcer data
-    ulcer = ulcer[(ulcer['SOE'] >= date_range[0]) & (ulcer['SOE'] <= date_range[1])]
+    ulcer = ulcer[(ulcer['SOE'] >= start_date) & (ulcer['SOE'] <= end_date)]
 
     # Filter brad data
-    brad = brad[(brad['Visitdate'] >= date_range[0]) & (brad['Visitdate'] <= date_range[1])]
+    brad = brad[(brad['Visitdate'] >= start_date) & (brad['Visitdate'] <= end_date)]
 
     return ulcer, brad
-
 
 def process_birth_data(birth):
     birth['DOB'] = pd.to_datetime(birth['DOB'])
