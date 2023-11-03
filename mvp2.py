@@ -177,10 +177,10 @@ def plot_ulcer_counts_by_month(ulcer):
     
     # Default number of bars to display
     default_num_bars = 16
-    num_bars = st.slider('Display Window', min_value=1, max_value=len(type_counts_by_month)-default_num_bars+1, value=1)
+    num_bars = st.slider('Choose the timeframe for display: ', min_value=1, max_value=len(type_counts_by_month)-default_num_bars+1, value=1)
 
     # Dropdown menu to choose time grouping
-    time_grouping = st.selectbox('Choose Time Grouping', ['Month', 'Quarter', 'Year'])
+    time_grouping = st.selectbox('Choose the time grouping: ', ['Month', 'Quarter', 'Year'])
 
     # Resample the data based on the chosen time grouping
     if time_grouping == 'Quarter':
@@ -243,11 +243,10 @@ def plot_severity_counts_by_month(brad):
     
     # Default number of bars to display
     default_num_bars = 16
-    num_bars = st.slider('Display Window', min_value=1, max_value=len(severity_counts_by_month)-default_num_bars+1, value=1)
-
+    num_bars = st.slider('Choose the timeframe for display:', min_value=1, max_value=len(severity_counts_by_month)-default_num_bars+1, value=1)
 
     # Dropdown menu to choose time grouping
-    time_grouping = st.selectbox('Choose Time Grouping', ['Month', 'Quarter', 'Year'])
+    time_grouping = st.selectbox('Choose the time grouping:', ['Month', 'Quarter', 'Year'])
 
     # Resample the data based on the chosen time grouping
     if time_grouping == 'Quarter':
