@@ -80,7 +80,7 @@ def filter_date(ulcer, brad):
     min_date = pd.to_datetime(min(ulcer['SOE'].min(), brad['Visitdate'].min()))
     max_date = pd.to_datetime(max(ulcer['SOE'].max(), brad['Visitdate'].max()))
 
-    st.subheader("Filter the data by dates:")
+    st.subheader("Filter the Data by Dates")
     start_date = st.date_input('**Choose start date:**', min_value=min_date.date(), max_value=max_date.date(), value=min_date.date())
     end_date = st.date_input('**Choose end date:**', min_value=min_date.date(), max_value=max_date.date(), value=max_date.date())
     
@@ -210,10 +210,13 @@ def plot_ulcer_counts_by_month(ulcer):
         type_counts_by_month = pd.crosstab(sub['Quarter'], sub['Type']).fillna(0)
         type_counts_by_month = type_counts_by_month.div(type_counts_by_month.sum(axis=1), axis=0) * 100    
         type_counts_by_month = type_counts_by_month.sort_values('Quarter', ascending=True)
+        num_bars = st.slider('Choose the timeframe for display:', min_value=1, max_value=len(severity_counts_by_month)-default_num_bars+1, value=1)
+
     elif time_grouping == 'Year':
         type_counts_by_month = pd.crosstab(sub['Year'], sub['Type']).fillna(0)
         type_counts_by_month = type_counts_by_month.div(type_counts_by_month.sum(axis=1), axis=0) * 100    
         type_counts_by_month = type_counts_by_month.sort_values('Year', ascending=True)
+        num_bars = st.slider('Choose the timeframe for display:', min_value=1, max_value=len(severity_counts_by_month)-default_num_bars+1, value=1)
 
     # Check if there is data available for plotting
     if not type_counts_by_month.empty:
@@ -280,10 +283,12 @@ def plot_severity_counts_by_month(brad):
         severity_counts_by_month = pd.crosstab(sub['Quarter'], sub['Severity']).fillna(0)
         severity_counts_by_month = severity_counts_by_month.div(severity_counts_by_month.sum(axis=1), axis=0) * 100    
         severity_counts_by_month = severity_counts_by_month.sort_values('Quarter', ascending=True)
+        num_bars = st.slider('Choose the timeframe for display:', min_value=1, max_value=len(severity_counts_by_month)-default_num_bars+1, value=1)
     elif time_grouping == 'Year':
         severity_counts_by_month = pd.crosstab(sub['Year'], sub['Severity']).fillna(0)
         severity_counts_by_month = severity_counts_by_month.div(severity_counts_by_month.sum(axis=1), axis=0) * 100    
         severity_counts_by_month = severity_counts_by_month.sort_values('Year', ascending=True)
+        num_bars = st.slider('Choose the timeframe for display:', min_value=1, max_value=len(severity_counts_by_month)-default_num_bars+1, value=1)
 
     # Check if there is data available for plotting
     if not severity_counts_by_month.empty:
@@ -355,13 +360,13 @@ def high_loc(ulcer_b):
     name_location_count = ulcer_b.groupby('Name')['Location'].nunique().reset_index()
     name_location_count.columns = ['Name', 'Location_Count']
     
-    location_count_name_counts = name_location_count.groupby('Location_Count')['Name'].count().reset_index()
-    location_count_name_counts.columns = ['Location_Count', 'Name_Count']
+    # location_count_name_counts = name_location_count.groupby('Location_Count')['Name'].count().reset_index()
+    # location_count_name_counts.columns = ['Location_Count', 'Name_Count']
     
-    location_counts = location_count_name_counts['Location_Count']
-    name_counts = location_count_name_counts['Name_Count']
+    # location_counts = location_count_name_counts['Location_Count']
+    # name_counts = location_count_name_counts['Name_Count']
 
-    loc = location_count_name_counts[location_count_name_counts['Location_Count'] >=10]
+    loc = name_location_count[name_location_count['Location_Count'] >=10]
     st.write("patients with more than 10 ulcers:")
     st.write(loc)
 
@@ -891,7 +896,7 @@ def main():
         result = heal_rate_merge(merged_df,df3)
         result = heal_logic(result)
 
-        st.subheader("Heal rate analysis")
+        st.subheader("Heal Rate Analysis")
         Cate_given_brad(result)
         Cate_given_brad_perc(result)
         heal_speed_by_age(merged_df)
