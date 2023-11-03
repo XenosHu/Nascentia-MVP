@@ -81,7 +81,6 @@ def filter_date(ulcer, brad):
     max_date = pd.to_datetime(max(ulcer['SOE'].max(), brad['Visitdate'].max()))
 
     st.subheader("Filter the data by dates:")
-    st.write("**Leave it unchanged if no adjustment needed, refresh the page to reset the dataset.**")
     start_date = st.date_input('**Choose start date:**', min_value=min_date.date(), max_value=max_date.date(), value=min_date.date())
     end_date = st.date_input('**Choose end date:**', min_value=min_date.date(), max_value=max_date.date(), value=max_date.date())
     
@@ -344,6 +343,19 @@ def location_counts(ulcer_b):
     plt.ylabel('Patients count')
     st.pyplot()
 
+def high_loc(ulcer_b):
+    name_location_count = ulcer_b.groupby('Name')['Location'].nunique().reset_index()
+    name_location_count.columns = ['Name', 'Location_Count']
+    
+    location_count_name_counts = name_location_count.groupby('Location_Count')['Name'].count().reset_index()
+    location_count_name_counts.columns = ['Location_Count', 'Name_Count']
+    
+    location_counts = location_count_name_counts['Location_Count']
+    name_counts = location_count_name_counts['Name_Count']
+
+    loc = location_count_name_counts[location_count_name_counts['Location_Count'] >=10]
+    st.write(patients with more than 10 ulcers:)
+    st.write(loc)
 
 def heal_rate_type(ulcer_b):    
     # Check if ulcer_b is not None
@@ -857,6 +869,7 @@ def main():
         plot_severity_counts_by_month(brad)
         
     if ulcer is not None and brad is not None:
+        st.subheader("Overview")
         plot_ulcer_counts(ulcer_b)
         plot_ulcer_counts_by_month(ulcer_b)
         braden_score_for_ulcer_patient_counts(ulcer_b)
@@ -866,13 +879,18 @@ def main():
         merged_df = heal_rate_braden_score(brad)
         result = heal_rate_merge(merged_df,df3)
         result = heal_logic(result)
-        
+
+        st.subheader("Heal rate analysis")
         Cate_given_brad(result)
         Cate_given_brad_perc(result)
+        heal_speed_by_age(merged_df)
+        
+        st.subheader("Patients Spotlight")
+        high_loc(ulcer_b)
         find_worse(result)
         vulnerable(brad)
-        heal_speed_by_age(merged_df)
-
+        
+        st.subheader("Machine Learning")
         SVM(brad)
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
             "(https://drive.google.com/file/d/1snQ3VCuuk-yga4JHz1W_h15UQ5-kKnWq/view?usp=sharing)")
