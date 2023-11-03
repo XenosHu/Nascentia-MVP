@@ -169,7 +169,7 @@ def plot_ulcer_counts(ulcer):
     type_counts = unique_ulcer_patients['Type'].value_counts().sort_index()
 
     colors = plt.cm.RdYlGn(np.linspace(1, 0, len(type_counts)))
-    plt.figure(figsize=(10, 6))
+    plt.figure(=(10, 6))
     type_counts.plot(kind='bar', title='Pressure ulcer count by Type for all unique patients', color = colors)
     plt.xlabel('Type')
     plt.ylabel('Count')
@@ -196,12 +196,8 @@ def plot_ulcer_counts_by_month(ulcer):
     type_counts_by_month = type_counts_by_month.div(type_counts_by_month.sum(axis=1), axis=0) * 100    
     type_counts_by_month = type_counts_by_month.sort_values('Month', ascending=True)
     
-    custom_colors = ['#006837', '#b7e075', '#febe6f', '#a50026']   
+    custom_colors = ['#006837', '#b7e075', '#febe6f', '#a50026']  
     
-    # Default number of bars to display
-    default_num_bars = 16
-    num_bars = st.slider('Choose the timeframe for display: ', min_value=1, max_value=len(type_counts_by_month)-default_num_bars+1, value=1)
-
     # Dropdown menu to choose time grouping
     time_grouping = st.selectbox('Choose the time grouping: ', ['Month', 'Quarter', 'Year'])
 
@@ -210,14 +206,18 @@ def plot_ulcer_counts_by_month(ulcer):
         type_counts_by_month = pd.crosstab(sub['Quarter'], sub['Type']).fillna(0)
         type_counts_by_month = type_counts_by_month.div(type_counts_by_month.sum(axis=1), axis=0) * 100    
         type_counts_by_month = type_counts_by_month.sort_values('Quarter', ascending=True)
-        num_bars = st.slider('Choose the timeframe for display:', min_value=1, max_value=len(severity_counts_by_month)-default_num_bars+1, value=1)
-
+        default_num_bars = min(len(type_counts_by_month), 16)
     elif time_grouping == 'Year':
         type_counts_by_month = pd.crosstab(sub['Year'], sub['Type']).fillna(0)
         type_counts_by_month = type_counts_by_month.div(type_counts_by_month.sum(axis=1), axis=0) * 100    
         type_counts_by_month = type_counts_by_month.sort_values('Year', ascending=True)
-        num_bars = st.slider('Choose the timeframe for display:', min_value=1, max_value=len(severity_counts_by_month)-default_num_bars+1, value=1)
+        default_num_bars = min(len(type_counts_by_month), 16)
+    else:  # Default to 'Month'
+        default_num_bars = min(len(type_counts_by_month), 16)
 
+    # Default number of bars to display
+    num_bars = st.slider('Choose the timeframe for display: ', min_value=1, max_value=len(type_counts_by_month)-default_num_bars+1, value=1)
+    
     # Check if there is data available for plotting
     if not type_counts_by_month.empty:
         # Plotting the chart with the selected window of bars
@@ -271,10 +271,6 @@ def plot_severity_counts_by_month(brad):
     
     custom_colors = ['#006837', '#b7e075', '#febe6f', '#a50026']   
     
-    # Default number of bars to display
-    default_num_bars = 16
-    num_bars = st.slider('Choose the timeframe for display:', min_value=1, max_value=len(severity_counts_by_month)-default_num_bars+1, value=1)
-
     # Dropdown menu to choose time grouping
     time_grouping = st.selectbox('Choose the time grouping:', ['Month', 'Quarter', 'Year'])
 
@@ -283,12 +279,17 @@ def plot_severity_counts_by_month(brad):
         severity_counts_by_month = pd.crosstab(sub['Quarter'], sub['Severity']).fillna(0)
         severity_counts_by_month = severity_counts_by_month.div(severity_counts_by_month.sum(axis=1), axis=0) * 100    
         severity_counts_by_month = severity_counts_by_month.sort_values('Quarter', ascending=True)
-        num_bars = st.slider('Choose the timeframe for display:', min_value=1, max_value=len(severity_counts_by_month)-default_num_bars+1, value=1)
+        default_num_bars = min(len(severity_counts_by_month), 16)
     elif time_grouping == 'Year':
         severity_counts_by_month = pd.crosstab(sub['Year'], sub['Severity']).fillna(0)
         severity_counts_by_month = severity_counts_by_month.div(severity_counts_by_month.sum(axis=1), axis=0) * 100    
         severity_counts_by_month = severity_counts_by_month.sort_values('Year', ascending=True)
-        num_bars = st.slider('Choose the timeframe for display:', min_value=1, max_value=len(severity_counts_by_month)-default_num_bars+1, value=1)
+        default_num_bars = min(len(severity_counts_by_month), 16)
+    else:  # Default to 'Month'
+        default_num_bars = min(len(type_counts_by_month), 16)
+
+    # Default number of bars to display
+    num_bars = st.slider('Choose the timeframe for display: ', min_value=1, max_value=len(severity_counts_by_month)-default_num_bars+1, value=1)
 
     # Check if there is data available for plotting
     if not severity_counts_by_month.empty:
