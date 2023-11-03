@@ -173,14 +173,7 @@ def plot_ulcer_counts_by_month(ulcer):
     type_counts_by_month = type_counts_by_month.div(type_counts_by_month.sum(axis=1), axis=0) * 100    
     type_counts_by_month = type_counts_by_month.sort_values('Month', ascending = True)
 
-    # Get the number of types for colormap
-    num_types = len(type_counts_by_month.columns.get_level_values(1).unique())
-    
-    # Manually assign colors based on values 1, 2, 3, and 4
-    custom_colors = {1: 'green', 2: 'lightgreen', 3: 'orange', 4: 'red'}
-    
-    # Map the colors to the type columns
-    colors = [custom_colors.get(i, 'grey') for i in range(1, num_types + 1)]
+    custom_colors = ['#1f77b4',  '#2ca02c', '#ff7f0e','#d62728']   
     
     # Default number of bars to display
     default_num_bars = 16
@@ -188,7 +181,7 @@ def plot_ulcer_counts_by_month(ulcer):
 
     # Plotting the chart with the selected window of bars
     plt.figure(figsize=(10, 6))
-    ax = type_counts_by_month.iloc[num_bars:num_bars+default_num_bars].plot(kind='bar', title='Historical distribution of pressure ulcer by Type', stacked=True, colormap= colors)
+    ax = type_counts_by_month.iloc[num_bars:num_bars+default_num_bars].plot(kind='bar', title='Historical distribution of pressure ulcer by Type', stacked=True, colormap= custom_colors)
     
     plt.xlabel('Time')
     plt.ylabel('Percentage')
