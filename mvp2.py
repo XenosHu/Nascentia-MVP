@@ -80,11 +80,12 @@ def filter_date(ulcer, brad):
     min_date = pd.to_datetime(min(ulcer['SOE'].min(), brad['Visitdate'].min()))
     max_date = pd.to_datetime(max(ulcer['SOE'].max(), brad['Visitdate'].max()))
 
-    # Range slider for 'SOE' and 'Visitdate'
-    date_range = st.date_input('You can choose to filter data by Date Range', min_value=min_date.date(), max_value=max_date.date(), value=(min_date.date(), max_date.date()))
-
+    start_date = st.date_input('Choose start date:', min_value=min_date.date(), max_value=max_date.date(), value=min_date.date())
+    end_date = st.date_input('Choose end date:', min_value=min_date.date(), max_value=max_date.date(), value=max_date.date())
+    
     # Convert date_range to datetime for comparison
-    date_range = (pd.to_datetime(date_range[0]), pd.to_datetime(date_range[1]))
+    start_date = (pd.to_datetime(start_date[0]), pd.to_datetime(start_date[1]))
+    end_date = (pd.to_datetime(end_date[0]), pd.to_datetime(end_date[1]))
 
     # Filter ulcer data
     ulcer = ulcer[(ulcer['SOE'] >= date_range[0]) & (ulcer['SOE'] <= date_range[1])]
