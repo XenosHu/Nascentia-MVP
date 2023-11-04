@@ -882,11 +882,12 @@ def main():
             plot_patient_data(patient_id, brad)
 
     if brad is not None:
-        st.subheader("Overview")
+        st.subheader("Severity Overview")
         plot_severity_counts(brad)
         plot_severity_counts_by_month(brad)
         
     if ulcer is not None and brad is not None:
+        st.subheader("Ulcer Type Overview")
         plot_ulcer_counts(ulcer_b)
         plot_ulcer_counts_by_month(ulcer_b)
         braden_score_for_ulcer_patient_counts(ulcer_b)
