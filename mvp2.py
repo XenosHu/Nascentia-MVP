@@ -288,7 +288,7 @@ def plot_severity_counts_by_month(brad):
         default_num_bars = min(len(severity_counts_by_month), 12)
         num_bars = st.slider('Choose the timeframe for display: ', min_value=1, max_value=len(sub['Year'])-default_num_bars+1, value=1)
     else:  # Default to 'Month'
-        default_num_bars = min(len(type_counts_by_month), 12)
+        default_num_bars = min(len(severity_counts_by_month), 12)
         num_bars = st.slider('Choose the timeframe for display: ', min_value=1, max_value=len(sub['Month'])-default_num_bars+1, value=1)
 
     # Check if there is data available for plotting
