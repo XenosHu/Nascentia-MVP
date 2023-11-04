@@ -360,15 +360,9 @@ def location_counts(ulcer_b):
 def high_loc(ulcer_b):
     name_location_count = ulcer_b.groupby('Name')['Location'].nunique().reset_index()
     name_location_count.columns = ['Name', 'Location_Count']
-    
-    # location_count_name_counts = name_location_count.groupby('Location_Count')['Name'].count().reset_index()
-    # location_count_name_counts.columns = ['Location_Count', 'Name_Count']
-    
-    # location_counts = location_count_name_counts['Location_Count']
-    # name_counts = location_count_name_counts['Name_Count']
 
     loc = name_location_count[name_location_count['Location_Count'] >=10]
-    st.write("patients with more than 10 ulcers:")
+    st.write("Patients with more than 10 ulcers:")
     st.write(loc)
 
 def heal_rate_type(ulcer_b):    
