@@ -844,10 +844,8 @@ def main():
     ulcer = upload_ulcer_csv()
     brad = upload_brad_csv()
 
-    # Display the processed Ulcer dataset
-    st.subheader("Data Outlook")
-    
     if birth is not None:
+        st.subheader("Data Outlook")
         process_birth_data(birth)
         st.write(f"Length of 'Birthday Data': {len(birth)}")
     
