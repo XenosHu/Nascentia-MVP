@@ -822,6 +822,11 @@ def merge_and_process_data(ulcer, brad):
     ulcer_b = ulcer_b.sort_values('Name', ascending=True)
 
     return ulcer_b  
+
+def create_table_of_contents(subheaders):
+    st.sidebar.header("Table of Contents")
+    for subheader in subheaders:
+        st.sidebar.markdown(f"- [{subheader}](#{subheader.lower().replace(' ', '-')} )")
     
 def main():
     image_path = "nascentia_logo.png"
