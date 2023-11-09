@@ -80,7 +80,7 @@ def filter_date(ulcer, brad):
     min_date = pd.to_datetime(min(ulcer['SOE'].min(), brad['Visitdate'].min()))
     max_date = pd.to_datetime(max(ulcer['SOE'].max(), brad['Visitdate'].max()))
 
-    st.subheader("Filter the Data by Dates")
+    st.subheader("Filter Data by Dates")
     start_date = st.date_input('**Choose start date:**', min_value=min_date.date(), max_value=max_date.date(), value=min_date.date())
     end_date = st.date_input('**Choose end date:**', min_value=min_date.date(), max_value=max_date.date(), value=max_date.date())
     
@@ -832,6 +832,10 @@ def main():
     image_path = "nascentia_logo.png"
     st.image(image_path, width = 100)
     st.title("Nascentia Pressure Ulcer Data Analyzer")
+
+    subheaders = ["Instructions", "Data Outlook", "Filter Data by Dates", "Patient Search", "Severity Overview", "Ulcer Type Overview", "Heal Rate Analysis", "Machine Learning", "Patients Spotlight"]
+    create_table_of_contents(subheaders)
+    
     st.subheader("Instructions:")
     st.write("**1. Pull the equivalent data from the database for the past 3 years from the day intended for analysis.**")
     st.write("**2. Save the data as \".csv\" format and upload them in the correct order.**")
@@ -899,14 +903,15 @@ def main():
         Cate_given_brad(result)
         Cate_given_brad_perc(result)
         heal_speed_by_age(merged_df)
-        
+
+        st.subheader("Machine Learning")
+        SVM(brad)
+         
         st.subheader("Patients Spotlight")
         high_loc(ulcer_b)
         find_worse(result)
         vulnerable(brad)
         
-        st.subheader("Machine Learning")
-        SVM(brad)
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
             "(https://drive.google.com/file/d/1snQ3VCuuk-yga4JHz1W_h15UQ5-kKnWq/view?usp=sharing)")
         
