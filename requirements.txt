@@ -6,4 +6,4 @@ plotly
 scikit-learn
 scipy
 streamlit==1.26.0
-scholarly
+scholarly==1.2.0
