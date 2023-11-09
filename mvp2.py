@@ -13,6 +13,7 @@ import streamlit as st
 from collections import defaultdict
 import subprocess
 import time
+import scholarly
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, confusion_matrix, roc_auc_score
@@ -796,6 +797,30 @@ def SVM(brad):
 
 # ----------------------------------------------------------------------------------------------------------------#
 
+def get_recent_journals(query, num_results=5):
+    search_query = scholarly.search_pubs(query)
+    journals = []
+
+    for i in range(num_results):
+        try:
+            article = next(search_query)
+            title = article.bib.get('title', '')
+            link = article.bib.get('url', '')
+            abstract = article.bib.get('abstract', '')
+
+            journals.append({
+                'title': title,
+                'link': link,
+                'abstract': abstract
+            })
+        except StopIteration:
+            break
+
+    return journals
+
+
+# ----------------------------------------------------------------------------------------------------------------#
+
 def merge_with_birth(brad, birth):
 
     brad = brad.merge(birth, left_on='Name', right_on='Name')
@@ -912,9 +937,28 @@ def main():
         high_loc(ulcer_b)
         find_worse(result)
         vulnerable(brad)
+
+    st.title("Google Scholar Journal Scraper")
+
+    # User input for query
+    query = st.text_input("Enter your search query:", "Pressure ulcer")
+    
+    # Button to fetch and display results
+    if st.button("Fetch Journals"):
+        st.info("Fetching the most recent journals...")
+    
+        # Get recent journals
+        recent_journals = get_recent_journals(query)
+    
+        # Display the results
+        for journal in recent_journals:
+            st.subheader(journal['title'])
+            st.write(f"Link: {journal['link']}")
+            st.write(f"Abstract: {journal['abstract']}")
+            st.markdown("---")
         
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
-            "(https://drive.google.com/file/d/1snQ3VCuuk-yga4JHz1W_h15UQ5-kKnWq/view?usp=sharing)")
+            "(https://drive.google.com/file/d/1fdlZvz1MJB2MUytRCtJgErGbnS_SCLqY/view?usp=sharing)")
         
 if __name__ == "__main__":
     main()
