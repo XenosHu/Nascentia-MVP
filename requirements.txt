@@ -10,4 +10,4 @@ altair
 yolov5
 Pillow
 torch
-
+ultralytics
