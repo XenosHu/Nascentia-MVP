@@ -30,7 +30,6 @@ from PIL import Image
 # Execute setup.sh
 subprocess.run("bash setup.sh", shell=True, check=True)
 
-%pip install ultralytics
 from ultralytics import YOLO
 
 st.set_option('deprecation.showPyplotGlobalUse', False)
