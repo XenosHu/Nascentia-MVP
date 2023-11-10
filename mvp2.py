@@ -819,6 +819,16 @@ def SVM(brad):
 
 # ----------------------------------------------------------------------------------------------------------------#
 
+def predict(image):
+    MODEL_PATH = "last.pt"
+
+    # Load your trained model
+    model = YOLOv8.load_from_checkpoint(MODEL_PATH)
+    model.eval()
+
+    results = model(image)
+    st.write(results)
+
 def merge_with_birth(brad, birth):
 
     brad = brad.merge(birth, left_on='Name', right_on='Name')
@@ -936,7 +946,22 @@ def main():
         find_worse(result)
         vulnerable(brad)
 
+
+    st.title("YOLOv8 Image Prediction App")
+    
+    uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
+    if uploaded_file is not None:
+        image = Image.open(uploaded_file)
+        st.image(image, caption='Uploaded Image', use_column_width=True)
+        st.write("Predicting...")
         
+        # Perform prediction
+        results = predict(image)
+    
+        # Display results
+        st.write("Results:")
+        st.write(results)
+    
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
             "(https://drive.google.com/file/d/1fdlZvz1MJB2MUytRCtJgErGbnS_SCLqY/view?usp=sharing)")
         
