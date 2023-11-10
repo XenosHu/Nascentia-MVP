@@ -19,7 +19,7 @@ from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, confusion_matrix, roc_auc_score
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.model_selection import GridSearchCV
-from yolo_module import train_yolo, predict_yolo
+# from yolo_module import train_yolo, predict_yolo
 
 # # Install dependencies
 # subprocess.run(["pip", "install", "-r", "requirements.txt"], check=True)
