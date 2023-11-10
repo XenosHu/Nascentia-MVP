@@ -21,7 +21,7 @@ from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.model_selection import GridSearchCV
 from PIL import Image
 # from ultralytics import YOLO
-from yolov5.models.yolo import Model
+
 
 # from yolo_module import train_yolo, predict_yolo
 
