@@ -9,7 +9,6 @@ from datetime import datetime as dt, timedelta
 import numpy as np
 import matplotlib.pyplot as plt
 from plotly import colors, express as px, graph_objects as go, offline as pyo
-pip install --upgrade pip
 import streamlit as st
 from collections import defaultdict
 import subprocess
