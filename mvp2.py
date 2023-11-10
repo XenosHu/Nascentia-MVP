@@ -13,7 +13,7 @@ import streamlit as st
 from collections import defaultdict
 import subprocess
 import time
-!pip install scholarly
+pip install scholarly
 import scholarly 
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
