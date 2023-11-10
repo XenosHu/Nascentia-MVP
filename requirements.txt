@@ -10,4 +10,4 @@ altair
 ultralytics
 Pillow
 torch
-yolov8
+
