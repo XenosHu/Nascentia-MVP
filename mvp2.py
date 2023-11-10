@@ -947,7 +947,7 @@ def main():
         vulnerable(brad)
 
 
-    st.title("YOLOv8 Image Prediction App")
+    st.subheader("Pressure Ulcer Image Prediction")
     
     uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
     if uploaded_file is not None:
