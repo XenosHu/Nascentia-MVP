@@ -727,15 +727,21 @@ def SVM(brad):
 
     sub_brad = sub_brad.sort_values(by='Visitdate', ascending=False)
 
-    # Scale only numeric features
-    scaler = StandardScaler()
-    sub_brad.iloc[:, :-1] = scaler.fit_transform(sub_brad.iloc[:, :-1])  # Scale all columns except the last one
-
     # Use the most recent 10% of data as the test set
     split_index = int(0.9 * len(sub_brad))
     train_data = sub_brad.iloc[:split_index, :]
     test_data = sub_brad.iloc[split_index:, :]
 
+    # Output timeframe of the test set
+    min_test_date = test_data['Visitdate'].min()
+    max_test_date = test_data['Visitdate'].max()
+    st.write(f"Timeframe of Test Set: from {min_test_date} to {max_test_date}")
+
+    # Scale only numeric features
+    scaler = StandardScaler()
+    train_data.iloc[:, :-1] = scaler.fit_transform(train_data.iloc[:, :-1])  # Scale all columns except the last one
+    test_data.iloc[:, :-1] = scaler.fit_transform(test_data.iloc[:, :-1])
+    
     X_train, y_train = train_data.iloc[:, :-1], train_data[target]
     X_test, y_test = test_data.iloc[:, :-1], test_data[target]
     
@@ -767,11 +773,6 @@ def SVM(brad):
     
     # Make predictions on the test set
     svm_pred = svm_model.predict(X_test)
-    
-    # Output timeframe of the test set
-    min_test_date = test_data['Visitdate'].min()
-    max_test_date = test_data['Visitdate'].max()
-    st.write(f"Timeframe of Test Set: from {min_test_date} to {max_test_date}")
     
     # Calculate accuracy
     svm_accuracy = round(accuracy_score(y_test, svm_pred),4)
