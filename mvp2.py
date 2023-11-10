@@ -11,7 +11,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from plotly import colors, express as px, graph_objects as go, offline as pyo
 import streamlit as st
-from streamlit_vega_lite import vega_lite_component, altair_component
 from collections import defaultdict
 import subprocess
 import time
