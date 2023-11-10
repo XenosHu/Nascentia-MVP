@@ -9,3 +9,4 @@ streamlit==1.26.0
 altair
 ultralytics
 Pillow
+torch
