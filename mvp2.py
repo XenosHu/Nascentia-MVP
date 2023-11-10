@@ -13,7 +13,8 @@ import streamlit as st
 from collections import defaultdict
 import subprocess
 import time
-import scholarly
+!pip install scholarly
+import scholarly 
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, confusion_matrix, roc_auc_score
