@@ -34,9 +34,9 @@ subprocess.run("bash setup.sh", shell=True, check=True)
 
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
-MODEL_PATH = "last.pt"
-model = YOLO(MODEL_PATH)
-model.eval()
+# MODEL_PATH = "last.pt"
+# model = YOLO(MODEL_PATH)
+# model.eval()
 
 
 def determine_severity(score):
@@ -829,10 +829,28 @@ def SVM(brad):
 
 # ----------------------------------------------------------------------------------------------------------------#
 
+MODEL_PATH = "last.pt"
+model = torch.hub.load('ultralytics/yolov5', 'custom', path=MODEL_PATH, force_reload=True)
+model.eval()
+
 def predict(image):
+    # Define image transformations
+    transform = transforms.Compose([
+        transforms.Resize((64, 64)),  # Resize the image to the size your model expects
+        transforms.ToTensor(),  # Convert the PIL Image to a tensor
+    ])
+
+    # Apply the transformations to the image
+    image = transform(image).unsqueeze(0)  # Add a batch dimension
+
+    # Perform prediction
     with torch.no_grad():
         results = model(image)
-    return results
+
+    # Process and format the results
+    formatted_results = process_results(results)  # Process the results
+
+    return formatted_results
 
 def merge_with_birth(brad, birth):
 
