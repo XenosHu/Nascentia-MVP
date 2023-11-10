@@ -723,12 +723,16 @@ def SVM(brad):
     label_encoder = LabelEncoder()
     sub_brad.loc[:, 'got_ulcer'] = sub_brad['got_ulcer'].astype(int)
 
-    # Sort data by 'Visitdate' in descending order
-    sub_brad = sub_brad.sort_values(by='Visitdate', ascending=False)
+    # Separate datetime columns
+    date_cols = sub_brad.select_dtypes(include=['datetime64']).columns
+    non_date_cols = [col for col in sub_brad.columns if col not in date_cols]
 
-    # Scale only numeric features
+    # Scale only numeric features (excluding datetime columns)
     scaler = StandardScaler()
-    sub_brad.iloc[:, :-1] = scaler.fit_transform(sub_brad.iloc[:, :-1])  # Scale all columns except the last one
+    sub_brad[non_date_cols] = scaler.fit_transform(sub_brad[non_date_cols])
+
+    # Combine datetime columns back to the dataframe
+    sub_brad = pd.concat([sub_brad[non_date_cols], sub_brad[date_cols]], axis=1)
 
     # Calculate the index to split the data
     split_index = int(0.9 * len(sub_brad))
@@ -765,6 +769,14 @@ def SVM(brad):
     # Calculate accuracy
     svm_accuracy = round(accuracy_score(y_test, svm_pred), 4)
     st.write(f"SVM Accuracy: {svm_accuracy}")
+
+    # Create confusion matrix
+    conf_matrix = confusion_matrix(y_test, svm_pred)
+
+    # Display confusion matrix with labels
+    conf_matrix_display = pd.DataFrame(conf_matrix, index=['Actual 0', 'Actual 1'], columns=['Predicted 0', 'Predicted 1'])
+    st.write("Confusion Matrix:")
+    st.write(conf_matrix_display)
 
     # Create confusion matrix
     conf_matrix = confusion_matrix(y_test, svm_pred)
