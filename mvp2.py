@@ -9,6 +9,7 @@ from datetime import datetime as dt, timedelta
 import numpy as np
 import matplotlib.pyplot as plt
 from plotly import colors, express as px, graph_objects as go, offline as pyo
+pip install --upgrade pip
 import streamlit as st
 from collections import defaultdict
 import subprocess
@@ -19,11 +20,11 @@ from sklearn.metrics import accuracy_score, confusion_matrix, roc_auc_score
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.model_selection import GridSearchCV
 
-# Install dependencies
-subprocess.run(["pip", "install", "-r", "requirements.txt"], check=True)
+# # Install dependencies
+# subprocess.run(["pip", "install", "-r", "requirements.txt"], check=True)
 
-# Execute setup.sh
-subprocess.run("bash setup.sh", shell=True, check=True)
+# # Execute setup.sh
+# subprocess.run("bash setup.sh", shell=True, check=True)
 
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
