@@ -7,7 +7,7 @@ scikit-learn
 scipy
 streamlit==1.26.0
 altair
-ultralytics
+yolov5
 Pillow
 torch
 
