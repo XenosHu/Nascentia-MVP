@@ -712,40 +712,44 @@ def SVM(brad):
     seed = 1031
 
     # Select features and target variable
-    #features = ["AssessmentAnswer", "Age_as_of_visit", "duration"]
     features = ["AssessmentAnswer", "ServiceCode", "Visitdate", "Worker_type", "Age_as_of_visit", "duration"]
     target = 'got_ulcer'
 
     # Create a subset of brad with only selected columns
     sub_brad = brad[features + [target]]
-    sub_brad = convert_to_factors(sub_brad,["ServiceCode", "Worker_type"])
-    sub_brad["Visitdate"] = sub_brad["Visitdate"].dt.month.astype(int)
+    sub_brad = convert_to_factors(sub_brad, ["ServiceCode", "Worker_type"])
 
     # Convert the 'got_ulcer' column to binary labels
     label_encoder = LabelEncoder()
     sub_brad.loc[:, 'got_ulcer'] = sub_brad['got_ulcer'].astype(int)
 
+    # Sort data by 'Visitdate' in descending order
+    sub_brad = sub_brad.sort_values(by='Visitdate', ascending=False)
+
     # Scale only numeric features
     scaler = StandardScaler()
     sub_brad.iloc[:, :-1] = scaler.fit_transform(sub_brad.iloc[:, :-1])  # Scale all columns except the last one
 
-    # Split the data into training and testing sets
-    X = sub_brad.iloc[:, :-1]  # All columns except the last one
-    y = sub_brad[target]
+    # Calculate the index to split the data
+    split_index = int(0.9 * len(sub_brad))
 
-    # Train-test split with scaled features
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=seed)
+    # Split the data into training and testing sets
+    train_data = sub_brad.iloc[:split_index, :]
+    test_data = sub_brad.iloc[split_index:, :]
+
+    X_train, y_train = train_data.iloc[:, :-1], train_data[target]
+    X_test, y_test = test_data.iloc[:, :-1], test_data[target]
 
     # Estimate time to train SVM model
     dataset_size = len(X_train)
     complexity_factor = 0.0001  # Adjust this based on your model and dataset complexity
 
-    estimated_time = round(dataset_size * complexity_factor*5, 2)
+    estimated_time = round(dataset_size * complexity_factor * 5, 2)
     st.write(f"Estimated time to train SVM model: {estimated_time} seconds")
 
     start_time = time.time()
 
-   # Train the SVM model
+    # Train the SVM model
     svm_model = SVC(kernel='rbf', C=1, gamma=0.1, max_iter=20000, random_state=seed)
     svm_model.fit(X_train, y_train)
 
@@ -754,17 +758,17 @@ def SVM(brad):
     st.write(f"Actual time taken to train SVM model: {elapsed_time} seconds")
 
     Inv_X_test = pd.DataFrame(scaler.inverse_transform(X_test), columns=X_test.columns)
-    
+
     # Make predictions on the test set
     svm_pred = svm_model.predict(X_test)
-    
+
     # Calculate accuracy
-    svm_accuracy = round(accuracy_score(y_test, svm_pred),4)
+    svm_accuracy = round(accuracy_score(y_test, svm_pred), 4)
     st.write(f"SVM Accuracy: {svm_accuracy}")
-    
+
     # Create confusion matrix
     conf_matrix = confusion_matrix(y_test, svm_pred)
-    
+
     # Display confusion matrix with labels
     conf_matrix_display = pd.DataFrame(conf_matrix, index=['Actual 0', 'Actual 1'], columns=['Predicted 0', 'Predicted 1'])
     st.write("Confusion Matrix:")
@@ -798,8 +802,6 @@ def SVM(brad):
     
     # Show the figure
     st.plotly_chart(fig)
-
-# ----------------------------------------------------------------------------------------------------------------#
 
 # ----------------------------------------------------------------------------------------------------------------#
 
