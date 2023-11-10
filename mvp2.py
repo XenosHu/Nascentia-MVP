@@ -36,6 +36,7 @@ MODEL_PATH = "last.pt"
 model = YOLO(MODEL_PATH)
 model.eval()
 
+
 def determine_severity(score):
     if 6 <= score <= 12:
         return 'High Risk'
