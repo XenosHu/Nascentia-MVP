@@ -20,6 +20,7 @@ from sklearn.metrics import accuracy_score, confusion_matrix, roc_auc_score
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.model_selection import GridSearchCV
 from PIL import Image
+from yolov8 import YOLOv8
 # from yolo_module import train_yolo, predict_yolo
 
 # # Install dependencies
