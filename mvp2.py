@@ -20,7 +20,8 @@ from sklearn.metrics import accuracy_score, confusion_matrix, roc_auc_score
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.model_selection import GridSearchCV
 from PIL import Image
-from yolov8 import YOLOv8
+from ultralytics import YOLO
+import cv2
 # from yolo_module import train_yolo, predict_yolo
 
 # # Install dependencies
@@ -32,7 +33,7 @@ from yolov8 import YOLOv8
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
 MODEL_PATH = "last.pt"
-model = YOLOv8.load_from_checkpoint(MODEL_PATH)
+model = YOLO(MODEL_PATH)
 model.eval()
 
 def determine_severity(score):
@@ -952,6 +953,7 @@ def main():
     uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
 
     if uploaded_file is not None:
+        
         image = Image.open(uploaded_file)
         st.image(image, caption='Uploaded Image', use_column_width=True)
         st.write("Predicting...")
