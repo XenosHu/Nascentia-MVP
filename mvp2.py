@@ -733,8 +733,8 @@ def SVM(brad):
     test_data = sub_brad.iloc[split_index:, :]
 
     # Output timeframe of the test set
-    min_test_date = test_data['Visitdate'].min()
-    max_test_date = test_data['Visitdate'].max()
+    min_test_date = brad.loc[brad.index[split_index], 'Visitdate']
+    max_test_date = brad.loc[brad.index[-1], 'Visitdate']
     st.write(f"Timeframe of Test Set: from {min_test_date} to {max_test_date}")
 
     # Scale only numeric features
