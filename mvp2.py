@@ -19,6 +19,7 @@ from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, confusion_matrix, roc_auc_score
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.model_selection import GridSearchCV
+from PIL import Image
 # from yolo_module import train_yolo, predict_yolo
 
 # # Install dependencies
@@ -28,6 +29,10 @@ from sklearn.model_selection import GridSearchCV
 # subprocess.run("bash setup.sh", shell=True, check=True)
 
 st.set_option('deprecation.showPyplotGlobalUse', False)
+
+MODEL_PATH = "last.pt"
+model = YOLOv8.load_from_checkpoint(MODEL_PATH)
+model.eval()
 
 def determine_severity(score):
     if 6 <= score <= 12:
@@ -820,14 +825,9 @@ def SVM(brad):
 # ----------------------------------------------------------------------------------------------------------------#
 
 def predict(image):
-    MODEL_PATH = "last.pt"
-
-    # Load your trained model
-    model = YOLOv8.load_from_checkpoint(MODEL_PATH)
-    model.eval()
-
-    results = model(image)
-    st.write(results)
+    with torch.no_grad():
+        results = model(image)
+    return results
 
 def merge_with_birth(brad, birth):
 
@@ -946,19 +946,18 @@ def main():
         find_worse(result)
         vulnerable(brad)
 
-
     st.subheader("Pressure Ulcer Image Prediction")
-    
+
     uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
-    image = Image.open(uploaded_file)
-    
+
     if uploaded_file is not None:
+        image = Image.open(uploaded_file)
         st.image(image, caption='Uploaded Image', use_column_width=True)
         st.write("Predicting...")
-        
+
         # Perform prediction
         results = predict(image)
-    
+
         # Display results
         st.write("Results:")
         st.write(results)
