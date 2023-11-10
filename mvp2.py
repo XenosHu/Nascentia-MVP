@@ -768,6 +768,11 @@ def SVM(brad):
     # Make predictions on the test set
     svm_pred = svm_model.predict(X_test)
     
+    # Output timeframe of the test set
+    min_test_date = test_data['Visitdate'].min()
+    max_test_date = test_data['Visitdate'].max()
+    st.write(f"Timeframe of Test Set: from {min_test_date} to {max_test_date}")
+    
     # Calculate accuracy
     svm_accuracy = round(accuracy_score(y_test, svm_pred),4)
     st.write(f"SVM Accuracy: {svm_accuracy}")
@@ -775,14 +780,6 @@ def SVM(brad):
     # Create confusion matrix
     conf_matrix = confusion_matrix(y_test, svm_pred)
     
-    # Display confusion matrix with labels
-    conf_matrix_display = pd.DataFrame(conf_matrix, index=['Actual 0', 'Actual 1'], columns=['Predicted 0', 'Predicted 1'])
-    st.write("Confusion Matrix:")
-    st.write(conf_matrix_display)
-
-    # Create confusion matrix
-    conf_matrix = confusion_matrix(y_test, svm_pred)
-
     # Display confusion matrix with labels
     conf_matrix_display = pd.DataFrame(conf_matrix, index=['Actual 0', 'Actual 1'], columns=['Predicted 0', 'Predicted 1'])
     st.write("Confusion Matrix:")
