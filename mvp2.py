@@ -20,7 +20,12 @@ from sklearn.metrics import accuracy_score, confusion_matrix, roc_auc_score
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.model_selection import GridSearchCV
 
-#subprocess.run(["pip", "install", "fpdf"])
+# Install dependencies
+subprocess.run(["pip", "install", "-r", "requirements.txt"], check=True)
+
+# Execute setup.sh
+subprocess.run("bash setup.sh", shell=True, check=True)
+
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
 def determine_severity(score):
