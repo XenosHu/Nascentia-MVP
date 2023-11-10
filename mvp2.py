@@ -5,6 +5,7 @@
 import pandas as pd
 import sys
 import ast
+import altair as alt
 from datetime import datetime as dt, timedelta
 import numpy as np
 import matplotlib.pyplot as plt
