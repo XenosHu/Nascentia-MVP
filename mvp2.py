@@ -23,7 +23,7 @@ from sklearn.model_selection import GridSearchCV
 from PIL import Image
 import torch
 from torchvision import transforms
-import ultralytics
+#import ultralytics
 # from yolov5.models import DetectMultiBackend
 
 # from ultralytics import YOLO
