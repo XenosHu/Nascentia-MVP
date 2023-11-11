@@ -57,7 +57,6 @@ def setup_yolov5():
 # Run the setup function
 setup_yolov5()
 
-from yolov5 import YOLO
 
 def determine_severity(score):
     if 6 <= score <= 12:
