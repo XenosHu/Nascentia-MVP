@@ -903,7 +903,7 @@ def create_table_of_contents(subheaders):
         st.sidebar.markdown(f"- [{subheader}](#{subheader.lower().replace(' ', '-')} )")
     
 def main():
-    image_path = "nascentia_logo.png"
+    image_path = "https://raw.githubusercontent.com/XenosHu/Nascentia-MVP/blob/8420fb4e6df6f4c3ff614e4c5f9bf752baea2c3a/nascentia_logo.png"
     st.image(image_path, width = 100)
     st.title("Nascentia Pressure Ulcer Data Analyzer")
 
