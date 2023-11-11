@@ -20,7 +20,8 @@ from sklearn.metrics import accuracy_score, confusion_matrix, roc_auc_score
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.model_selection import GridSearchCV
 from PIL import Image
-import yolov5
+from torchvision import transforms
+#import yolov5
 
 
 
@@ -28,7 +29,7 @@ import yolov5
 # subprocess.run(["pip", "install", "-r", "requirements.txt"], check=True)
 
 # Execute setup.sh
-subprocess.run("bash setup.sh", shell=True, check=True)
+#subprocess.run("bash setup.sh", shell=True, check=True)
 
 # from ultralytics import YOLO
 
