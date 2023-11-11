@@ -60,30 +60,30 @@ st.set_option('deprecation.showPyplotGlobalUse', False)
 # # Run the setup function
 # setup_yolov5()
 
-import pkg_resources
+# import pkg_resources
 
-def is_package_installed(package_name):
-    """ Check if a Python package is installed """
-    installed_packages = {d.project_name.lower() for d in pkg_resources.working_set}
-    return package_name.lower() in installed_packages
+# def is_package_installed(package_name):
+#     """ Check if a Python package is installed """
+#     installed_packages = {d.project_name.lower() for d in pkg_resources.working_set}
+#     return package_name.lower() in installed_packages
 
-def setup_yolov5():
-    yolov5_cloned = os.path.exists('yolov5')
-    torch_installed = is_package_installed('torch')
+# def setup_yolov5():
+#     yolov5_cloned = os.path.exists('yolov5')
+#     torch_installed = is_package_installed('torch')
 
-    # Clone YOLOv5 repository if not already cloned
-    if not yolov5_cloned:
-        subprocess.run(["git", "clone", "https://github.com/ultralytics/yolov5"], check=True)
-        yolov5_cloned = True
+#     # Clone YOLOv5 repository if not already cloned
+#     if not yolov5_cloned:
+#         subprocess.run(["git", "clone", "https://github.com/ultralytics/yolov5"], check=True)
+#         yolov5_cloned = True
 
-    # Change directory to yolov5 and install requirements if YOLOv5 is cloned but torch is not installed
-    if yolov5_cloned and not torch_installed:
-        os.chdir('yolov5')
-        subprocess.run(["pip", "install", "-r", "requirements.txt"], check=True)
-        os.chdir('..')
+#     # Change directory to yolov5 and install requirements if YOLOv5 is cloned but torch is not installed
+#     if yolov5_cloned and not torch_installed:
+#         os.chdir('yolov5')
+#         subprocess.run(["pip", "install", "-r", "requirements.txt"], check=True)
+#         os.chdir('..')
 
-# Run the setup function
-setup_yolov5()
+# # Run the setup function
+# setup_yolov5()
 
 def determine_severity(score):
     if 6 <= score <= 12:
