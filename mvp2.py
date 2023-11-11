@@ -23,9 +23,9 @@ from sklearn.model_selection import GridSearchCV
 from PIL import Image
 import torch
 from torchvision import transforms
-from yolov5.models import DetectMultiBackend
+# from yolov5.models import DetectMultiBackend
 
-
+from ultralytics import YOLO
 
 # # Install dependencies
 # subprocess.run(["pip", "install", "-r", "requirements.txt"], check=True)
