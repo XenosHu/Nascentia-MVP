@@ -23,6 +23,7 @@ from sklearn.model_selection import GridSearchCV
 from PIL import Image
 import torch
 from torchvision import transforms
+import ultralytics
 # from yolov5.models import DetectMultiBackend
 
 # from ultralytics import YOLO
@@ -42,7 +43,7 @@ st.set_option('deprecation.showPyplotGlobalUse', False)
 
 MODEL_PATH = "last.pt"
 # # Load the model using torch.hub.load
-model = torch.hub.load('ultralytics/yolov5', 'custom', path=MODEL_PATH, force_reload=True)
+# model = torch.hub.load('ultralytics/yolov5', 'custom', path=MODEL_PATH, force_reload=True)
 # model.eval()
 
 # def setup_yolov5():
