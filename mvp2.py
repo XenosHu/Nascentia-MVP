@@ -23,7 +23,7 @@ from sklearn.model_selection import GridSearchCV
 from PIL import Image
 import torch
 from torchvision import transforms
-from yolov5 import DetectMultiBackend 
+import yolov5
 
 
 
