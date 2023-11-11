@@ -22,7 +22,7 @@ from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.model_selection import GridSearchCV
 from PIL import Image
 #from torchvision import transforms
-#import yolov5
+
 
 
 
@@ -56,6 +56,7 @@ def setup_yolov5():
 # Run the setup function
 setup_yolov5()
 
+from yolov5 import YOLO
 
 def determine_severity(score):
     if 6 <= score <= 12:
