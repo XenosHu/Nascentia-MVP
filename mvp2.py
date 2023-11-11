@@ -40,6 +40,22 @@ st.set_option('deprecation.showPyplotGlobalUse', False)
 # model.eval()
 
 
+def setup_yolov5():
+    # Check if the setup is already done
+    if not os.path.exists('yolov5'):
+        # Clone the YOLOv5 repository
+        subprocess.run(["git", "clone", "https://github.com/ultralytics/yolov5"], check=True)
+
+        # Change directory to yolov5
+        os.chdir('yolov5')
+
+        # Install requirements
+        subprocess.run(["pip", "install", "-r", "requirements.txt"], check=True)
+
+# Run the setup function
+setup_yolov5()
+
+
 def determine_severity(score):
     if 6 <= score <= 12:
         return 'High Risk'
