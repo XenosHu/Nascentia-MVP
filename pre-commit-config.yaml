@@ -1,8 +1,5 @@
 # Define hooks for code formations
-# Will be applied on any updated commit files if a user has installed and linked commit hook
 
-default_language_version:
-  python: python3.8
 
 jobs:
   build:
