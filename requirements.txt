@@ -44,7 +44,6 @@ rpds-py
 scikit-learn
 scipy
 seaborn
-shutil
 six
 smmap
 streamlit==1.26.0
