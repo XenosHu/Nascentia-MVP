@@ -37,10 +37,14 @@ import torch
 
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
-MODEL_PATH = "last.pt"
-# Load the model using torch.hub.load
-model = torch.hub.load('ultralytics/yolov5', 'custom', path=MODEL_PATH, force_reload=True)
-model.eval()
+import sys
+st.write(sys.executable)
+
+
+# MODEL_PATH = "last.pt"
+# # Load the model using torch.hub.load
+# model = torch.hub.load('ultralytics/yolov5', 'custom', path=MODEL_PATH, force_reload=True)
+# model.eval()
 
 def setup_yolov5():
     # Check if the setup is already done
