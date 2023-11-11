@@ -830,28 +830,28 @@ def SVM(brad):
 
 # ----------------------------------------------------------------------------------------------------------------#
 
-MODEL_PATH = "last.pt"
-model = torch.hub.load('ultralytics/yolov5', 'custom', path=MODEL_PATH, force_reload=True)
-model.eval()
+# MODEL_PATH = "last.pt"
+# model = torch.hub.load('ultralytics/yolov5', 'custom', path=MODEL_PATH, force_reload=True)
+# model.eval()
 
-def predict(image):
-    # Define image transformations
-    transform = transforms.Compose([
-        transforms.Resize((64, 64)),  # Resize the image to the size your model expects
-        transforms.ToTensor(),  # Convert the PIL Image to a tensor
-    ])
+# def predict(image):
+#     # Define image transformations
+#     transform = transforms.Compose([
+#         transforms.Resize((64, 64)),  # Resize the image to the size your model expects
+#         transforms.ToTensor(),  # Convert the PIL Image to a tensor
+#     ])
 
-    # Apply the transformations to the image
-    image = transform(image).unsqueeze(0)  # Add a batch dimension
+#     # Apply the transformations to the image
+#     image = transform(image).unsqueeze(0)  # Add a batch dimension
 
-    # Perform prediction
-    with torch.no_grad():
-        results = model(image)
+#     # Perform prediction
+#     with torch.no_grad():
+#         results = model(image)
 
-    # Process and format the results
-    formatted_results = process_results(results)  # Process the results
+#     # Process and format the results
+#     formatted_results = process_results(results)  # Process the results
 
-    return formatted_results
+#     return formatted_results
 
 def merge_with_birth(brad, birth):
 
@@ -970,22 +970,22 @@ def main():
         find_worse(result)
         vulnerable(brad)
 
-    st.subheader("Pressure Ulcer Image Prediction")
+    # st.subheader("Pressure Ulcer Image Prediction")
 
-    uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
+    # uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
 
-    if uploaded_file is not None:
+    # if uploaded_file is not None:
         
-        image = Image.open(uploaded_file)
-        st.image(image, caption='Uploaded Image', use_column_width=True)
-        st.write("Predicting...")
+    #     image = Image.open(uploaded_file)
+    #     st.image(image, caption='Uploaded Image', use_column_width=True)
+    #     st.write("Predicting...")
 
-        # Perform prediction
-        results = predict(image)
+    #     # Perform prediction
+    #     results = predict(image)
 
-        # Display results
-        st.write("Results:")
-        st.write(results)
+    #     # Display results
+    #     st.write("Results:")
+    #     st.write(results)
     
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
             "(https://drive.google.com/file/d/1fdlZvz1MJB2MUytRCtJgErGbnS_SCLqY/view?usp=sharing)")
