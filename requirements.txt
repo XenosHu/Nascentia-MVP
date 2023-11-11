@@ -1,4 +1,5 @@
 altair
+cv2
 fpdf
 markdown-it-py
 matplotlib
