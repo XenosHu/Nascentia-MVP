@@ -12,6 +12,10 @@ cmd = "git clone https://github.com/ultralytics/yolov5"
 #cmd = "git reset --hard 68211f72c99915a15855f7b99bf5d93f5631330f"
 subprocess.run(cmd, shell = True)
 
+cmd = "pip install torch torchvision"
+subprocess.run(cmd, shell = True)
+
+
 #os.replace(os.path.join('.', 'app.py'), os.path.join('.', 'yolov5'))
 shutil.move(os.path.join('.', files[0]), os.path.join('.', 'yolov5'))
 print("app.py is copied")
