@@ -983,12 +983,12 @@ def main():
     if uploaded_file is not None:
         detections = load_and_infer_image(uploaded_file, model)
         predicted_class_label, detection_result = display_results(detections)
-        with st.expander("Click to view uploaded image"):
+        with st.expander("**Click to view uploaded image**"):
             st.image(uploaded_file, caption='Uploaded Image.', use_column_width=True)
         st.write(f"**Predicted Class Label: {predicted_class_label}**")
         st.write(f"**Detections: {detection_result}**")
     
-    st.markdown("Appendix: [The logic of graphs and analysis for reference]"
+    st.markdown("**Appendix: [The logic of graphs and analysis for reference]**"
             "(https://drive.google.com/file/d/1fdlZvz1MJB2MUytRCtJgErGbnS_SCLqY/view?usp=sharing)")
         
 if __name__ == "__main__":
