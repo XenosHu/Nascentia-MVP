@@ -983,7 +983,8 @@ def main():
     if uploaded_file is not None:
         detections = load_and_infer_image(uploaded_file, model)
         predicted_class_label, detection_result = display_results(detections)
-        st.image(uploaded_file, caption='Uploaded Image.', use_column_width=True)
+        with st.expander("Click to view uploaded image"):
+            st.image(uploaded_file, caption='Uploaded Image.', use_column_width=True)
         st.write(f"**Predicted Class Label: {predicted_class_label}**")
         st.write(f"**Detections: {detection_result}**")
     
