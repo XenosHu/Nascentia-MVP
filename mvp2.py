@@ -61,7 +61,7 @@ def display_results(detections):
     predicted_class_id = detections.argmax(dim=1).item()
     # Match the class ID to the class label using the mapping
     predicted_class_label = class_id_to_label.get(predicted_class_id, 'Unknown')
-    detection_result = round(detections.max().item(), 2)
+    detection_result = f"{round(detections.max().item() * 100, 2)}%"
     return predicted_class_label, detection_result
 
 def determine_severity(score):
