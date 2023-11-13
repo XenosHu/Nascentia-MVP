@@ -61,7 +61,8 @@ def display_results(detections):
     predicted_class_id = detections.argmax(dim=1).item()
     # Match the class ID to the class label using the mapping
     predicted_class_label = class_id_to_label.get(predicted_class_id, 'Unknown')
-    return predicted_class_label, detections
+    detection_result = round(detections.max().astype(int),2)
+    return predicted_class_label, detection_result
 
 def determine_severity(score):
     if 6 <= score <= 12:
@@ -981,10 +982,10 @@ def main():
     
     if uploaded_file is not None:
         detections = load_and_infer_image(uploaded_file, model)
-        predicted_class_label, detection_details = display_results(detections)
+        predicted_class_label, detection_result = display_results(detections)
         st.image(uploaded_file, caption='Uploaded Image.', use_column_width=True)
         st.write(f"**Predicted Class Label: {predicted_class_label}**")
-        st.write(f"**Detections: {detection_details}**")
+        st.write(f"**Detections: {detection_result}**")
     
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
             "(https://drive.google.com/file/d/1fdlZvz1MJB2MUytRCtJgErGbnS_SCLqY/view?usp=sharing)")
