@@ -59,7 +59,6 @@ triton
 typing-extensions
 tzdata
 tzlocal
-ultralytics
 urllib3
 validators
 watchdog
