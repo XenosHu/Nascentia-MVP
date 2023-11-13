@@ -891,7 +891,7 @@ def main():
     st.image(image_path, width = 100)
     st.title("Nascentia Pressure Ulcer Data Analyzer")
 
-    subheaders = ["Instructions", "Data Outlook", "Filter Data by Dates", "Patient Search", "Severity Overview", "Ulcer Type Overview", "Heal Rate Analysis", "Machine Learning", "Patients Spotlight"]
+    subheaders = ["Instructions", "Data Outlook", "Filter Data by Dates", "Patient Search", "Severity Overview", "Ulcer Type Overview", "Heal Rate Analysis", "Machine Learning", "Patients Spotlight", "Pressure Ulcer Image Classifier"]
     create_table_of_contents(subheaders)
     
     st.subheader("Instructions:")
@@ -971,7 +971,7 @@ def main():
         find_worse(result)
         vulnerable(brad)
 
-    st.subheader("Pressure Ulcer Image Prediction")
+    st.subheader("Pressure Ulcer Image Classifier")
     
     MODEL_PATH = "last.pt"
     model_dict = torch.load(MODEL_PATH)
