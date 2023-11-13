@@ -986,13 +986,13 @@ def main():
     model = model_dict['model']
     model.eval()
 
-    # uploaded_file = st.file_uploader("Choose an image...", type="jpg")
-    # if uploaded_file is not None:
-    #     detections = load_and_infer_image(uploaded_file, model)
-    #     predicted_class_label, detection_details = display_results(detections)
-    #     st.image(uploaded_file, caption='Uploaded Image.', use_column_width=True)
-    #     st.write(f"Predicted Class Label: {predicted_class_label}")
-    #     st.write(f"Detections: {detection_details}")
+    uploaded_file = st.file_uploader("Choose an image...", type="jpg")
+    if uploaded_file is not None:
+        detections = load_and_infer_image(uploaded_file, model)
+        predicted_class_label, detection_details = display_results(detections)
+        st.image(uploaded_file, caption='Uploaded Image.', use_column_width=True)
+        st.write(f"Predicted Class Label: {predicted_class_label}")
+        st.write(f"Detections: {detection_details}")
     
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
             "(https://drive.google.com/file/d/1fdlZvz1MJB2MUytRCtJgErGbnS_SCLqY/view?usp=sharing)")
