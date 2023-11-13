@@ -23,10 +23,6 @@ from sklearn.model_selection import GridSearchCV
 from PIL import Image
 import torch
 from torchvision import transforms
-#import ultralytics
-# from yolov5.models import DetectMultiBackend
-
-# from ultralytics import YOLO
 
 # # Install dependencies
 # subprocess.run(["pip", "install", "-r", "requirements.txt"], check=True)
@@ -34,57 +30,34 @@ from torchvision import transforms
 # Execute setup.sh
 #subprocess.run("bash setup.sh", shell=True, check=True)
 
-# from ultralytics import YOLO
-
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
-# st.write(sys.executable)
 
 
-MODEL_PATH = "last.pt"
-# # Load the model using torch.hub.load
-# model = torch.hub.load('ultralytics/yolov5', 'custom', path=MODEL_PATH, force_reload=True)
-# model.eval()
 
-# def setup_yolov5():
-#     # Check if the setup is already done
-#     if not os.path.exists('yolov5'):
-#         # Clone the YOLOv5 repository
-#         subprocess.run(["git", "clone", "https://github.com/ultralytics/yolov5"], check=True)
+def load_and_infer_image(uploaded_file, model):
+    # Load the image
+    img = Image.open(uploaded_file)
 
-#         # Change directory to yolov5
-#         os.chdir('yolov5')
+    # Preprocess the image
+    img = img.resize((640, 640))
+    img = np.array(img) / 255.0  # Normalize the image to [0, 1]
 
-#         # Install requirements
-#         subprocess.run(["pip", "install", "-r", "requirements.txt"], check=True)
+    # Convert the image to a PyTorch tensor
+    img_tensor = torch.FloatTensor(img).permute(2, 0, 1).unsqueeze(0)
+    model = model.float()
 
-# # Run the setup function
-# setup_yolov5()
+    # Perform inference
+    with torch.no_grad():
+        detections = model(img_tensor)
 
-# import pkg_resources
+    return detections
 
-# def is_package_installed(package_name):
-#     """ Check if a Python package is installed """
-#     installed_packages = {d.project_name.lower() for d in pkg_resources.working_set}
-#     return package_name.lower() in installed_packages
-
-# def setup_yolov5():
-#     yolov5_cloned = os.path.exists('yolov5')
-#     torch_installed = is_package_installed('torch')
-
-#     # Clone YOLOv5 repository if not already cloned
-#     if not yolov5_cloned:
-#         subprocess.run(["git", "clone", "https://github.com/ultralytics/yolov5"], check=True)
-#         yolov5_cloned = True
-
-#     # Change directory to yolov5 and install requirements if YOLOv5 is cloned but torch is not installed
-#     if yolov5_cloned and not torch_installed:
-#         os.chdir('yolov5')
-#         subprocess.run(["pip", "install", "-r", "requirements.txt"], check=True)
-#         os.chdir('..')
-
-# # Run the setup function
-# setup_yolov5()
+def display_results(detections):
+    # Assuming 'class_id_to_label' is defined earlier in your script
+    predicted_class_id = detections.argmax(dim=1).item()
+    predicted_class_label = class_id_to_label.get(predicted_class_id, 'Unknown')
+    return predicted_class_label, detections
 
 def determine_severity(score):
     if 6 <= score <= 12:
@@ -1032,6 +1005,19 @@ def main():
     #     # Display results
     #     st.write("Results:")
     #     st.write(results)
+
+    MODEL_PATH = "last.pt"
+    model_dict = torch.load(MODEL_PATH)
+    model = model_dict['model']
+    model.eval()
+
+    uploaded_file = st.file_uploader("Choose an image...", type="jpg")
+    if uploaded_file is not None:
+        detections = load_and_infer_image(uploaded_file, model)
+        predicted_class_label, detection_details = display_results(detections)
+        st.image(uploaded_file, caption='Uploaded Image.', use_column_width=True)
+        st.write(f"Predicted Class Label: {predicted_class_label}")
+        st.write(f"Detections: {detection_details}")
     
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
             "(https://drive.google.com/file/d/1fdlZvz1MJB2MUytRCtJgErGbnS_SCLqY/view?usp=sharing)")
