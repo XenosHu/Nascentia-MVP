@@ -970,36 +970,21 @@ def main():
         find_worse(result)
         vulnerable(brad)
 
-    # st.subheader("Pressure Ulcer Image Prediction")
-
-    # uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
-
-    # if uploaded_file is not None:
-        
-    #     image = Image.open(uploaded_file)
-    #     st.image(image, caption='Uploaded Image', use_column_width=True)
-    #     st.write("Predicting...")
-
-    #     # Perform prediction
-    #     results = predict(image)
-
-    #     # Display results
-    #     st.write("Results:")
-    #     st.write(results)
-
+    st.subheader("Pressure Ulcer Image Prediction")
+    
     MODEL_PATH = "last.pt"
     model_dict = torch.load(MODEL_PATH)
     model = model_dict['model']
     model.eval()
 
-    uploaded_file = st.file_uploader("Choose an image...", type="jpg")
+    uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
     
     if uploaded_file is not None:
         detections = load_and_infer_image(uploaded_file, model)
         predicted_class_label, detection_details = display_results(detections)
         st.image(uploaded_file, caption='Uploaded Image.', use_column_width=True)
-        st.write(f"Predicted Class Label: {predicted_class_label}")
-        st.write(f"Detections: {detection_details}")
+        st.write(f"**Predicted Class Label: {predicted_class_label}**")
+        st.write(f"**Detections: {detection_details}**")
     
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
             "(https://drive.google.com/file/d/1fdlZvz1MJB2MUytRCtJgErGbnS_SCLqY/view?usp=sharing)")
