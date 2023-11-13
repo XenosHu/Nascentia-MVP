@@ -33,29 +33,29 @@ from torchvision import transforms
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
 
-# def load_and_infer_image(uploaded_file, model):
-#     # Load the image
-#     img = Image.open(uploaded_file)
+def load_and_infer_image(uploaded_file, model):
+    # Load the image
+    img = Image.open(uploaded_file)
 
-#     # Preprocess the image
-#     img = img.resize((640, 640))
-#     img = np.array(img) / 255.0  # Normalize the image to [0, 1]
+    # Preprocess the image
+    img = img.resize((640, 640))
+    img = np.array(img) / 255.0  # Normalize the image to [0, 1]
 
-#     # Convert the image to a PyTorch tensor
-#     img_tensor = torch.FloatTensor(img).permute(2, 0, 1).unsqueeze(0)
-#     model = model.float()
+    # Convert the image to a PyTorch tensor
+    img_tensor = torch.FloatTensor(img).permute(2, 0, 1).unsqueeze(0)
+    model = model.float()
 
-#     # Perform inference
-#     with torch.no_grad():
-#         detections = model(img_tensor)
+    # Perform inference
+    with torch.no_grad():
+        detections = model(img_tensor)
 
-#     return detections
+    return detections
 
-# def display_results(detections):
-#     # Assuming 'class_id_to_label' is defined earlier in your script
-#     predicted_class_id = detections.argmax(dim=1).item()
-#     predicted_class_label = class_id_to_label.get(predicted_class_id, 'Unknown')
-#     return predicted_class_label, detections
+def display_results(detections):
+    # Assuming 'class_id_to_label' is defined earlier in your script
+    predicted_class_id = detections.argmax(dim=1).item()
+    predicted_class_label = class_id_to_label.get(predicted_class_id, 'Unknown')
+    return predicted_class_label, detections
 
 def determine_severity(score):
     if 6 <= score <= 12:
