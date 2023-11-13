@@ -977,7 +977,7 @@ def main():
     model = model_dict['model']
     model.eval()
 
-    uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
+    uploaded_file = st.file_uploader("**Choose an image...**", type=["jpg", "jpeg", "png"])
     
     if uploaded_file is not None:
         detections = load_and_infer_image(uploaded_file, model)
