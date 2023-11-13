@@ -32,7 +32,6 @@ from torchvision import transforms
 
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
-
 def load_and_infer_image(uploaded_file, model):
     # Load the image
     img = Image.open(uploaded_file)
@@ -52,8 +51,15 @@ def load_and_infer_image(uploaded_file, model):
     return detections
 
 def display_results(detections):
-    # Assuming 'class_id_to_label' is defined earlier in your script
+    #Labeling
+    class_labels = ['healing', 'necrotic', 'sloughy', 'superficial', 'undermine']
+    class_ids = [0, 1, 2, 3, 4]
+    # Create a mapping from class IDs to class labels
+    class_id_to_label = {class_id: label for class_id, label in zip(class_ids, class_labels)}
+
+    # Get the class ID with the highest confidence from the result tensor
     predicted_class_id = detections.argmax(dim=1).item()
+    # Match the class ID to the class label using the mapping
     predicted_class_label = class_id_to_label.get(predicted_class_id, 'Unknown')
     return predicted_class_label, detections
 
@@ -987,6 +993,7 @@ def main():
     model.eval()
 
     uploaded_file = st.file_uploader("Choose an image...", type="jpg")
+    
     if uploaded_file is not None:
         detections = load_and_infer_image(uploaded_file, model)
         predicted_class_label, detection_details = display_results(detections)
