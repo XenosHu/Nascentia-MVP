@@ -33,31 +33,29 @@ from torchvision import transforms
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
 
+# def load_and_infer_image(uploaded_file, model):
+#     # Load the image
+#     img = Image.open(uploaded_file)
 
+#     # Preprocess the image
+#     img = img.resize((640, 640))
+#     img = np.array(img) / 255.0  # Normalize the image to [0, 1]
 
-def load_and_infer_image(uploaded_file, model):
-    # Load the image
-    img = Image.open(uploaded_file)
+#     # Convert the image to a PyTorch tensor
+#     img_tensor = torch.FloatTensor(img).permute(2, 0, 1).unsqueeze(0)
+#     model = model.float()
 
-    # Preprocess the image
-    img = img.resize((640, 640))
-    img = np.array(img) / 255.0  # Normalize the image to [0, 1]
+#     # Perform inference
+#     with torch.no_grad():
+#         detections = model(img_tensor)
 
-    # Convert the image to a PyTorch tensor
-    img_tensor = torch.FloatTensor(img).permute(2, 0, 1).unsqueeze(0)
-    model = model.float()
+#     return detections
 
-    # Perform inference
-    with torch.no_grad():
-        detections = model(img_tensor)
-
-    return detections
-
-def display_results(detections):
-    # Assuming 'class_id_to_label' is defined earlier in your script
-    predicted_class_id = detections.argmax(dim=1).item()
-    predicted_class_label = class_id_to_label.get(predicted_class_id, 'Unknown')
-    return predicted_class_label, detections
+# def display_results(detections):
+#     # Assuming 'class_id_to_label' is defined earlier in your script
+#     predicted_class_id = detections.argmax(dim=1).item()
+#     predicted_class_label = class_id_to_label.get(predicted_class_id, 'Unknown')
+#     return predicted_class_label, detections
 
 def determine_severity(score):
     if 6 <= score <= 12:
@@ -1011,13 +1009,13 @@ def main():
     model = model_dict['model']
     model.eval()
 
-    uploaded_file = st.file_uploader("Choose an image...", type="jpg")
-    if uploaded_file is not None:
-        detections = load_and_infer_image(uploaded_file, model)
-        predicted_class_label, detection_details = display_results(detections)
-        st.image(uploaded_file, caption='Uploaded Image.', use_column_width=True)
-        st.write(f"Predicted Class Label: {predicted_class_label}")
-        st.write(f"Detections: {detection_details}")
+    # uploaded_file = st.file_uploader("Choose an image...", type="jpg")
+    # if uploaded_file is not None:
+    #     detections = load_and_infer_image(uploaded_file, model)
+    #     predicted_class_label, detection_details = display_results(detections)
+    #     st.image(uploaded_file, caption='Uploaded Image.', use_column_width=True)
+    #     st.write(f"Predicted Class Label: {predicted_class_label}")
+    #     st.write(f"Detections: {detection_details}")
     
     st.markdown("Appendix: [The logic of graphs and analysis for reference]"
             "(https://drive.google.com/file/d/1fdlZvz1MJB2MUytRCtJgErGbnS_SCLqY/view?usp=sharing)")
