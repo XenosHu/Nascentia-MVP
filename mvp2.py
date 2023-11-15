@@ -77,7 +77,7 @@ def determine_severity(score):
         return 'Unknown'
 
 def upload_birth_csv():
-    st.subheader("**Choose a CSV file for Birthday dataset**")
+    st.write("**Choose a CSV file for Birthday dataset**")
     uploaded_file = st.file_uploader("", type="csv")
 
     if uploaded_file is not None:
@@ -90,7 +90,7 @@ def upload_birth_csv():
     return None
 
 def upload_ulcer_csv():
-    st.subheader("**Choose a CSV file for Ulcer dataset**")
+    st.write("**Choose a CSV file for Ulcer dataset**")
     uploaded_file = st.file_uploader(" ", type="csv")
 
     if uploaded_file is not None:
@@ -103,7 +103,7 @@ def upload_ulcer_csv():
     return None
 
 def upload_brad_csv():
-    st.subheader("**Choose a CSV file for Physical Assessment dataset**")
+    st.write("**Choose a CSV file for Physical Assessment dataset**")
     uploaded_file = st.file_uploader("  ", type="csv")
 
     if uploaded_file is not None:
@@ -891,7 +891,7 @@ def main():
     st.image(image_path, width = 100)
     st.title("Nascentia Pressure Ulcer Data Analyzer")
 
-    subheaders = ["Instructions", "Data Outlook", "Filter Data by Dates", "Patient Search", "Severity Overview", "Ulcer Type Overview", "Heal Rate Analysis", "Machine Learning", "Patients Spotlight", "Pressure Ulcer Image Classifier"]
+    subheaders = ["Instructions", "Data Upload", "Data Outlook", "Filter Data by Dates", "Patient Search", "Severity Overview", "Ulcer Type Overview", "Heal Rate Analysis", "Machine Learning", "Patients Spotlight", "Pressure Ulcer Image Classifier"]
     create_table_of_contents(subheaders)
     
     st.subheader("Instructions:")
@@ -902,6 +902,7 @@ def main():
     st.write("**5. Try manipulating plots with interactive tables and widgets.**")
     st.write("**Note: The machine learning model will be trained with historical data and predict the results of the most recent patients. Those who are predicted to get an ulcer but actually do not may be interpreted by the model as being vulnerable to getting an ulcer in the future.**")
 
+    st.subheader("Data Upload")
     birth = upload_birth_csv()
     ulcer = upload_ulcer_csv()
     brad = upload_brad_csv()
