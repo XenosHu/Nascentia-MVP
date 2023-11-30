@@ -997,19 +997,19 @@ def main():
             uploaded_file = buffer
             
     if uploaded_file is not None:
-    detections = load_and_infer_image(uploaded_file, model)
-    predicted_class_label, detection_result = display_results(detections)
+        detections = load_and_infer_image(uploaded_file, model)
+        predicted_class_label, detection_result = display_results(detections)
     
-    with st.expander("**Click to view uploaded image**"):
-        # Ensure the uploaded file is in the correct format for display
-        if isinstance(uploaded_file, io.BytesIO):
-            uploaded_image = Image.open(uploaded_file)
-            st.image(uploaded_image, caption='Uploaded Image.', use_column_width=True)
-        else:
-            st.image(uploaded_file, caption='Uploaded Image.', use_column_width=True)
-    
-    st.write(f"**Predicted Class Label: {predicted_class_label}**")
-    st.write(f"**Detections: {detection_result}**")
+        with st.expander("**Click to view uploaded image**"):
+            # Ensure the uploaded file is in the correct format for display
+            if isinstance(uploaded_file, io.BytesIO):
+                uploaded_image = Image.open(uploaded_file)
+                st.image(uploaded_image, caption='Uploaded Image.', use_column_width=True)
+            else:
+                st.image(uploaded_file, caption='Uploaded Image.', use_column_width=True)
+        
+        st.write(f"**Predicted Class Label: {predicted_class_label}**")
+        st.write(f"**Detections: {detection_result}**")
         
     # #raw dataset for training: https://github.com/mlaradji/deep-learning-for-wound-care
     # uploaded_file = st.file_uploader("**Choose an image...**", type=["jpg", "jpeg", "png"])
