@@ -978,9 +978,26 @@ def main():
     model_dict = torch.load(MODEL_PATH)
     model = model_dict['model']
     model.eval()
-
-    #raw dataset for training: https://github.com/mlaradji/deep-learning-for-wound-care
-    uploaded_file = st.file_uploader("**Choose an image...**", type=["jpg", "jpeg", "png"])
+    
+    option = st.radio("Choose your input method:", ('Upload an Image', 'Take a Photo'))
+    
+    uploaded_file = None
+    
+    if option == 'Upload an Image':
+        uploaded_file = st.file_uploader("**Choose an image...**", type=["jpg", "jpeg", "png"])
+    elif option == 'Take a Photo':
+        # Use Streamlit's built-in functionality to capture an image from the camera
+        # Set label visibility to "collapsed"
+        camera_input = st.camera_input(label="**Take a photo...**", label_visibility="collapsed")
+        if camera_input is not None:
+            # Convert the camera image to a file-like object
+            buffer = io.BytesIO()
+            camera_input.save(buffer, format='JPEG')
+            buffer.seek(0)
+            uploaded_file = buffer
+        
+    # #raw dataset for training: https://github.com/mlaradji/deep-learning-for-wound-care
+    # uploaded_file = st.file_uploader("**Choose an image...**", type=["jpg", "jpeg", "png"])
     
     if uploaded_file is not None:
         detections = load_and_infer_image(uploaded_file, model)
