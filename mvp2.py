@@ -23,6 +23,7 @@ from sklearn.model_selection import GridSearchCV
 from PIL import Image
 import torch
 from torchvision import transforms
+import io
 
 # # Install dependencies
 # subprocess.run(["pip", "install", "-r", "requirements.txt"], check=True)
