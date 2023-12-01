@@ -1058,8 +1058,8 @@ if 'password_correct' in st.session_state and st.session_state['password_correct
                     st.image(uploaded_image, caption='Uploaded Image.', use_column_width=True)
                 else:
                     st.image(uploaded_file, caption='Uploaded Image.', use_column_width=True)
-            st.write(f"**Predicted Class Label: {predicted_class_label}**")
-            st.write(f"**Detections: {detection_result}**")
+            st.write(f"**Predicted Skin Condition: {predicted_class_label}**")
+            st.write(f"**Detection Confidence: {detection_result}**")
         
         st.markdown("**Appendix: [The logic of graphs and analysis for reference]**"
                     "(https://drive.google.com/file/d/1fdlZvz1MJB2MUytRCtJgErGbnS_SCLqY/view?usp=sharing)")
