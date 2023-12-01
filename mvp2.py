@@ -886,147 +886,197 @@ def create_table_of_contents(subheaders):
     st.sidebar.header("Table of Contents")
     for subheader in subheaders:
         st.sidebar.markdown(f"- [{subheader}](#{subheader.lower().replace(' ', '-')} )")
+
+# ----------------------------------------------------------------------------------------------------------------#
+
+def check_password():
+    """Returns `True` if the user had a correct password."""
+
+    def login_form():
+        """Form with widgets to collect user information"""
+        with st.form("Credentials"):
+            st.text_input("Username", key="username")
+            st.text_input("Password", type="password", key="password")
+            st.form_submit_button("Log in", on_click=password_entered)
+
+    def password_entered():
+        """Checks whether a password entered by the user is correct."""
+        entered_username = st.session_state["username"]
+        entered_password = st.session_state["password"]
     
-def main():
-    image_path = "nascentia_logo.png"
-    st.image(image_path, width = 100)
-    st.title("Nascentia Pressure Ulcer Data Analyzer")
-
-    subheaders = ["Instructions", "Data Upload", "Data Outlook", "Filter Data by Dates", "Patient Search", "Severity Overview", "Ulcer Type Overview", "Heal Rate Analysis", "Machine Learning", "Patients Spotlight", "Pressure Ulcer Image Classifier"]
-    create_table_of_contents(subheaders)
-    
-    st.subheader("Instructions:")
-    st.write("**1. Pull the equivalent data from the database for the past 3 years from the day intended for analysis.**")
-    st.write("**2. Save the data as \".csv\" format and upload them in the CORRECT-ORDER.**")
-    st.write("**3. Wait for the system to process and plot the analysis results.**")
-    st.write("**4. Try using the sidebar table of content to jump to desire sections.**")
-    st.write("**5. Try manipulating plots with interactive tables and widgets.**")
-    st.write("**Note: The machine learning model will be trained with historical data and predict the results of the most recent patients. Those who are predicted to get an ulcer but actually do not may be interpreted by the model as being vulnerable to getting an ulcer in the future.**")
-
-    st.subheader("Data Upload")
-    birth = upload_birth_csv()
-    ulcer = upload_ulcer_csv()
-    brad = upload_brad_csv()
-
-    if birth is not None:
-        st.subheader("Data Outlook")
-        process_birth_data(birth)
-        st.write(f"Length of 'Birthday Data': {len(birth)}")
-    
-    if ulcer is not None:
-        process_ulcer_data(ulcer)
-        st.write(f"Length of 'Pressure Ulcer Data': {len(ulcer)}")
-
-    # Display the processed brad dataset
-    if brad is not None:
-        process_brad_data(brad)
-        brad = duration(brad)
-        st.write(f"Length of 'Physical Assessment Data': {len(brad)}")
-
-    if ulcer is not None and brad is not None:
-        ulcer, brad = filter_date(ulcer, brad)
-        brad = merge_with_birth(brad, birth)
-
-    if ulcer is not None and brad is not None:
-        brad = got_ulcer(brad,ulcer)
-        ulcer_b = merge_and_process_data(ulcer, brad)  # Get the processed DataFrame
-        st.write(f"Length of 'Pressure Ulcer Data merge Physical Assessment Data': {len(ulcer_b)}")
-        st.write("Preview of 'Pressure Ulcer Data merge Physical Assessment Data' DataFrame:")
-        st.write(ulcer_b)
-
-        # Allow user to input a patient ID
-        st.subheader("Patient Search")
-        patient_id = st.text_input("**Enter Patient ID (in format of First-Last, e.g. 12-345) for their Braden score history:**")
-        
-        # Check if the patient ID is provided
-        if patient_id:
-            # Plot line chart for the specified patient
-            plot_patient_data(patient_id, brad)
-
-    if brad is not None:
-        st.subheader("Severity Overview")
-        plot_severity_counts(brad)
-        plot_severity_counts_by_month(brad)
-        
-    if ulcer is not None and brad is not None:
-        st.subheader("Ulcer Type Overview")
-        plot_ulcer_counts(ulcer_b)
-        plot_ulcer_counts_by_month(ulcer_b)
-        braden_score_for_ulcer_patient_counts(ulcer_b)
-        location_counts(ulcer_b)
-        
-        df3 = heal_rate_type(ulcer_b)
-        merged_df = heal_rate_braden_score(brad)
-        result = heal_rate_merge(merged_df,df3)
-        result = heal_logic(result)
-
-        st.subheader("Heal Rate Analysis")
-        Cate_given_brad(result)
-        Cate_given_brad_perc(result)
-        heal_speed_by_age(merged_df)
-
-        st.subheader("Machine Learning")
-        SVM(brad)
-         
-        st.subheader("Patients Spotlight")
-        high_loc(ulcer_b)
-        find_worse(result)
-        vulnerable(brad)
-
-    st.subheader("Pressure Ulcer Image Classifier")
-    
-    MODEL_PATH = "last.pt"
-    model_dict = torch.load(MODEL_PATH)
-    model = model_dict['model']
-    model.eval()
-    
-    option = st.radio("Choose your input method:", ('Upload an Image', 'Take a Photo'))
-    
-    uploaded_file = None
-    
-    if option == 'Upload an Image':
-        uploaded_file = st.file_uploader("**Choose an image...**", type=["jpg", "jpeg", "png"])
-    elif option == 'Take a Photo':
-        camera_input = st.camera_input(label="**Take a photo...**", label_visibility="collapsed")
-        if camera_input is not None:
-            # Read the image file buffer as a PIL Image
-            img = Image.open(camera_input)
-    
-            # Convert PIL Image to a BytesIO object in JPEG format
-            buffer = io.BytesIO()
-            img.save(buffer, format='JPEG')
-            buffer.seek(0)
-            uploaded_file = buffer
-    
-    if uploaded_file is not None:
-        detections = load_and_infer_image(uploaded_file, model)
-        predicted_class_label, detection_result = display_results(detections)
-        with st.expander("**Click to view uploaded image**"):
-            if isinstance(uploaded_file, io.BytesIO):
-                uploaded_image = Image.open(uploaded_file)
-                st.image(uploaded_image, caption='Uploaded Image.', use_column_width=True)
+        # Check if the entered username exists in the secrets
+        if entered_username in st.secrets["users"]:
+            # Compare the entered password with the stored one
+            correct_password = st.secrets["users"][entered_username]
+            if hmac.compare_digest(entered_password, correct_password):
+                st.session_state["password_correct"] = True
+                del st.session_state["password"]  # Don't store the username or password.
+                del st.session_state["username"]
             else:
-                st.image(uploaded_file, caption='Uploaded Image.', use_column_width=True)
-        st.write(f"**Predicted Class Label: {predicted_class_label}**")
-        st.write(f"**Detections: {detection_result}**")
+                st.session_state["password_correct"] = False
+        else:
+            st.session_state["password_correct"] = False
+
+    # Return True if the username + password is validated.
+    if st.session_state.get("password_correct", False):
+        return True
+
+    # Show inputs for username + password.
+    login_form()
+    if "password_correct" in st.session_state:
+        st.error("😕 User not known or password incorrect")
+    return False
+
+if not check_password():
+    st.stop()
+
+def logout():
+    # Reset or remove login-related session state variables
+    for key in ['password_correct', 'username', 'password']:
+        if key in st.session_state:
+            del st.session_state[key]
+
+if 'password_correct' in st.session_state and st.session_state['password_correct']:
+    def main():
+        image_path = "nascentia_logo.png"
+        st.image(image_path, width = 100)
+        st.title("Nascentia Pressure Ulcer Data Analyzer")
     
-    st.markdown("**Appendix: [The logic of graphs and analysis for reference]**"
-                "(https://drive.google.com/file/d/1fdlZvz1MJB2MUytRCtJgErGbnS_SCLqY/view?usp=sharing)")
+        subheaders = ["Instructions", "Data Upload", "Data Outlook", "Filter Data by Dates", "Patient Search", "Severity Overview", "Ulcer Type Overview", "Heal Rate Analysis", "Machine Learning", "Patients Spotlight", "Pressure Ulcer Image Classifier"]
+        create_table_of_contents(subheaders)
         
-    # #raw dataset for training: https://github.com/mlaradji/deep-learning-for-wound-care
-    # uploaded_file = st.file_uploader("**Choose an image...**", type=["jpg", "jpeg", "png"])
+        st.subheader("Instructions:")
+        st.write("**1. Pull the equivalent data from the database for the past 3 years from the day intended for analysis.**")
+        st.write("**2. Save the data as \".csv\" format and upload them in the CORRECT-ORDER.**")
+        st.write("**3. Wait for the system to process and plot the analysis results.**")
+        st.write("**4. Try using the sidebar table of content to jump to desire sections.**")
+        st.write("**5. Try manipulating plots with interactive tables and widgets.**")
+        st.write("**Note: The machine learning model will be trained with historical data and predict the results of the most recent patients. Those who are predicted to get an ulcer but actually do not may be interpreted by the model as being vulnerable to getting an ulcer in the future.**")
     
-    # if uploaded_file is not None:
-    #     detections = load_and_infer_image(uploaded_file, model)
-    #     predicted_class_label, detection_result = display_results(detections)
-    #     with st.expander("**Click to view uploaded image**"):
-    #         st.image(uploaded_file, caption='Uploaded Image.', use_column_width=True)
-    #     st.write(f"**Predicted Class Label: {predicted_class_label}**")
-    #     st.write(f"**Detections: {detection_result}**")
+        st.subheader("Data Upload")
+        birth = upload_birth_csv()
+        ulcer = upload_ulcer_csv()
+        brad = upload_brad_csv()
     
-    # st.markdown("**Appendix: [The logic of graphs and analysis for reference]**"
-    #         "(https://drive.google.com/file/d/1fdlZvz1MJB2MUytRCtJgErGbnS_SCLqY/view?usp=sharing)")
+        if birth is not None:
+            st.subheader("Data Outlook")
+            process_birth_data(birth)
+            st.write(f"Length of 'Birthday Data': {len(birth)}")
         
-if __name__ == "__main__":
-    main()
+        if ulcer is not None:
+            process_ulcer_data(ulcer)
+            st.write(f"Length of 'Pressure Ulcer Data': {len(ulcer)}")
+    
+        # Display the processed brad dataset
+        if brad is not None:
+            process_brad_data(brad)
+            brad = duration(brad)
+            st.write(f"Length of 'Physical Assessment Data': {len(brad)}")
+    
+        if ulcer is not None and brad is not None:
+            ulcer, brad = filter_date(ulcer, brad)
+            brad = merge_with_birth(brad, birth)
+    
+        if ulcer is not None and brad is not None:
+            brad = got_ulcer(brad,ulcer)
+            ulcer_b = merge_and_process_data(ulcer, brad)  # Get the processed DataFrame
+            st.write(f"Length of 'Pressure Ulcer Data merge Physical Assessment Data': {len(ulcer_b)}")
+            st.write("Preview of 'Pressure Ulcer Data merge Physical Assessment Data' DataFrame:")
+            st.write(ulcer_b)
+    
+            # Allow user to input a patient ID
+            st.subheader("Patient Search")
+            patient_id = st.text_input("**Enter Patient ID (in format of First-Last, e.g. 12-345) for their Braden score history:**")
+            
+            # Check if the patient ID is provided
+            if patient_id:
+                # Plot line chart for the specified patient
+                plot_patient_data(patient_id, brad)
+    
+        if brad is not None:
+            st.subheader("Severity Overview")
+            plot_severity_counts(brad)
+            plot_severity_counts_by_month(brad)
+            
+        if ulcer is not None and brad is not None:
+            st.subheader("Ulcer Type Overview")
+            plot_ulcer_counts(ulcer_b)
+            plot_ulcer_counts_by_month(ulcer_b)
+            braden_score_for_ulcer_patient_counts(ulcer_b)
+            location_counts(ulcer_b)
+            
+            df3 = heal_rate_type(ulcer_b)
+            merged_df = heal_rate_braden_score(brad)
+            result = heal_rate_merge(merged_df,df3)
+            result = heal_logic(result)
+    
+            st.subheader("Heal Rate Analysis")
+            Cate_given_brad(result)
+            Cate_given_brad_perc(result)
+            heal_speed_by_age(merged_df)
+    
+            st.subheader("Machine Learning")
+            SVM(brad)
+             
+            st.subheader("Patients Spotlight")
+            high_loc(ulcer_b)
+            find_worse(result)
+            vulnerable(brad)
+    
+        st.subheader("Pressure Ulcer Image Classifier")
+        
+        MODEL_PATH = "last.pt"
+        model_dict = torch.load(MODEL_PATH)
+        model = model_dict['model']
+        model.eval()
+        
+        option = st.radio("Choose your input method:", ('Upload an Image', 'Take a Photo'))
+        
+        uploaded_file = None
+        
+        if option == 'Upload an Image':
+            uploaded_file = st.file_uploader("**Choose an image...**", type=["jpg", "jpeg", "png"])
+        elif option == 'Take a Photo':
+            camera_input = st.camera_input(label="**Take a photo...**", label_visibility="collapsed")
+            if camera_input is not None:
+                # Read the image file buffer as a PIL Image
+                img = Image.open(camera_input)
+        
+                # Convert PIL Image to a BytesIO object in JPEG format
+                buffer = io.BytesIO()
+                img.save(buffer, format='JPEG')
+                buffer.seek(0)
+                uploaded_file = buffer
+        
+        if uploaded_file is not None:
+            detections = load_and_infer_image(uploaded_file, model)
+            predicted_class_label, detection_result = display_results(detections)
+            with st.expander("**Click to view uploaded image**"):
+                if isinstance(uploaded_file, io.BytesIO):
+                    uploaded_image = Image.open(uploaded_file)
+                    st.image(uploaded_image, caption='Uploaded Image.', use_column_width=True)
+                else:
+                    st.image(uploaded_file, caption='Uploaded Image.', use_column_width=True)
+            st.write(f"**Predicted Class Label: {predicted_class_label}**")
+            st.write(f"**Detections: {detection_result}**")
+        
+        st.markdown("**Appendix: [The logic of graphs and analysis for reference]**"
+                    "(https://drive.google.com/file/d/1fdlZvz1MJB2MUytRCtJgErGbnS_SCLqY/view?usp=sharing)")
+            
+        # #raw dataset for training: https://github.com/mlaradji/deep-learning-for-wound-care
+        # uploaded_file = st.file_uploader("**Choose an image...**", type=["jpg", "jpeg", "png"])
+        
+        # if uploaded_file is not None:
+        #     detections = load_and_infer_image(uploaded_file, model)
+        #     predicted_class_label, detection_result = display_results(detections)
+        #     with st.expander("**Click to view uploaded image**"):
+        #         st.image(uploaded_file, caption='Uploaded Image.', use_column_width=True)
+        #     st.write(f"**Predicted Class Label: {predicted_class_label}**")
+        #     st.write(f"**Detections: {detection_result}**")
+        
+        # st.markdown("**Appendix: [The logic of graphs and analysis for reference]**"
+        #         "(https://drive.google.com/file/d/1fdlZvz1MJB2MUytRCtJgErGbnS_SCLqY/view?usp=sharing)")
+            
+    if __name__ == "__main__":
+        main()
 
