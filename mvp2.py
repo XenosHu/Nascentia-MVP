@@ -149,6 +149,7 @@ def process_birth_data(birth):
 
     dup_birth = birth[birth['Name'].duplicated(keep=False)]
     dup_birth = dup_birth.sort_values('Name', ascending=True)
+    #return birth
 
 def process_ulcer_data(ulcer):
     ulcer['Name'] = ulcer['Name'].str.split('Last').str[1].str.split(', First').str.join('-')
@@ -178,7 +179,7 @@ def process_ulcer_data(ulcer):
     
     ulcer["Type"] = ulcer["Type"].astype(int)
 
-    return ulcer  # Return the modified DataFrame
+    #return ulcer  # Return the modified DataFrame
 
 def process_brad_data(brad):
     brad['Severity'] = brad['AssessmentAnswer'].apply(determine_severity)
@@ -712,6 +713,7 @@ def got_ulcer(brad,ulcer_b):
 def vulnerable(brad):
     brad = brad.sort_values('Visitdate', ascending = False)
     sub = brad.drop_duplicates(subset=['Name'], keep='first')
+    sub = sub.drop('Textbox65',axis=1)
     vul = sub[(sub['Severity'] == "High Risk") & (sub['got_ulcer'] == False)]
     st.write('Patients who are vulnerable and might get pressure ulcers in the future: ')
     st.write(vul)
@@ -783,13 +785,6 @@ def SVM(brad):
     
     X_train, y_train = train_data.iloc[:, :-1], train_data[target]
     X_test, y_test = test_data.iloc[:, :-1], test_data[target]
-    
-    # # Split the data into training and testing sets
-    # X = sub_brad.iloc[:, :-1]  # All columns except the last one
-    # y = sub_brad[target]
-
-    # # Train-test split with scaled features
-    # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=seed)
 
     # Estimate time to train SVM model
     dataset_size = len(X_train)
@@ -888,6 +883,9 @@ def create_table_of_contents(subheaders):
     for subheader in subheaders:
         st.sidebar.markdown(f"- [{subheader}](#{subheader.lower().replace(' ', '-')} )")
 
+def convert_df(df):
+   return df.to_csv(index=False).encode('utf-8')
+
 # ----------------------------------------------------------------------------------------------------------------#
 
 image_path = "nascentia_logo.png"
@@ -944,7 +942,7 @@ def logout():
 if 'password_correct' in st.session_state and st.session_state['password_correct']:
     def main():
     
-        subheaders = ["Instructions", "Data Upload", "Data Outlook", "Filter Data by Dates", "Patient Search", "Severity Overview", "Ulcer Type Overview", "Heal Rate Analysis", "Machine Learning", "Patients Spotlight", "Pressure Ulcer Image Classifier"]
+        subheaders = ["Instructions", "Data Upload", "Data Outlook", "Filter Data by Dates", "Patient Search", "Severity Overview", "Ulcer Type Overview", "Heal Rate Analysis", "Machine Learning", "Patients Spotlight", "Processed Data Download", "Pressure Ulcer Image Classifier"]
         create_table_of_contents(subheaders)
         
         st.subheader("Instructions:")
@@ -962,16 +960,16 @@ if 'password_correct' in st.session_state and st.session_state['password_correct
     
         if birth is not None:
             st.subheader("Data Outlook")
-            process_birth_data(birth)
+            birth = process_birth_data(birth)
             st.write(f"Length of 'Birthday Data': {len(birth)}")
         
         if ulcer is not None:
-            process_ulcer_data(ulcer)
+            ulcer = process_ulcer_data(ulcer)
             st.write(f"Length of 'Pressure Ulcer Data': {len(ulcer)}")
     
         # Display the processed brad dataset
         if brad is not None:
-            process_brad_data(brad)
+            brad = process_brad_data(brad)
             brad = duration(brad)
             st.write(f"Length of 'Physical Assessment Data': {len(brad)}")
     
@@ -1024,6 +1022,44 @@ if 'password_correct' in st.session_state and st.session_state['password_correct
             high_loc(ulcer_b)
             find_worse(result)
             vulnerable(brad)
+
+            st.subheader("Processed Data Download")
+            
+            st.download_button(
+                                    label="Download Birthday dataset as CSV",
+                                    data= birth,
+                                    file_name='birthday_processed.csv',
+                                    mime='text/csv',
+                                    use_container_width = True
+                                )
+            st.download_button(
+                                    label="Download Ulcer / Pchart dataset as CSV",
+                                    data= ulcer,
+                                    file_name='ulcer_processed.csv',
+                                    mime='text/csv',
+                                    use_container_width = True
+                                )
+            st.download_button(
+                                    label="Download Braden Score / Physical Assessment dataset as CSV",
+                                    data= brad,
+                                    file_name='brad_processed.csv',
+                                    mime='text/csv',
+                                    use_container_width = True
+                                )
+            st.download_button(
+                                    label="Download Merged dataset as CSV",
+                                    data= ulcer_b,
+                                    file_name='ulcer_b.csv',
+                                    mime='text/csv',
+                                    use_container_width = True
+                                )
+            st.download_button(
+                                    label="Download Aggregated Healing Analysis dataset as CSV",
+                                    data= result,
+                                    file_name='healing.csv',
+                                    mime='text/csv',
+                                    use_container_width = True
+                                )   
     
         st.subheader("Pressure Ulcer Image Classifier")
         
@@ -1064,20 +1100,6 @@ if 'password_correct' in st.session_state and st.session_state['password_correct
         
         st.markdown("**Appendix: [The logic of graphs and analysis for reference]**"
                     "(https://drive.google.com/file/d/1fdlZvz1MJB2MUytRCtJgErGbnS_SCLqY/view?usp=sharing)")
-            
-        # #raw dataset for training: https://github.com/mlaradji/deep-learning-for-wound-care
-        # uploaded_file = st.file_uploader("**Choose an image...**", type=["jpg", "jpeg", "png"])
-        
-        # if uploaded_file is not None:
-        #     detections = load_and_infer_image(uploaded_file, model)
-        #     predicted_class_label, detection_result = display_results(detections)
-        #     with st.expander("**Click to view uploaded image**"):
-        #         st.image(uploaded_file, caption='Uploaded Image.', use_column_width=True)
-        #     st.write(f"**Predicted Class Label: {predicted_class_label}**")
-        #     st.write(f"**Detections: {detection_result}**")
-        
-        # st.markdown("**Appendix: [The logic of graphs and analysis for reference]**"
-        #         "(https://drive.google.com/file/d/1fdlZvz1MJB2MUytRCtJgErGbnS_SCLqY/view?usp=sharing)")
             
     if __name__ == "__main__":
         main()
