@@ -969,7 +969,7 @@ if 'password_correct' in st.session_state and st.session_state['password_correct
     
         # Display the processed brad dataset
         if brad is not None:
-            brad = process_brad_data(brad)
+            process_brad_data(brad)
             brad = duration(brad)
             st.write(f"Length of 'Physical Assessment Data': {len(brad)}")
     
