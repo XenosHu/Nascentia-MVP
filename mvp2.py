@@ -883,8 +883,9 @@ def create_table_of_contents(subheaders):
     for subheader in subheaders:
         st.sidebar.markdown(f"- [{subheader}](#{subheader.lower().replace(' ', '-')} )")
 
-def convert_df(df):
-   return df.to_csv(index=False).encode('utf-8')
+def convert_df_to_csv_bytes(df):
+    csv_bytes = df.to_csv(index=False).encode('utf-8')
+    return csv_bytes
 
 # ----------------------------------------------------------------------------------------------------------------#
 
@@ -1027,35 +1028,35 @@ if 'password_correct' in st.session_state and st.session_state['password_correct
             
             st.download_button(
                                     label="Download Birthday dataset as CSV",
-                                    data= birth,
+                                    data= convert_df_to_csv_bytes(birth),
                                     file_name='birthday_processed.csv',
                                     mime='text/csv',
                                     use_container_width = True
                                 )
             st.download_button(
                                     label="Download Ulcer / Pchart dataset as CSV",
-                                    data= ulcer,
+                                    data= convert_df_to_csv_bytes(ulcer),
                                     file_name='ulcer_processed.csv',
                                     mime='text/csv',
                                     use_container_width = True
                                 )
             st.download_button(
                                     label="Download Braden Score / Physical Assessment dataset as CSV",
-                                    data= brad,
+                                    data= convert_df_to_csv_bytes(brad),
                                     file_name='brad_processed.csv',
                                     mime='text/csv',
                                     use_container_width = True
                                 )
             st.download_button(
                                     label="Download Merged dataset as CSV",
-                                    data= ulcer_b,
+                                    data= convert_df_to_csv_bytes(ulcer_b),
                                     file_name='ulcer_b.csv',
                                     mime='text/csv',
                                     use_container_width = True
                                 )
             st.download_button(
                                     label="Download Aggregated Healing Analysis dataset as CSV",
-                                    data= result,
+                                    data= convert_df_to_csv_bytes(result),
                                     file_name='healing.csv',
                                     mime='text/csv',
                                     use_container_width = True
