@@ -149,7 +149,7 @@ def process_birth_data(birth):
 
     dup_birth = birth[birth['Name'].duplicated(keep=False)]
     dup_birth = dup_birth.sort_values('Name', ascending=True)
-    #return birth
+    return birth
 
 def process_ulcer_data(ulcer):
     ulcer['Name'] = ulcer['Name'].str.split('Last').str[1].str.split(', First').str.join('-')
@@ -179,7 +179,7 @@ def process_ulcer_data(ulcer):
     
     ulcer["Type"] = ulcer["Type"].astype(int)
 
-    #return ulcer  # Return the modified DataFrame
+    return ulcer  # Return the modified DataFrame
 
 def process_brad_data(brad):
     brad['Severity'] = brad['AssessmentAnswer'].apply(determine_severity)
@@ -960,11 +960,11 @@ if 'password_correct' in st.session_state and st.session_state['password_correct
     
         if birth is not None:
             st.subheader("Data Outlook")
-            birth = process_birth_data(birth)
+            process_birth_data(birth)
             st.write(f"Length of 'Birthday Data': {len(birth)}")
         
         if ulcer is not None:
-            ulcer = process_ulcer_data(ulcer)
+            process_ulcer_data(ulcer)
             st.write(f"Length of 'Pressure Ulcer Data': {len(ulcer)}")
     
         # Display the processed brad dataset
