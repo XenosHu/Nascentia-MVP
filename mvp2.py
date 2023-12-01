@@ -890,6 +890,10 @@ def create_table_of_contents(subheaders):
 
 # ----------------------------------------------------------------------------------------------------------------#
 
+image_path = "nascentia_logo.png"
+st.image(image_path, width = 100)
+st.title("Nascentia Pressure Ulcer Data Analyzer")
+
 def check_password():
     """Returns `True` if the user had a correct password."""
 
@@ -939,9 +943,6 @@ def logout():
 
 if 'password_correct' in st.session_state and st.session_state['password_correct']:
     def main():
-        image_path = "nascentia_logo.png"
-        st.image(image_path, width = 100)
-        st.title("Nascentia Pressure Ulcer Data Analyzer")
     
         subheaders = ["Instructions", "Data Upload", "Data Outlook", "Filter Data by Dates", "Patient Search", "Severity Overview", "Ulcer Type Overview", "Heal Rate Analysis", "Machine Learning", "Patients Spotlight", "Pressure Ulcer Image Classifier"]
         create_table_of_contents(subheaders)
