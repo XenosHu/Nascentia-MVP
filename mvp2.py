@@ -1065,7 +1065,7 @@ if 'password_correct' in st.session_state and st.session_state['password_correct
                                     use_container_width = False
                                 )
             st.download_button(
-                                    label="**Download-------'Aggregated Healing Analysis'---------dataset**",
+                                    label="**Download-------------'Healing Analysis'--------------dataset**",
                                     data= convert_df_to_csv_bytes(result),
                                     file_name='healing.csv',
                                     mime='text/csv',
