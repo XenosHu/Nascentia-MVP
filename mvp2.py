@@ -713,7 +713,7 @@ def got_ulcer(brad,ulcer_b):
 def vulnerable(brad):
     brad = brad.sort_values('Visitdate', ascending = False)
     sub = brad.drop_duplicates(subset=['Name'], keep='first')
-    sub = sub.drop('Textbox65',axis=1)
+    sub = sub.drop(['Textbox65', 'AssessmentQuestion'],axis=1)
     vul = sub[(sub['Severity'] == "High Risk") & (sub['got_ulcer'] == False)]
     st.write('Patients who are vulnerable and might get pressure ulcers in the future: ')
     st.write(vul)
@@ -1051,21 +1051,21 @@ if 'password_correct' in st.session_state and st.session_state['password_correct
                                     use_container_width = False
                                 )
             st.download_button(
-                                    label="**Download----'Braden Score / Physical Assessment'----dataset**",
+                                    label="**Download---'Braden Score / Physical Assessment'---dataset**",
                                     data= convert_df_to_csv_bytes(brad),
                                     file_name='brad_processed.csv',
                                     mime='text/csv',
                                     use_container_width = False
                                 )
             st.download_button(
-                                    label="**Download------------------'Merged'------------------dataset**",
+                                    label="**Download-------------------'Merged'-------------------dataset**",
                                     data= convert_df_to_csv_bytes(ulcer_b),
                                     file_name='ulcer_b.csv',
                                     mime='text/csv',
                                     use_container_width = False
                                 )
             st.download_button(
-                                    label="**Download-------'Aggregated Healing Analysis'-------dataset**",
+                                    label="**Download-------'Aggregated Healing Analysis'------dataset**",
                                     data= convert_df_to_csv_bytes(result),
                                     file_name='healing.csv',
                                     mime='text/csv',
