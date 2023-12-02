@@ -1027,14 +1027,14 @@ if 'password_correct' in st.session_state and st.session_state['password_correct
             st.subheader("Processed Data Download")
             
             st.download_button(
-                                    label="**Download Birthday dataset as CSV**",
+                                    label="**Download Birthday dataset as CSV                          **",
                                     data= convert_df_to_csv_bytes(birth),
                                     file_name='birthday_processed.csv',
                                     mime='text/csv',
                                     use_container_width = False
                                 )
             st.download_button(
-                                    label="**Download Ulcer / Pchart dataset as CSV**",
+                                    label="**Download Ulcer / Pchart dataset as CSV                    **",
                                     data= convert_df_to_csv_bytes(ulcer),
                                     file_name='ulcer_processed.csv',
                                     mime='text/csv',
@@ -1048,14 +1048,14 @@ if 'password_correct' in st.session_state and st.session_state['password_correct
                                     use_container_width = False
                                 )
             st.download_button(
-                                    label="**Download Merged dataset as CSV**",
+                                    label="**Download Merged dataset as CSV                            **",
                                     data= convert_df_to_csv_bytes(ulcer_b),
                                     file_name='ulcer_b.csv',
                                     mime='text/csv',
                                     use_container_width = False
                                 )
             st.download_button(
-                                    label="**Download Aggregated Healing Analysis dataset as CSV**",
+                                    label="**Download Aggregated Healing Analysis dataset as CSV       **",
                                     data= convert_df_to_csv_bytes(result),
                                     file_name='healing.csv',
                                     mime='text/csv',
