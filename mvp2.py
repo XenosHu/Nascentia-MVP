@@ -1051,7 +1051,7 @@ if 'password_correct' in st.session_state and st.session_state['password_correct
                                     use_container_width = False
                                 )
             st.download_button(
-                                    label="**Download---'Braden Score / Physical Assessment'----dataset**",
+                                    label="**Download---'Braden Score / Physical Assessment'---dataset**",
                                     data= convert_df_to_csv_bytes(brad),
                                     file_name='brad_processed.csv',
                                     mime='text/csv',
