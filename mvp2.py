@@ -1069,7 +1069,7 @@ if 'password_correct' in st.session_state and st.session_state['password_correct
         model = model_dict['model']
         model.eval()
         
-        option = st.radio("Choose your input method:", ('Upload an Image', 'Take a Photo'))
+        option = st.radio("**Choose your input method:**", ('Upload an Image', 'Take a Photo'))
         
         uploaded_file = None
         
