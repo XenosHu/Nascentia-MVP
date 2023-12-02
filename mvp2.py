@@ -1039,35 +1039,35 @@ if 'password_correct' in st.session_state and st.session_state['password_correct
             
             
             st.download_button(
-                                    label="**Download-------------------'Birthday'----------------------dataset**",
+                                    label="**Download-------------------'birthday'----------------------dataset**",
                                     data= convert_df_to_csv_bytes(birth),
                                     file_name='birthday_processed.csv',
                                     mime='text/csv',
                                     use_container_width = False
                                 )
             st.download_button(
-                                    label="**Download----------------'Ulcer / Pchart'-------------------dataset**",
+                                    label="**Download----------------'ulcer / pchart'-------------------dataset**",
                                     data= convert_df_to_csv_bytes(ulcer),
                                     file_name='ulcer_processed.csv',
                                     mime='text/csv',
                                     use_container_width = False
                                 )
             st.download_button(
-                                    label="**Download---'Braden Score / Physical Assessment'---dataset**",
+                                    label="**Download---'braden score / physical assessment'---dataset**",
                                     data= convert_df_to_csv_bytes(brad),
                                     file_name='brad_processed.csv',
                                     mime='text/csv',
                                     use_container_width = False
                                 )
             st.download_button(
-                                    label="**Download--------------------'Merged'-----------------------dataset**",
+                                    label="**Download--------------------'merged'-----------------------dataset**",
                                     data= convert_df_to_csv_bytes(ulcer_b),
                                     file_name='ulcer_b.csv',
                                     mime='text/csv',
                                     use_container_width = False
                                 )
             st.download_button(
-                                    label="**Download---------------'Healing Analysis'----------------dataset**",
+                                    label="**Download---------------'healing analysis'----------------dataset**",
                                     data= convert_df_to_csv_bytes(result),
                                     file_name='healing.csv',
                                     mime='text/csv',
