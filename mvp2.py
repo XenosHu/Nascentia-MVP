@@ -887,6 +887,15 @@ def convert_df_to_csv_bytes(df):
     csv_bytes = df.to_csv(index=False).encode('utf-8')
     return csv_bytes
 
+def create_label(dataset_name, total_width=60):
+    prefix = "Download "
+    suffix = " dataset"
+    # Calculate the remaining width for the dataset name
+    remaining_width = total_width - len(prefix) - len(suffix)
+    # Center the dataset name within the remaining width
+    centered_name = dataset_name.center(remaining_width)
+    return f"{prefix}{centered_name}{suffix}"
+    
 # ----------------------------------------------------------------------------------------------------------------#
 
 image_path = "nascentia_logo.png"
@@ -1026,42 +1035,84 @@ if 'password_correct' in st.session_state and st.session_state['password_correct
 
             st.subheader("Processed Data Download")
             
+            
+            # st.download_button(
+            #                         label="**Download Birthday dataset**                          ",
+            #                         data= convert_df_to_csv_bytes(birth),
+            #                         file_name='birthday_processed.csv',
+            #                         mime='text/csv',
+            #                         use_container_width = False
+            #                     )
+            # st.download_button(
+            #                         label="**Download Ulcer / Pchart dataset**                    ",
+            #                         data= convert_df_to_csv_bytes(ulcer),
+            #                         file_name='ulcer_processed.csv',
+            #                         mime='text/csv',
+            #                         use_container_width = False
+            #                     )
+            # st.download_button(
+            #                         label="**Download Braden Score / Physical Assessment dataset**",
+            #                         data= convert_df_to_csv_bytes(brad),
+            #                         file_name='brad_processed.csv',
+            #                         mime='text/csv',
+            #                         use_container_width = False
+            #                     )
+            # st.download_button(
+            #                         label="**Download Merged dataset**                            ",
+            #                         data= convert_df_to_csv_bytes(ulcer_b),
+            #                         file_name='ulcer_b.csv',
+            #                         mime='text/csv',
+            #                         use_container_width = False
+            #                     )
+            # st.download_button(
+            #                         label="**Download Aggregated Healing Analysis dataset**       ",
+            #                         data= convert_df_to_csv_bytes(result),
+            #                         file_name='healing.csv',
+            #                         mime='text/csv',
+            #                         use_container_width = False
+            #                     )   
+
+            
+            # Download button for Birthday dataset
             st.download_button(
-                                    label="**Download Birthday dataset**                          ",
-                                    data= convert_df_to_csv_bytes(birth),
-                                    file_name='birthday_processed.csv',
-                                    mime='text/csv',
-                                    use_container_width = False
-                                )
+                label=create_label("Birthday"),
+                data=convert_df_to_csv_bytes(birth),
+                file_name='birthday_processed.csv',
+                mime='text/csv'
+            )
+            
+            # Download button for Ulcer / Pchart dataset
             st.download_button(
-                                    label="**Download Ulcer / Pchart dataset**                    ",
-                                    data= convert_df_to_csv_bytes(ulcer),
-                                    file_name='ulcer_processed.csv',
-                                    mime='text/csv',
-                                    use_container_width = False
-                                )
+                label=create_label("Ulcer / Pchart"),
+                data=convert_df_to_csv_bytes(ulcer),
+                file_name='ulcer_processed.csv',
+                mime='text/csv'
+            )
+            
+            # Download button for Braden Score / Physical Assessment dataset
             st.download_button(
-                                    label="**Download Braden Score / Physical Assessment dataset**",
-                                    data= convert_df_to_csv_bytes(brad),
-                                    file_name='brad_processed.csv',
-                                    mime='text/csv',
-                                    use_container_width = False
-                                )
+                label=create_label("Braden Score / Physical Assessment"),
+                data=convert_df_to_csv_bytes(brad),
+                file_name='brad_processed.csv',
+                mime='text/csv'
+            )
+            
+            # Download button for Merged dataset
             st.download_button(
-                                    label="**Download Merged dataset**                            ",
-                                    data= convert_df_to_csv_bytes(ulcer_b),
-                                    file_name='ulcer_b.csv',
-                                    mime='text/csv',
-                                    use_container_width = False
-                                )
+                label=create_label("Merged"),
+                data=convert_df_to_csv_bytes(ulcer_b),
+                file_name='ulcer_b.csv',
+                mime='text/csv'
+            )
+            
+            # Download button for Aggregated Healing Analysis dataset
             st.download_button(
-                                    label="**Download Aggregated Healing Analysis dataset**       ",
-                                    data= convert_df_to_csv_bytes(result),
-                                    file_name='healing.csv',
-                                    mime='text/csv',
-                                    use_container_width = False
-                                )   
-    
+                label=create_label("Aggregated Healing Analysis"),
+                data=convert_df_to_csv_bytes(result),
+                file_name='healing.csv',
+                mime='text/csv'
+            )
+            
         st.subheader("Pressure Ulcer Image Classifier")
         
         MODEL_PATH = "last.pt"
