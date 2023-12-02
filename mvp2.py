@@ -595,7 +595,8 @@ def heal_logic(result):
 
 def Cate_given_brad(result):
     # Define your custom color set with four colors
-    custom_colors = ['#1f77b4',  '#2ca02c', '#ff7f0e','#d62728']
+    # custom_colors = ['#1f77b4',  '#2ca02c', '#ff7f0e','#d62728']
+    custom_colors = ['#006837', '#b7e075', '#febe6f', '#a50026']  
     
     # Group by the 'last_assessment_score' column and 'Categorization', then count the occurrences
     agg_result = result.groupby(['last_assessment_score', 'Categorization']).size().reset_index(name='Count')
@@ -624,7 +625,8 @@ def Cate_given_brad(result):
     
 def Cate_given_brad_perc(result):    
 
-    custom_colors = ['#1f77b4',  '#2ca02c', '#ff7f0e','#d62728']
+    # custom_colors = ['#1f77b4',  '#2ca02c', '#ff7f0e','#d62728']
+    custom_colors = ['#006837', '#b7e075', '#febe6f', '#a50026']  
     
     # Group by the 'last_assessment_score' column and 'Categorization', then calculate the sum of counts
     agg_result = result.groupby(['last_assessment_score', 'Categorization']).size().reset_index(name='Count')
