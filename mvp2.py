@@ -189,14 +189,31 @@ def process_brad_data(brad):
     brad['Worker_name'] = brad['Textbox65'].str.split(':').str[1].str.split(',').str[0]
     brad['Worker_type'] = brad['Textbox65'].str.rsplit(',').str[1]
     
-def plot_patient_data(patient_id, brad):
-    # Filter data for the specified patient
-    sub = brad[brad['Name'] == patient_id]
-    sub = sub.sort_values('Visitdate', ascending=True)
+# def plot_patient_data(patient_id, brad):
+#     # Filter data for the specified patient
+#     sub = brad[brad['Name'] == patient_id]
+#     sub = sub.sort_values('Visitdate', ascending=True)
 
-    # Plot line chart
+#     # Plot line chart
+#     plt.figure(figsize=(10, 6))
+#     plt.plot(sub['Visitdate'], sub['AssessmentAnswer'], marker='o', linestyle='-')
+#     plt.title(f'Assessment Braden score of Patient {patient_id} over Time')
+#     plt.xlabel('Visit Date')
+#     plt.ylabel('Assessment Answer')
+#     plt.tight_layout()
+
+#     # Display the plot using Streamlit
+#     st.set_option('deprecation.showPyplotGlobalUse', False)
+#     st.pyplot()
+
+def plot_patient_data(patient_id, brad, ulcer):
+    # Filter data for the specified patient in the brad dataframe
+    sub_brad = brad[brad['Name'] == patient_id]
+    sub_brad = sub_brad.sort_values('Visitdate', ascending=True)
+
+    # Plot line chart for brad data
     plt.figure(figsize=(10, 6))
-    plt.plot(sub['Visitdate'], sub['AssessmentAnswer'], marker='o', linestyle='-')
+    plt.plot(sub_brad['Visitdate'], sub_brad['AssessmentAnswer'], marker='o', linestyle='-')
     plt.title(f'Assessment Braden score of Patient {patient_id} over Time')
     plt.xlabel('Visit Date')
     plt.ylabel('Assessment Answer')
@@ -205,6 +222,15 @@ def plot_patient_data(patient_id, brad):
     # Display the plot using Streamlit
     st.set_option('deprecation.showPyplotGlobalUse', False)
     st.pyplot()
+
+    # Filter data for the specified patient in the ulcer dataframe
+    sub_ulcer = ulcer[ulcer['Name'] == patient_id]
+
+    # Check if there are matching rows in the ulcer dataframe
+    if not sub_ulcer.empty:
+        return sub_ulcer
+    else:
+        return "No matching ulcer data for this patient ID."
 
 def plot_ulcer_counts(ulcer):
     # Create a filtered DataFrame with unique patients, keeping the most recent record
@@ -1003,7 +1029,7 @@ if 'password_correct' in st.session_state and st.session_state['password_correct
             # Check if the patient ID is provided
             if patient_id:
                 # Plot line chart for the specified patient
-                plot_patient_data(patient_id, brad)
+                plot_patient_data(patient_id, brad, ulcer)
     
         if brad is not None:
             st.subheader("Severity Overview")
