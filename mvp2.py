@@ -228,9 +228,9 @@ def plot_patient_data(patient_id, brad, ulcer):
 
     # Check if there are matching rows in the ulcer dataframe
     if not sub_ulcer.empty:
-        return sub_ulcer
+        st.write(sub_ulcer)
     else:
-        return "No matching ulcer data for this patient ID."
+        st.write("No matching ulcer data for this patient ID.")
 
 def plot_ulcer_counts(ulcer):
     # Create a filtered DataFrame with unique patients, keeping the most recent record
